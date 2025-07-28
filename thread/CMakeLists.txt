@@ -4,8 +4,6 @@ project(emdevif_thread C CXX)
 
 add_library(${PROJECT_NAME} OBJECT)
 
-add_subdirectory(system)
-
 target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_core)
 
 target_sources(${PROJECT_NAME} PUBLIC
