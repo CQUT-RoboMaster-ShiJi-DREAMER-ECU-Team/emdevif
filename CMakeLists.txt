@@ -9,6 +9,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 
+option(EMDEVIF_USE_STM32CUBEMX "Enable it will link stm32cubemx lib to emdevif" OFF)
+
+if (EMDEVIF_USE_STM32CUBEMX)
+    enable_language(ASM)
+    add_subdirectory(support/stm32cubemx)
+endif ()
+
 add_subdirectory(core)
 add_subdirectory(thread)
 add_subdirectory(connectivity)
