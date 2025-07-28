@@ -1,6 +1,6 @@
 /**
  * @file error_handler.cppm
- * @module rmdev.error_handler
+ * @module emdevif.error_handler
  * @author 杜以成
  * @date 2025-06-01
  * @brief 错误处理
@@ -10,11 +10,11 @@ module;
 
 #include <cstdint>
 
-#include "rmdev/attributes_and_useful_macros.h"
+#include "emdevif/attributes_and_useful_macros.h"
 
-export module rmdev.error_handler;
+export module emdevif.error_handler;
 
-namespace rmdev {
+namespace emdevif {
 
 /**
  * 错误码
@@ -45,7 +45,7 @@ using FaultHandlerCallBack = void (*)(const char* file, int line, const char* me
  * @param line 所在行号
  * @param message 错误消息
  */
-RMDEV_NO_RETURN void defaultFaultHandler(const char* file, int line, const char* message);
+EMDEVIF_NO_RETURN void defaultFaultHandler(const char* file, int line, const char* message);
 
 /**
  * 致命错误回调函数（编译期初始化为默认的回调函数）
@@ -54,8 +54,8 @@ constinit FaultHandlerCallBack faultHandlerCallback = defaultFaultHandler;
 
 /**
  * 致命错误处理函数
- * @note 建议使用宏 RMDEV_FAULT_HANDLER，可以自动填充文件名与行号，但需要
- * 引入头文件 rmdev/fault_handler.hpp
+ * @note 建议使用宏 EMDEVIF_FAULT_HANDLER，可以自动填充文件名与行号，但需要
+ * 引入头文件 emdevif/fault_handler.hpp
  * @param file 所在文件名
  * @param line 所在行号
  * @param message 错误信息
@@ -72,4 +72,4 @@ export void faultHandler(const char* file, const int line, const char* message =
  */
 export void registerFaultHandler(FaultHandlerCallBack callback);
 
-}  // namespace rmdev
+}  // namespace emdevif

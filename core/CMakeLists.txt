@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(rmdev_core C CXX)
+project(emdevif_core C CXX)
 
 add_library(${PROJECT_NAME} OBJECT)
 
@@ -11,7 +11,7 @@ target_compile_options(${PROJECT_NAME} PUBLIC
 target_include_directories(${PROJECT_NAME} PUBLIC inc/)
 
 target_sources(${PROJECT_NAME}
-    PUBLIC FILE_SET rmdev_core_error_handler_module TYPE CXX_MODULES FILES
+    PUBLIC FILE_SET emdevif_core_module TYPE CXX_MODULES FILES
         error_handler/error_handler.cppm
 
     PUBLIC error_handler/error_handler.cpp

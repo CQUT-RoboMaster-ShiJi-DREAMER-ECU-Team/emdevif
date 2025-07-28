@@ -1,6 +1,6 @@
 /**
  * @file InitOnce.cppm
- * @module rmdev.lib.InitOnce
+ * @module emdevif.lib.InitOnce
  * @author 杜以成
  * @date 2025-05-09
  * @brief 单次初始化类
@@ -11,11 +11,11 @@ module;
 #include <type_traits>
 #include <utility>
 
-export module rmdev.util.InitOnce;
+export module emdevif.util.InitOnce;
 
-export import rmdev.error_handler;
+export import emdevif.error_handler;
 
-export namespace rmdev {
+export namespace emdevif {
 
 /**
  * 单次初始化类
@@ -150,4 +150,4 @@ private:
     bool is_init;  ///< 是否已经初始化
 };
 
-}  // namespace rmdev
+}  // namespace emdevif

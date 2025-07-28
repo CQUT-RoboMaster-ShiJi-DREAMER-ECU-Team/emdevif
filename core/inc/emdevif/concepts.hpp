@@ -6,12 +6,12 @@
  */
 
 #pragma once
-#ifndef RMDEV_CONCEPTS_HPP
-#define RMDEV_CONCEPTS_HPP
+#ifndef EMDEVIF_CONCEPTS_HPP
+#define EMDEVIF_CONCEPTS_HPP
 
 #include <type_traits>
 
-namespace rmdev {
+namespace emdevif {
 
 /**
  * 可计算类型概念
@@ -45,6 +45,6 @@ concept MatrixCouldMultiplied = (col1 == row2);
 template<std::size_t row, std::size_t col>
 concept SquareMatrix = (row == col);
 
-}  // namespace rmdev
+}  // namespace emdevif
 
-#endif  // !RMDEV_CONCEPTS_HPP
+#endif  // !EMDEVIF_CONCEPTS_HPP

@@ -1,6 +1,6 @@
 /**
  * @file Connect.cppm
- * @module rmdev.connectivity.Connect
+ * @module emdevif.connectivity.Connect
  * @author 杜以成
  * @date 2025-05-09
  * @brief 通信基类
@@ -11,11 +11,11 @@ module;
 #include <cstdint>
 #include <string_view>
 
-export module rmdev.connectivity.Connect;
+export module emdevif.connectivity.Connect;
 
-import rmdev.util.InitOnce;
+import emdevif.util.InitOnce;
 
-export namespace rmdev {
+export namespace emdevif {
 
 /**
  * 通信方式
@@ -52,4 +52,4 @@ protected:
     InitOnce<void*> handle{};          ///< 句柄
 };
 
-}  // namespace rmdev
+}  // namespace emdevif

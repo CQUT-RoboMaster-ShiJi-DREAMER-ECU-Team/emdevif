@@ -7,17 +7,17 @@
 
 module;
 
-#include "rmdev/attributes_and_useful_macros.h"
+#include "emdevif/attributes_and_useful_macros.h"
 
-module rmdev.error_handler;
+module emdevif.error_handler;
 
-namespace rmdev {
+namespace emdevif {
 
-RMDEV_NO_RETURN void defaultFaultHandler(const char* file, const int line, const char* message)
+EMDEVIF_NO_RETURN void defaultFaultHandler(const char* file, const int line, const char* message)
 {
-    RMDEV_UNUSED(file);
-    RMDEV_UNUSED(line);
-    RMDEV_UNUSED(message);
+    EMDEVIF_UNUSED(file);
+    EMDEVIF_UNUSED(line);
+    EMDEVIF_UNUSED(message);
 
     while (true) {
     }
@@ -30,4 +30,4 @@ void registerFaultHandler(const FaultHandlerCallBack callback)
     }
 }
 
-}  // namespace rmdev
+}  // namespace emdevif

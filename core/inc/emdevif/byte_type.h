@@ -5,8 +5,8 @@
  * @brief 字节类型（一般用于 void* 类型的自增运算或者静态内存分配）
  */
 
-#ifndef RMDEV_BYTE_TYPE_H
-#define RMDEV_BYTE_TYPE_H
+#ifndef EMDEVIF_BYTE_TYPE_H
+#define EMDEVIF_BYTE_TYPE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,4 +24,4 @@ static_assert(sizeof(ubyte_t) == 1U, "字节类型大小不匹配！");
 }
 #endif
 
-#endif  // !RMDEV_BYTE_TYPE_H
+#endif  // !EMDEVIF_BYTE_TYPE_H

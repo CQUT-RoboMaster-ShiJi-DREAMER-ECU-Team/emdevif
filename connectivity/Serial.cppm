@@ -1,6 +1,6 @@
 /**
  * @file Serial.cppm
- * @module rmdev.connectivity.Serial
+ * @module emdevif.connectivity.Serial
  * @author 杜以成
  * @date 2025-05-09
  * @brief 串口通信
@@ -10,21 +10,21 @@ module;
 
 #include <string_view>
 #include <cstdint>
-#include "rmdev/simplify_decl_macros.hpp"
+#include "emdevif/simplify_decl_macros.hpp"
 
-export module rmdev.connectivity.Serial;
+export module emdevif.connectivity.Serial;
 
-export import rmdev.error_handler;
+export import emdevif.error_handler;
 
-import rmdev.connectivity.Connect;
+import emdevif.connectivity.Connect;
 
-export namespace rmdev {
+export namespace emdevif {
 
 class Serial : public Connect
 {
 public:
     Serial() = delete;
-    RMDEV_DELETE_COPY_AND_MOVE(Serial);
+    EMDEVIF_DELETE_COPY_AND_MOVE(Serial);
 
     Serial(const std::string_view name, const ConnectMethod tx, const ConnectMethod rx) : Connect(name, tx, rx) {}
 
@@ -33,4 +33,4 @@ public:
     ErrorCode rx(const uint8_t* data, std::size_t size) const noexcept;
 };
 
-}  // namespace rmdev
+}  // namespace emdevif

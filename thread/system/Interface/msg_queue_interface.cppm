@@ -1,6 +1,6 @@
 /**
  * @file msg_queue_interface.cppm
- * @module rmdev.thread.message_queue:interface
+ * @module emdevif.thread.message_queue:interface
  * @author 杜以成
  * @date 2025-06-18
  * @brief 消息队列接口
@@ -10,11 +10,11 @@ module;
 
 #include <cstddef>
 
-export module rmdev.thread.message_queue:interface;
+export module emdevif.thread.message_queue:interface;
 
-export import rmdev.error_handler;
+export import emdevif.error_handler;
 
-namespace rmdev {
+namespace emdevif {
 
 template<class Impl>
 class MessageQueueInterface
@@ -57,4 +57,4 @@ protected:
     ~MessageQueueInterface() = default;
 };
 
-}  // namespace rmdev
+}  // namespace emdevif

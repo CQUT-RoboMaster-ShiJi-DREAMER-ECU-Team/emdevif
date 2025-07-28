@@ -6,14 +6,14 @@
  */
 
 #pragma once
-#ifndef RMDEV_SIMPLIFY_DECL_HPP
-#define RMDEV_SIMPLIFY_DECL_HPP
+#ifndef EMDEVIF_SIMPLIFY_DECL_HPP
+#define EMDEVIF_SIMPLIFY_DECL_HPP
 
 /**
  * 删除拷贝构造函数和拷贝赋值运算符
  * @param ClassName 待删除的类名
  */
-#define RMDEV_DELETE_COPY_CONSTRUCTOR(ClassName) \
+#define EMDEVIF_DELETE_COPY_CONSTRUCTOR(ClassName) \
     ClassName(const ClassName&) = delete;        \
     ClassName& operator=(const ClassName&) = delete
 
@@ -21,7 +21,7 @@
  * 删除移动构造函数和移动赋值运算符
  * @param ClassName 待删除的类名
  */
-#define RMDEV_DELETE_MOVE_CONSTRUCTOR(ClassName) \
+#define EMDEVIF_DELETE_MOVE_CONSTRUCTOR(ClassName) \
     ClassName(ClassName&&) = delete;             \
     ClassName& operator=(const ClassName&&) = delete
 
@@ -29,8 +29,8 @@
  * 删除拷贝与移动构造函数及相关运算符
  * @param ClassName 待删除的类名
  */
-#define RMDEV_DELETE_COPY_AND_MOVE(ClassName) \
-    RMDEV_DELETE_COPY_CONSTRUCTOR(ClassName); \
-    RMDEV_DELETE_MOVE_CONSTRUCTOR(ClassName)
+#define EMDEVIF_DELETE_COPY_AND_MOVE(ClassName) \
+    EMDEVIF_DELETE_COPY_CONSTRUCTOR(ClassName); \
+    EMDEVIF_DELETE_MOVE_CONSTRUCTOR(ClassName)
 
-#endif  // !RMDEV_SIMPLIFY_DECL_HPP
+#endif  // !EMDEVIF_SIMPLIFY_DECL_HPP

@@ -1,6 +1,6 @@
 /**
  * @file msg_queue_implements.cppm
- * @module rmdev.thread.message_queue:implements
+ * @module emdevif.thread.message_queue:implements
  * @author 杜以成
  * @date 2025-06-18
  * @brief 消息队列的实现
@@ -13,14 +13,14 @@ module;
 #include "FreeRTOS.h"
 #include "queue.h"
 
-#include "rmdev/byte_type.h"
+#include "emdevif/byte_type.h"
 
-#include "rmdev/fault_handler.hpp"
+#include "emdevif/fault_handler.hpp"
 
-export module rmdev.thread.message_queue:implements;
+export module emdevif.thread.message_queue:implements;
 import :interface;
 
-namespace rmdev {
+namespace emdevif {
 
 export template<typename Type, std::size_t length>
 class MessageQueueView : public MessageQueueInterface<MessageQueueView<Type, length>>
@@ -33,7 +33,7 @@ public:
     explicit MessageQueueView(QueueHandle_t handle) : handle_(handle)
     {
         if (handle == nullptr) {
-            RMDEV_FAULT_HANDLER("Failed to create message queue!");
+            EMDEVIF_FAULT_HANDLER("Failed to create message queue!");
         }
     }
 
@@ -171,4 +171,4 @@ private:
     ubyte_t storge_memory[length * sizeof(Type)]{};
 };
 
-}  // namespace rmdev
+}  // namespace emdevif
