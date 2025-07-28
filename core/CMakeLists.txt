@@ -4,7 +4,23 @@ project(emdevif_core C CXX)
 
 add_library(${PROJECT_NAME} OBJECT)
 
+if (NOT (DEFINED EMDEVIF_RELEASE_OPTIMIZE_LEVEL))
+    set(EMDEVIF_RELEASE_OPTIMIZE_LEVEL "-O2")
+endif ()
+
+if (CMAKE_BUILD_TYPE MATCHES "Debug")
+    set(EMDEVIF__COMPILE_OPTIMIZE "-O0 -g3")
+elseif (CMAKE_BUILD_TYPE MATCHES "Release")
+    set(EMDEVIF__COMPILE_OPTIMIZE "${EMDEVIF_RELEASE_OPTIMIZE_LEVEL} -g0")
+elseif (CMAKE_BUILD_TYPE MATCHES "RelWithDebugInfo")
+    set(EMDEVIF__COMPILE_OPTIMIZE "${EMDEVIF_RELEASE_OPTIMIZE_LEVEL} -g3")
+else ()
+    set(EMDEVIF__COMPILE_OPTIMIZE "-O0 -g3")
+endif ()
+
 target_compile_options(${PROJECT_NAME} PUBLIC
+    -Wall -Wextra -Wpedantic
+    ${EMDEVIF__COMPILE_OPTIMIZE}
     $<$<COMPILE_LANGUAGE:CXX>:-fno-rtti -fmodules-ts -fno-exceptions>
 )
 
