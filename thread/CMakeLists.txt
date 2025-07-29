@@ -6,12 +6,12 @@ add_library(${PROJECT_NAME} OBJECT)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_core)
 
-target_sources(${PROJECT_NAME} PUBLIC
-    FILE_SET emdevif_thread_exported_modules_unit TYPE CXX_MODULES FILES
+target_sources(${PROJECT_NAME}
+    PUBLIC FILE_SET emdevif_thread_exported_modules_unit TYPE CXX_MODULES FILES
         message_queue.cppm
         thread_constant.cppm
 
-    FILE_SET emdevif_thread_modules TYPE CXX_MODULES FILES
+    PUBLIC FILE_SET emdevif_thread_modules TYPE CXX_MODULES FILES
         Interface/msg_queue_interface.cppm
         Interface/thread_constant_interface.cppm
 )
@@ -19,6 +19,19 @@ target_sources(${PROJECT_NAME} PUBLIC
 if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
     option(EMDEVIF_FREERTOS_USE_STM32CUBEMX "FreeRTOS will use stm32cubemx generated FreeRTOS sources" OFF)
 
-    add_subdirectory(Implements/FreeRTOS)
-    target_link_libraries(${PROJECT_NAME} PUBLIC emdevif__freertos_impl)
+    if (EMDEVIF_FREERTOS_USE_STM32CUBEMX)
+        if (NOT EMDEVIF_USE_STM32CUBEMX)
+            message(FATAL_ERROR "Let FreeRTOS to use stm32cubemx requires to set EMDEVIF_USE_STM32CUBEMX equal to ON")
+        endif ()
+
+        target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_stm32cubemx_support)
+    else ()
+        target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_freertos_support)
+    endif ()
+
+    target_sources(${PROJECT_NAME} PUBLIC
+        FILE_SET emdevif__freertos_impl_modules TYPE CXX_MODULES FILES
+            Implements/FreeRTOS/msg_queue_implements.cppm
+            Implements/FreeRTOS/thread_constant_implements.cppm
+    )
 endif ()
