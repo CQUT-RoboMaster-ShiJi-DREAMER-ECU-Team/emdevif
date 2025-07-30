@@ -21,9 +21,28 @@ def get_caller_path():
     return os.path.abspath(os.getcwd())
 
 
+def add_comment_for_not_use_command(src: list[str], _i: int, comment: str, command: str) -> int:
+    """
+    根据特征注释与语句注释掉相应语句
+    :param src: 被逐行拆分成字符串的文件
+    :param _i: 当前待判断的行数
+    :param comment: 要注释掉的语句上一行的注释
+    :param command: 要替注释掉的语句
+    :return: 处理后的文件行数
+    """
+    if src[_i].find(comment) != -1:
+        _i += 1
+        if src[_i].find(command) != -1:
+            if src[_i][0] != "#":
+                _result_str = "#" + src[_i]
+                src[_i] = _result_str
+
+    return _i
+
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Use: python emdevif_stm32cubemx_processor <process file>")
+        print("Use: python stm32cubemx_processor <process file>")
         exit(1)
 
     argv_file_name = sys.argv[1]
@@ -43,20 +62,13 @@ if __name__ == "__main__":
     WILL_REPLACE_COMMAND1: str = "target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE ${MX_LINK_DIRS})"
     WILL_REPLACE_COMMENT_FLAG2: str = "# Add libraries to the project"
     WILL_REPLACE_COMMAND2: str = "target_link_libraries(${CMAKE_PROJECT_NAME} ${MX_LINK_LIBS})"
-    for i in range(0, len(file_str)):
-        if file_str[i].find(WILL_REPLACE_COMMENT_FLAG1) != -1:
-            i += 1
-            if file_str[i].find(WILL_REPLACE_COMMAND1) != -1:
-                if file_str[i][0] != "#":
-                    result_str = "#" + file_str[i]
-                    file_str[i] = result_str
 
-        if file_str[i].find(WILL_REPLACE_COMMENT_FLAG2) != -1:
-            i += 1
-            if file_str[i].find(WILL_REPLACE_COMMAND2) != -1:
-                if file_str[i][0] != "#":
-                    result_str = "#" + file_str[i]
-                    file_str[i] = result_str
+    i: int = 0
+    while i < len(file_str):
+        i = add_comment_for_not_use_command(file_str, i, WILL_REPLACE_COMMENT_FLAG1, WILL_REPLACE_COMMAND1)
+        i = add_comment_for_not_use_command(file_str, i, WILL_REPLACE_COMMENT_FLAG2, WILL_REPLACE_COMMAND2)
+
+        i += 1
 
     result_str = ""
     for i in range(0, len(file_str)):
