@@ -29,3 +29,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     emdevif_connectivity
     emdevif_util
 )
+
+if (EMDEVIF_ENABLE_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif ()
