@@ -10,6 +10,5 @@
 #define EMDEVIF_TEST_MAIN_HPP
 
 void initOnceTest();
-void arrayTraitsAggregateTest();
 
 #endif // !EMDEVIF_TEST_MAIN_HPP
