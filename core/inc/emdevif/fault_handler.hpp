@@ -14,6 +14,6 @@
  * @attention 需要导入模块 emdevif.error_handler 才能正常使用这个宏
  * @param ... 错误信息字符串（可以省略不写）
  */
-#define EMDEVIF_FAULT_HANDLER(...) faultHandler(__FILE__, __LINE__, ##__VA_ARGS__)
+#define EMDEVIF_FAULT_HANDLER(...) emdevif::faultHandler(__FILE__, __LINE__, ##__VA_ARGS__)
 
-#endif // !EMDEVIF_FAULT_HANDLER_HPP
+#endif  // !EMDEVIF_FAULT_HANDLER_HPP

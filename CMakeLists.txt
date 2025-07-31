@@ -21,7 +21,7 @@ add_subdirectory(thread)
 add_subdirectory(connectivity)
 add_subdirectory(util)
 
-add_library(${PROJECT_NAME} OBJECT)
+add_library(${PROJECT_NAME} STATIC)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     emdevif_core
