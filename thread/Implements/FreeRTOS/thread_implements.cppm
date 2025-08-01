@@ -61,7 +61,7 @@ inline ErrorCode Thread::delayUntil(const uint32_t ticks)
     return ErrorCode::Success;
 }
 
-Thread::StronglyTypedHandle Thread::create(const ThreadEntry entry, void* arguments, const Attribute& attribute)
+Thread::StronglyTypedHandle Thread::create(const Attribute& attribute, const ThreadEntry entry, void* arguments)
 {
     TaskHandle_t handle = nullptr;
 
@@ -85,13 +85,14 @@ Thread::StronglyTypedHandle Thread::create(const ThreadEntry entry, void* argume
     return {.value = handle};
 }
 
-inline ErrorCode Thread::destroy(Handle handle)
+inline ErrorCode Thread::destroy(Thread& obj)
 {
-    if (handle == nullptr) {
-        exit();
+    if (obj.getHandle() == nullptr) {
+        obj.exit();
     }
 
-    const auto handle_value = static_cast<TaskHandle_t>(handle);
+    const auto handle_value = static_cast<TaskHandle_t>(obj.getHandle());
+    obj.handle_ = nullptr;
 
     if (eTaskGetState(handle_value) != eDeleted) {
         vTaskDelete(handle_value);
@@ -105,6 +106,7 @@ inline ErrorCode Thread::destroy(Handle handle)
 
 inline void Thread::exit()
 {
+    handle_ = nullptr;
     vTaskDelete(nullptr);
 
     // 程序不应当执行到此处

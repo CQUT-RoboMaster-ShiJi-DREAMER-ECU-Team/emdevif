@@ -8,6 +8,8 @@
 
 module;
 
+#include "emdevif/fault_handler.hpp"
+
 #include <cstdint>
 
 export module emdevif.mutex:interface;
@@ -28,10 +30,12 @@ public:
         uint32_t cb_size{};     ///< 控制块大小
     };
 
+private:
     struct StronglyTypedHandle {
         Handle value;
     };
 
+public:
     static StronglyTypedHandle create(const Attribute& attribute);
 
     static void destroy(Handle handle);
@@ -49,9 +53,28 @@ public:
 
     void unlock() const;
 
+    [[nodiscard]] Handle getHandle() const
+    {
+        return handle_;
+    }
+
     Mutex() : handle_(nullptr) {}
 
-    explicit Mutex(StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}
+    explicit Mutex(const StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}
+
+    Mutex& operator=(const Mutex&) = delete;
+
+    Mutex& operator=(const StronglyTypedHandle strongly_handle)
+    {
+        if (handle_ != nullptr) {
+            EMDEVIF_FAULT_HANDLER("Should not create mutex on non-deleted mutex!");
+            return *this;
+        }
+
+        handle_ = strongly_handle.value;
+
+        return *this;
+    }
 
     explicit Mutex(const Attribute& attribute) : Mutex(create(attribute)) {}
 

@@ -9,6 +9,7 @@
 module;
 
 #include "emdevif/attributes_and_useful_macros.h"
+#include "emdevif/fault_handler.hpp"
 
 #include <cstdint>
 
@@ -33,10 +34,12 @@ public:
         uint32_t stack_size{};     ///< 存储栈的内存大小
     };
 
+private:
     struct StronglyTypedHandle {
         Handle value;
     };
 
+public:
     /**
      * 等待时间最大值
      */
@@ -50,11 +53,11 @@ public:
 
     static ErrorCode delayUntil(uint32_t ticks);
 
-    static StronglyTypedHandle create(ThreadEntry entry, void* arguments, const Attribute& attribute);
+    static StronglyTypedHandle create(const Attribute& attribute, ThreadEntry entry, void* arguments);
 
-    static ErrorCode destroy(Handle handle);
+    static ErrorCode destroy(Thread& obj);
 
-    EMDEVIF_NO_RETURN static void exit();
+    EMDEVIF_NO_RETURN void exit();
 
     static void suspend(Handle handle);
 
@@ -73,8 +76,20 @@ public:
 
     explicit Thread(const StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}
 
-    Thread(const ThreadEntry entry, void* arguments, const Attribute& attribute)
-        : Thread(create(entry, arguments, attribute))
+    Thread& operator=(const StronglyTypedHandle strongly_handle)
+    {
+        if (handle_ != nullptr) {
+            EMDEVIF_FAULT_HANDLER("Should not create thread on non-deleted thread!");
+            return *this;
+        }
+
+        handle_ = strongly_handle.value;
+
+        return *this;
+    }
+
+    Thread(const Attribute& attribute, const ThreadEntry entry, void* arguments)
+        : Thread(create(attribute, entry, arguments))
     {
     }
 
