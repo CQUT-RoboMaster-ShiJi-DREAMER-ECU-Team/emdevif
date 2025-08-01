@@ -25,7 +25,7 @@ consteval auto Thread::MAX_DELAY() noexcept
     return portMAX_DELAY;
 }
 
-auto Thread::getTick(const bool in_isr)
+inline auto Thread::getTick(const bool in_isr)
 {
     if (in_isr) {
         return xTaskGetTickCount();
@@ -35,17 +35,17 @@ auto Thread::getTick(const bool in_isr)
     }
 }
 
-void Thread::delay(const uint32_t ticks)
+inline void Thread::delay(const uint32_t ticks)
 {
     vTaskDelay(ticks);
 }
 
-void Thread::delayMs(const uint32_t ms)
+inline void Thread::delayMs(const uint32_t ms)
 {
     delay(pdMS_TO_TICKS(ms));
 }
 
-ErrorCode Thread::delayUntil(const uint32_t ticks)
+inline ErrorCode Thread::delayUntil(const uint32_t ticks)
 {
     auto tcnt = xTaskGetTickCount();
 
@@ -85,7 +85,7 @@ Thread::StronglyTypedHandle Thread::create(const ThreadEntry entry, void* argume
     return {.value = handle};
 }
 
-ErrorCode Thread::destroy(Handle handle)
+inline ErrorCode Thread::destroy(Handle handle)
 {
     if (handle == nullptr) {
         exit();
@@ -103,7 +103,7 @@ ErrorCode Thread::destroy(Handle handle)
     return ErrorCode::Success;
 }
 
-void Thread::exit()
+inline void Thread::exit()
 {
     vTaskDelete(nullptr);
 
@@ -113,12 +113,12 @@ void Thread::exit()
     }
 }
 
-void Thread::suspend(Handle handle)
+inline void Thread::suspend(Handle handle)
 {
     vTaskSuspend(static_cast<TaskHandle_t>(handle));
 }
 
-void Thread::resume(bool in_isr, Handle handle)
+inline void Thread::resume(bool in_isr, Handle handle)
 {
     if (in_isr) {
         const auto xYieldRequired = xTaskResumeFromISR(static_cast<TaskHandle_t>(handle));
@@ -130,11 +130,11 @@ void Thread::resume(bool in_isr, Handle handle)
     }
 }
 
-void Thread::yield()
+inline void Thread::yield()
 {
     portYIELD();
 }
 
-[[maybe_unused]] void Thread::join() {}  // NOLINT
+[[maybe_unused]] inline void Thread::join() {}  // NOLINT
 
 }  // namespace emdevif

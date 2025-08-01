@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 
 project(emdevif_thread C CXX)
 
-add_library(${PROJECT_NAME} OBJECT)
+add_library(${PROJECT_NAME} STATIC)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_core)
 
@@ -10,10 +10,13 @@ target_sources(${PROJECT_NAME}
     PUBLIC FILE_SET emdevif_thread_exported_modules_unit TYPE CXX_MODULES FILES
         message_queue.cppm
         thread.cppm
+        atomic.cppm
+        mutex.cppm
 
     PUBLIC FILE_SET emdevif_thread_modules TYPE CXX_MODULES FILES
         Interface/msg_queue_interface.cppm
         Interface/thread_interface.cppm
+        Interface/mutex_interface.cppm
 )
 
 if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
@@ -33,5 +36,6 @@ if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
         FILE_SET emdevif__freertos_impl_modules TYPE CXX_MODULES FILES
             Implements/FreeRTOS/msg_queue_implements.cppm
             Implements/FreeRTOS/thread_implements.cppm
+            Implements/FreeRTOS/mutex_implements.cppm
     )
 endif ()

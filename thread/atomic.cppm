@@ -1,0 +1,32 @@
+/**
+ * @file atomic.cppm
+ * @module emdevif.atomic
+ * @author DuYicheng
+ * @date 2025-08-01
+ * @brief 原子操作
+ */
+
+module;
+
+#ifndef EMDEVIF_USE_STL_ATOMIC
+#define EMDEVIF_USE_STL_ATOMIC true
+#endif
+
+#if (EMDEVIF_USE_STL_ATOMIC)
+#include <atomic>
+#endif
+
+export module emdevif.atomic;
+
+export namespace emdevif {
+
+#if (EMDEVIF_USE_STL_ATOMIC)
+
+template<typename T>
+using atomic = std::atomic<T>;
+
+using memory_order = std::memory_order;
+
+#endif
+
+}  // namespace emdevif

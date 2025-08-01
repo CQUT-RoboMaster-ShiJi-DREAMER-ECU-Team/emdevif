@@ -11,5 +11,3 @@ module;
 export module emdevif.thread;
 export import :interface;
 export import :implements;
-
-export import emdevif.thread.message_queue;
