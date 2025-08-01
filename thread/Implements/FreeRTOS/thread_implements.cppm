@@ -61,9 +61,9 @@ ErrorCode Thread::delayUntil(const uint32_t ticks)
     return ErrorCode::Success;
 }
 
-Thread::Handle Thread::create(const ThreadEntry entry, void* arguments, const Attribute& attribute)
+Thread::StronglyTypedHandle Thread::create(const ThreadEntry entry, void* arguments, const Attribute& attribute)
 {
-    xTaskHandle handle = nullptr;
+    TaskHandle_t handle = nullptr;
 
     if (attribute.cb_mem != nullptr && attribute.stack_mem != nullptr && attribute.cb_size != 0U) {
         handle = xTaskCreateStatic(entry,
@@ -82,10 +82,10 @@ Thread::Handle Thread::create(const ThreadEntry entry, void* arguments, const At
         }
     }
 
-    return handle;
+    return {.value = handle};
 }
 
-void Thread::destroy(const Handle handle)
+ErrorCode Thread::destroy(Handle handle)
 {
     if (handle == nullptr) {
         exit();
@@ -97,13 +97,44 @@ void Thread::destroy(const Handle handle)
         vTaskDelete(handle_value);
     }
     else {
-        EMDEVIF_FAULT_HANDLER("Delete deleted task!");
+        return ErrorCode::InvalidArgument;
     }
+
+    return ErrorCode::Success;
 }
 
 void Thread::exit()
 {
     vTaskDelete(nullptr);
+
+    // 程序不应当执行到此处
+    EMDEVIF_FAULT_HANDLER("Should not running here.");
+    while (true) {
+    }
 }
+
+void Thread::suspend(Handle handle)
+{
+    vTaskSuspend(static_cast<TaskHandle_t>(handle));
+}
+
+void Thread::resume(bool in_isr, Handle handle)
+{
+    if (in_isr) {
+        const auto xYieldRequired = xTaskResumeFromISR(static_cast<TaskHandle_t>(handle));
+
+        portYIELD_FROM_ISR(xYieldRequired);
+    }
+    else {
+        vTaskResume(static_cast<TaskHandle_t>(handle));
+    }
+}
+
+void Thread::yield()
+{
+    portYIELD();
+}
+
+[[maybe_unused]] void Thread::join() {}  // NOLINT
 
 }  // namespace emdevif

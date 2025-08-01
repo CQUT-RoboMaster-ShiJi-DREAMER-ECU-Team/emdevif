@@ -33,6 +33,10 @@ public:
         uint32_t stack_size{};     ///< 存储栈的内存大小
     };
 
+    struct StronglyTypedHandle {
+        Handle value;
+    };
+
     /**
      * 等待时间最大值
      */
@@ -46,11 +50,19 @@ public:
 
     static ErrorCode delayUntil(uint32_t ticks);
 
-    static Handle create(ThreadEntry entry, void* arguments, const Attribute& attribute);
+    static StronglyTypedHandle create(ThreadEntry entry, void* arguments, const Attribute& attribute);
 
-    static void destroy(Handle handle);
+    static ErrorCode destroy(Handle handle);
 
     EMDEVIF_NO_RETURN static void exit();
+
+    static void suspend(Handle handle);
+
+    static void resume(bool in_isr, Handle handle);
+
+    static void yield();
+
+    void join();
 
     [[nodiscard]] Handle getHandle() const
     {
@@ -59,10 +71,10 @@ public:
 
     Thread() : handle_(nullptr) {}
 
-    explicit Thread(Handle handle) : handle_(handle) {}
+    explicit Thread(const StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}
 
     Thread(const ThreadEntry entry, void* arguments, const Attribute& attribute)
-        : handle_(create(entry, arguments, attribute))
+        : Thread(create(entry, arguments, attribute))
     {
     }
 
