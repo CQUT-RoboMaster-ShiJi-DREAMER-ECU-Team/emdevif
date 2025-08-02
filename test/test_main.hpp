@@ -11,6 +11,6 @@
 
 void initOnceTest();
 
-void threadTest();
+void threadAndMutexTest();
 
 #endif // !EMDEVIF_TEST_MAIN_HPP

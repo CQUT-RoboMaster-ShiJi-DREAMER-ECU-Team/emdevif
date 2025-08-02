@@ -11,7 +11,7 @@
 
 import emdevif.util.InitOnce;
 
-static TEST_SUIT(BasicTest)
+static TEST_SUIT(InitOnceBasicTest)
 {
     TEST_CASE_BEGIN(InitOnceBasicTest);
     {
@@ -66,7 +66,7 @@ constinit const emdevif::InitOnce global3{5.4};
 constexpr emdevif::InitOnce global4{5};
 constinit const emdevif::InitOnce<int> global5;
 
-static TEST_SUIT(GlobalTest)
+static TEST_SUIT(InitOnceGlobalTest)
 {
     TEST_CASE_BEGIN(InitOnceGlobalTest);
     {
@@ -100,7 +100,7 @@ void allocateFailed()
     test_allocate_failed = true;
 }
 
-static TEST_SUIT(MoveTest)
+static TEST_SUIT(InitOnceMoveTest)
 {
     class Test final
     {
@@ -276,7 +276,7 @@ static TEST_SUIT(MoveTest)
 
 void initOnceTest()
 {
-    RUN_SUIT(BasicTest);
-    RUN_SUIT(GlobalTest);
-    RUN_SUIT(MoveTest);
+    RUN_SUIT(InitOnceBasicTest);
+    RUN_SUIT(InitOnceGlobalTest);
+    RUN_SUIT(InitOnceMoveTest);
 }

@@ -11,5 +11,5 @@ extern "C" void emdevif_testEntry(void)
 {
     initOnceTest();
 
-    threadTest();
+    threadAndMutexTest();
 }

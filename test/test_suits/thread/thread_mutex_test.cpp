@@ -178,9 +178,10 @@ TEST_SUIT(ThreadBasicTest)
     TEST_CASE_END();
 }
 
+// 此处注意：这个测试样例必须单独拿出来作为一个测试套件（函数），不能和上一个放在一起（原因未知）
 TEST_SUIT(ThreadAssignAndMoveTest)
 {
-    TEST_CASE_BEGIN(Case)
+    TEST_CASE_BEGIN(AssignAndMoveTest)
     {
         MutexGuard<int32_t> counter{0};
         MutexGuard<uint8_t> flag{0};
