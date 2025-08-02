@@ -85,10 +85,10 @@ Thread::StronglyTypedHandle Thread::create(const Attribute& attribute, const Thr
     return {.value = handle};
 }
 
-inline ErrorCode Thread::destroy(Thread& obj)
+ErrorCode Thread::destroy(Thread& obj)
 {
     if (obj.getHandle() == nullptr) {
-        obj.exit();
+        return ErrorCode::InvalidArgument;
     }
 
     const auto handle_value = static_cast<TaskHandle_t>(obj.getHandle());
@@ -138,5 +138,12 @@ inline void Thread::yield()
 }
 
 [[maybe_unused]] inline void Thread::join() {}  // NOLINT
+
+Thread::~Thread()
+{
+    if (handle_ != nullptr) {
+        destroy(*this);
+    }
+}
 
 }  // namespace emdevif

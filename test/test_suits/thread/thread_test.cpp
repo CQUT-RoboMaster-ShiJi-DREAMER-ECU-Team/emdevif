@@ -54,50 +54,61 @@ public:
     T v;
 };
 
-TEST_SUIT(ThreadTest)
+TEST_SUIT(ThreadBasicTest)
 {
-    TEST_CASE_BEGIN(BasicTest)
+    TEST_CASE_BEGIN(Case)
     {
         MutexGuard<int32_t> counter{0};
+        MutexGuard<uint8_t> flag{0};
         ASSERT_TRUE(counter.mutex.getHandle() != nullptr, "Mutex Create Failed!");
+        ASSERT_TRUE(flag.mutex.getHandle() != nullptr, "Mutex Create Failed!");
 
         struct Arg {
-            emdevif::Thread* thd;
+            emdevif::Thread& thd;
             decltype(counter)& cnt;
+            decltype(flag)& flg;
         };
 
         emdevif::Thread a_thread;
-        Arg arga{&a_thread, counter};
+        Arg arga{a_thread, counter, flag};
         a_thread = emdevif::Thread::create(
             {.name = "Thread BasicTest a", .priority = osPriorityNormal, .stack_size = 128},
             [](void* param) {
-                emdevif::Thread::delay(1);
+                const auto [thd, cnt, flg] = *static_cast<Arg*>(param);
 
-                const auto arg = *static_cast<Arg*>(param);
-
-                for (uint8_t i = 0; i < 100; i++) {
-                    arg.cnt.set(arg.cnt.get() + 1);
+                while ((flg.get() & 0b0011) != 0b0011) {
+                    emdevif::Thread::delay(1);
                 }
 
-                arg.thd->exit();
+                for (uint8_t i = 0; i < 100; i++) {
+                    cnt.set(cnt.get() + 1);
+                }
+
+                flg.set(flg.get() | 0b0100);
+                thd.exit();
             },
             &arga);
         ASSERT_TRUE(a_thread.getHandle() != nullptr, "Thread Create failed!");
 
+        flag.set(flag.get() | 0b0001);
+
         emdevif::Thread b_thread;
-        Arg argb{&b_thread, counter};
+        Arg argb{b_thread, counter, flag};
         b_thread = emdevif::Thread::create(
             {.name = "Thread BasicTest b", .priority = osPriorityNormal, .stack_size = 128},
             [](void* param) {
-                emdevif::Thread::delay(1);
+                const auto [thd, cnt, flg] = *static_cast<Arg*>(param);
 
-                const auto arg = *static_cast<Arg*>(param);
-
-                for (uint16_t i = 0; i < 353; i++) {
-                    arg.cnt.set(arg.cnt.get() + 1);
+                while ((flg.get() & 0b0011) != 0b0011) {
+                    emdevif::Thread::delay(1);
                 }
 
-                arg.thd->exit();
+                for (uint16_t i = 0; i < 353; i++) {
+                    cnt.set(cnt.get() + 1);
+                }
+
+                flg.set(flg.get() | 0b1000);
+                thd.exit();
             },
             &argb);
         ASSERT_TRUE(b_thread.getHandle() != nullptr, "Thread Create failed!");
@@ -106,70 +117,118 @@ TEST_SUIT(ThreadTest)
                     a_thread.getHandle(),
                     b_thread.getHandle());
 
-        emdevif::Thread::delayMs(1000);
+        flag.set(flag.get() | 0b0010);
 
-        INT_ASSERT_EQ(counter.get(), 353 + 100, "");
+        // 考虑到不是所有 RTOS 都有 join 方法，并且这里仅做测试，
+        // 不便于使用事件组。因此使用互斥锁+标志变量的方式实现条件阻塞。
+        while (flag.get() != 0b1111) {
+            emdevif::Thread::delay(1);
+        }
+
+        INT_EXPECT_EQ(counter.get(), 353 + 100);
         ASSERT_TRUE(a_thread.getHandle() == nullptr && b_thread.getHandle() == nullptr,
                     "a_thread = %p, b_thread = %p",
                     a_thread.getHandle(),
                     b_thread.getHandle());
     }
     TEST_CASE_END();
+}
 
-    TEST_CASE_BEGIN(AssignAndMoveTest)
+TEST_SUIT(ThreadAssignAndMoveTest)
+{
+    TEST_CASE_BEGIN(Case)
     {
         MutexGuard<int32_t> counter{0};
-
+        MutexGuard<uint8_t> flag{0};
         ASSERT_TRUE(counter.mutex.getHandle() != nullptr, "Mutex Create Failed!");
+        ASSERT_TRUE(flag.mutex.getHandle() != nullptr, "Mutex Create Failed!");
 
-        [[maybe_unused]] emdevif::Thread a_thread;
-        [[maybe_unused]] emdevif::Thread b_thread;
+        struct Arg {
+            emdevif::Thread& thd;
+            decltype(counter)& cnt;
+            decltype(flag)& flg;
+        };
+
+        emdevif::Thread a_thread;
+        emdevif::Thread b_thread;
+
+        emdevif::Thread a_;
+        emdevif::Thread b_;
+
+        ASSERT_TRUE(a_.getHandle() == nullptr && b_.getHandle() == nullptr, "");
 
         [&]() {
-            std::pair<emdevif::Thread&, decltype(counter)> pa{a_thread, counter};
+            Arg arga{a_thread, counter, flag};
             a_thread = emdevif::Thread::create(
-                {.name = "Thread Test 1 a", .priority = osPriorityNormal, .stack_size = 128},
+                {.name = "Thd Assign a", .priority = osPriorityNormal, .stack_size = 128},
                 [](void* param) {
-                    auto& [thread, cnt] = *static_cast<std::pair<emdevif::Thread&, decltype(counter)>*>(param);
+                    const auto [thd, cnt, flg] = *static_cast<Arg*>(param);
 
-                    for (uint8_t i = 0; i < 114; i++) {
+                    while ((flg.get() & 0b0011) != 0b0011) {
+                        emdevif::Thread::delay(1);
+                    }
+
+                    for (uint8_t i = 0; i < 100; i++) {
                         cnt.set(cnt.get() + 1);
                     }
 
-                    thread.exit();
+                    flg.set(flg.get() | 0b0100);
+                    thd.exit();
                 },
-                &pa);
+                &arga);
+            ASSERT_TRUE(a_thread.getHandle() != nullptr, "Thread Create failed!");
 
-            std::pair<emdevif::Thread&, decltype(counter)> pb{b_thread, counter};
+            Arg argb{b_thread, counter, flag};
             b_thread = emdevif::Thread::create(
-                {.name = "Thread Test 1 b", .priority = osPriorityNormal, .stack_size = 128},
+                {.name = "Thd Assign b", .priority = osPriorityNormal, .stack_size = 128},
                 [](void* param) {
-                    auto& [thread, cnt] = *static_cast<std::pair<emdevif::Thread&, decltype(counter)>*>(param);
+                    const auto [thd, cnt, flg] = *static_cast<Arg*>(param);
 
-                    for (uint16_t i = 0; i < 514; i++) {
+                    while ((flg.get() & 0b0011) != 0b0011) {
+                        emdevif::Thread::delay(1);
+                    }
+
+                    for (uint16_t i = 0; i < 353; i++) {
                         cnt.set(cnt.get() + 1);
                     }
 
-                    thread.exit();
+                    flg.set(flg.get() | 0b1000);
+                    thd.exit();
                 },
-                &pb);
+                &argb);
+            ASSERT_TRUE(b_thread.getHandle() != nullptr, "Thread Create failed!");
+            ASSERT_TRUE(a_thread.getHandle() != b_thread.getHandle(),
+                        "a_thread = %p, b_thread = %p",
+                        a_thread.getHandle(),
+                        b_thread.getHandle());
         }();
-        emdevif::Thread::delayMs(1000);
 
-        ASSERT_TRUE(a_thread.getHandle() != b_thread.getHandle(), "");
+        const auto [a_previous, b_previous] = std::pair{a_thread.getHandle(), b_thread.getHandle()};
+        ASSERT_TRUE(a_previous == a_thread.getHandle() && b_previous == b_thread.getHandle(), "");
+        ASSERT_TRUE(a_thread.getHandle() != nullptr && b_thread.getHandle() != nullptr, "");
+        a_ = std::move(a_thread);
+        b_ = std::move(b_thread);
+        ASSERT_TRUE(a_thread.getHandle() == nullptr && b_thread.getHandle() == nullptr, "");
+        ASSERT_TRUE(a_.getHandle() != nullptr && b_.getHandle() != nullptr, "");
+        ASSERT_TRUE(a_.getHandle() == a_previous && b_.getHandle() == b_previous, "");
 
-        emdevif::Thread a = std::move(a_thread);
-        emdevif::Thread b = std::move(b_thread);
-        ASSERT_TRUE(a_thread.getHandle() == nullptr, "");
-        ASSERT_TRUE(b_thread.getHandle() == nullptr, "");
+        flag.set(flag.get() | 0b0001);
+        flag.set(flag.get() | 0b0010);
+        while (flag.get() != 0b1111) {
+            emdevif::Thread::delay(1);
+        }
 
-        INT_ASSERT_EQ(counter.get(), 114 + 514, "");
-        ASSERT_TRUE(a.getHandle() != b.getHandle(), "");
+        INT_EXPECT_EQ(counter.get(), 353 + 100);
+        ASSERT_TRUE(a_thread.getHandle() == nullptr && b_thread.getHandle() == nullptr,
+                    "a_thread = %p, b_thread = %p",
+                    a_thread.getHandle(),
+                    b_thread.getHandle());
     }
     TEST_CASE_END();
 }
 
 void threadTest()
 {
-    RUN_SUIT(ThreadTest);
+    RUN_SUIT(ThreadBasicTest);
+    RUN_SUIT(ThreadAssignAndMoveTest);
 }

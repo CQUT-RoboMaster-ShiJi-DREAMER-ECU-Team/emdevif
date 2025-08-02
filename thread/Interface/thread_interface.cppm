@@ -113,10 +113,7 @@ public:
         return *this;
     }
 
-    ~Thread()
-    {
-        handle_ = nullptr;
-    }
+    ~Thread();
 
 private:
     Handle handle_;
