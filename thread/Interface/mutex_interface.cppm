@@ -38,11 +38,11 @@ private:
 public:
     static StronglyTypedHandle create(const Attribute& attribute);
 
-    static void destroy(Handle handle);
+    static void destroy(Mutex& obj);
 
     void destroy()
     {
-        destroy(handle_);
+        destroy(*this);
         handle_ = nullptr;
     }
 
@@ -63,6 +63,7 @@ public:
     explicit Mutex(const StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}
 
     Mutex& operator=(const Mutex&) = delete;
+    Mutex(const Mutex&) = delete;
 
     Mutex& operator=(const StronglyTypedHandle strongly_handle)
     {
@@ -77,6 +78,25 @@ public:
     }
 
     explicit Mutex(const Attribute& attribute) : Mutex(create(attribute)) {}
+
+    Mutex(Mutex&& other) noexcept : handle_(other.handle_)
+    {
+        other.handle_ = nullptr;
+    }
+
+    Mutex& operator=(Mutex&& other) noexcept
+    {
+        if (this == &other) {
+            return *this;
+        }
+
+        this->handle_ = other.handle_;
+        other.handle_ = nullptr;
+
+        return *this;
+    }
+
+    ~Mutex();
 
 private:
     Handle handle_;

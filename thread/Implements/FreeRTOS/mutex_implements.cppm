@@ -34,10 +34,11 @@ Mutex::StronglyTypedHandle Mutex::create(const Attribute& attribute)
     return {.value = handle};
 }
 
-void Mutex::destroy(Handle handle)
+void Mutex::destroy(Mutex& obj)  // NOLINT
 {
-    if (handle != nullptr) {
-        vSemaphoreDelete(handle);
+    if (obj.handle_ != nullptr) {
+        vSemaphoreDelete(obj.handle_);
+        obj.handle_ = nullptr;
     }
 }
 
@@ -62,6 +63,13 @@ inline void Mutex::unlock() const
 {
     if (xSemaphoreGive(handle_) != pdTRUE) {
         EMDEVIF_FAULT_HANDLER("Failed to Unlock mutex!");
+    }
+}
+
+Mutex::~Mutex()
+{
+    if (handle_ != nullptr) {
+        this->destroy();
     }
 }
 
