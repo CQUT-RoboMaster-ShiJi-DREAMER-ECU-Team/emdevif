@@ -6,8 +6,10 @@
  */
 
 #include "emdevif_test_framework.h"
-#include "cmsis_os2.h"
 
+#include "cmsis_os.h"
+
+#include <cstdint>
 #include <utility>
 
 import emdevif.thread;
