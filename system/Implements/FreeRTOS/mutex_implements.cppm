@@ -1,6 +1,6 @@
 /**
  * @file mutex_implements.cppm
- * @module emdevif.mutex:implements
+ * @module emdevif.sys.mutex:implements
  * @author DuYicheng
  * @date 2025-08-01
  * @brief 互斥锁 FreeRTOS 实现
@@ -13,7 +13,7 @@ module;
 
 #include "emdevif/fault_handler.hpp"
 
-export module emdevif.mutex:implements;
+export module emdevif.sys.mutex:implements;
 import :interface;
 
 import emdevif.error_handler;

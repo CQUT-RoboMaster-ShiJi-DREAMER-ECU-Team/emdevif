@@ -1,6 +1,6 @@
 /**
  * @file thread_interface.cppm
- * @module emdevif.thread:interface
+ * @module emdevif.sys.thread:interface
  * @author 杜以成
  * @date 2025-06-18
  * @brief 线程相关常数接口
@@ -13,7 +13,7 @@ module;
 
 #include <cstdint>
 
-export module emdevif.thread:interface;
+export module emdevif.sys.thread:interface;
 
 export import emdevif.error_handler;
 

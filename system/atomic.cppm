@@ -1,6 +1,6 @@
 /**
  * @file atomic.cppm
- * @module emdevif.atomic
+ * @module emdevif.sys.atomic
  * @author DuYicheng
  * @date 2025-08-01
  * @brief 原子操作
@@ -16,7 +16,7 @@ module;
 #include <atomic>
 #endif
 
-export module emdevif.atomic;
+export module emdevif.sys.atomic;
 
 export namespace emdevif {
 

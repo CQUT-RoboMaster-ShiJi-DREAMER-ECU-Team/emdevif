@@ -1,6 +1,6 @@
 /**
  * @file msg_queue_implements.cppm
- * @module emdevif.thread.message_queue:implements
+ * @module emdevif.sys.message_queue:implements
  * @author 杜以成
  * @date 2025-06-18
  * @brief 消息队列的实现
@@ -17,7 +17,7 @@ module;
 
 #include "emdevif/fault_handler.hpp"
 
-export module emdevif.thread.message_queue:implements;
+export module emdevif.sys.message_queue:implements;
 import :interface;
 
 namespace emdevif {

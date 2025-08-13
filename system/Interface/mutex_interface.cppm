@@ -1,6 +1,6 @@
 /**
  * @file mutex_interface.cppm
- * @module emdevif.mutex:interface
+ * @module emdevif.sys.mutex:interface
  * @author DuYicheng
  * @date 2025-08-01
  * @brief 互斥锁接口
@@ -12,10 +12,10 @@ module;
 
 #include <cstdint>
 
-export module emdevif.mutex:interface;
+export module emdevif.sys.mutex:interface;
 
 import emdevif.error_handler;
-import emdevif.thread;
+import emdevif.sys.thread;
 
 export namespace emdevif {
 

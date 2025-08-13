@@ -12,8 +12,8 @@
 #include <cstdint>
 #include <utility>
 
-import emdevif.thread;
-import emdevif.mutex;
+import emdevif.sys.thread;
+import emdevif.sys.mutex;
 
 template<typename T>
 class MutexGuard

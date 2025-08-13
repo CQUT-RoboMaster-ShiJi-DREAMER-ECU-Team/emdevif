@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(emdevif_thread C CXX)
+project(emdevif_system C CXX)
 
 add_library(${PROJECT_NAME} STATIC)
 

@@ -1,13 +1,13 @@
 /**
  * @file thread.cppm
- * @module emdevif.thread
+ * @module emdevif.sys.thread
  * @author 杜以成
  * @date 2025-06-18
- * @brief 线程相关常数定义
+ * @brief 线程
  */
 
 module;
 
-export module emdevif.thread;
+export module emdevif.sys.thread;
 export import :interface;
 export import :implements;

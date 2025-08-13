@@ -1,6 +1,6 @@
 /**
  * @file thread_implements.cppm
- * @module emdevif.thread:implements
+ * @module emdevif.sys.thread:implements
  * @author 杜以成
  * @date 2025-06-18
  * @brief FreeRTOS 线程相关常数实现
@@ -13,7 +13,7 @@ module;
 
 #include "emdevif/fault_handler.hpp"
 
-export module emdevif.thread:implements;
+export module emdevif.sys.thread:implements;
 import :interface;
 
 import emdevif.error_handler;
