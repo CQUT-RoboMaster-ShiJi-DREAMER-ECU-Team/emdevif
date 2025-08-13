@@ -40,16 +40,11 @@ inline void Thread::delay(const uint32_t ticks)
     vTaskDelay(ticks);
 }
 
-inline void Thread::delayMs(const uint32_t ms)
-{
-    delay(pdMS_TO_TICKS(ms));
-}
-
 inline ErrorCode Thread::delayUntil(const uint32_t ticks)
 {
     auto tcnt = xTaskGetTickCount();
 
-    const TickType_t delay = TickType_t(ticks) - tcnt;
+    const TickType_t delay = static_cast<TickType_t>(ticks) - tcnt;
 
     if ((delay != 0U) && (0 == (delay >> (8 * sizeof(TickType_t) - 1)))) {
         vTaskDelayUntil(&tcnt, delay);
@@ -59,6 +54,11 @@ inline ErrorCode Thread::delayUntil(const uint32_t ticks)
     }
 
     return ErrorCode::Success;
+}
+
+inline auto Thread::msToTick(const uint32_t ms)
+{
+    return pdMS_TO_TICKS(ms);
 }
 
 Thread::StronglyTypedHandle Thread::create(const Attribute& attribute, const ThreadEntry entry, void* arguments)

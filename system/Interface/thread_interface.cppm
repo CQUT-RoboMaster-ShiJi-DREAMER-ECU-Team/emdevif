@@ -3,7 +3,7 @@
  * @module emdevif.sys.thread:interface
  * @author 杜以成
  * @date 2025-06-18
- * @brief 线程相关常数接口
+ * @brief 线程接口
  */
 
 module;
@@ -49,9 +49,9 @@ public:
 
     static void delay(uint32_t ticks);
 
-    static void delayMs(uint32_t ms);
-
     static ErrorCode delayUntil(uint32_t ticks);
+
+    static auto msToTick(uint32_t ms);
 
     static StronglyTypedHandle create(const Attribute& attribute, ThreadEntry entry, void* arguments);
 
