@@ -11,7 +11,14 @@ module;
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include <utility>
+
 #include "emdevif/fault_handler.hpp"
+
+#if (configMAX_PRIORITIES < 6)
+#error \
+    "emdevif thread requires the max priorities more than or equal to 6. Please change the value of macro `configMAX_PRIORITIES' in FreeRTOSConfig.h."
+#endif
 
 export module emdevif.sys.thread:implements;
 import :interface;
@@ -23,6 +30,31 @@ export namespace emdevif {
 consteval auto Thread::MAX_DELAY() noexcept
 {
     return portMAX_DELAY;
+}
+
+consteval auto Thread::priorityMapRange() noexcept
+{
+    constexpr UBaseType_t max_priority = configMAX_PRIORITIES - 1;
+    constexpr UBaseType_t centered_priority = (max_priority - static_cast<UBaseType_t>(Priority::Realtime)) / 2U;
+
+    return std::pair<UBaseType_t, UBaseType_t>{centered_priority,
+                                               centered_priority + static_cast<UBaseType_t>(Priority::Realtime)};
+}
+
+auto Thread::priorityMapToSystem(const Priority priority)
+{
+    if (priority == Priority::Idle) {
+        return static_cast<UBaseType_t>(0U);
+    }
+
+    constexpr UBaseType_t max_priority = configMAX_PRIORITIES - 1;
+
+    if (priority == Priority::Max) {
+        return max_priority;
+    }
+
+    const auto [centered_priority, map_max_priority] = priorityMapRange();
+    return static_cast<UBaseType_t>(centered_priority + static_cast<UBaseType_t>(priority));
 }
 
 inline auto Thread::getTick(const bool in_isr)
@@ -70,13 +102,17 @@ Thread::StronglyTypedHandle Thread::create(const Attribute& attribute, const Thr
                                    attribute.name,
                                    attribute.stack_size,
                                    arguments,
-                                   attribute.priority,
+                                   priorityMapToSystem(attribute.priority),
                                    static_cast<StackType_t*>(attribute.stack_mem),
                                    static_cast<StaticTask_t*>(attribute.cb_mem));
     }
     else {
-        const auto result =
-            xTaskCreate(entry, attribute.name, attribute.stack_size, arguments, attribute.priority, &handle);
+        const auto result = xTaskCreate(entry,
+                                        attribute.name,
+                                        attribute.stack_size,
+                                        arguments,
+                                        priorityMapToSystem(attribute.priority),
+                                        &handle);
         if (result != pdPASS) {
             handle = nullptr;
         }

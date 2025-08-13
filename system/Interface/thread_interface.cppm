@@ -25,19 +25,36 @@ public:
     using ThreadEntry = void (*)(void*);
     using Handle = void*;
 
-    struct Attribute {
-        const char* name{};        ///< 名称
-        int32_t priority{};        ///< 初始的优先级
-        void* cb_mem{nullptr};     ///< 控制块的内存
-        uint32_t cb_size{};        ///< 控制块的大小
-        void* stack_mem{nullptr};  ///< 存储栈的内存
-        uint32_t stack_size{};     ///< 存储栈的内存大小
+    enum class Priority : int32_t {
+        Idle = -1,    ///< 空闲任务优先级（确保与空闲优先级一致）
+
+        Low = 0,      ///< 低优先级
+        BelowNormal,  ///< 低于常规优先级
+        Normal,       ///< 常规优先级（默认值）
+        AboveNormal,  ///< 高于常规优先级
+        High,         ///< 高优先级
+        Realtime,     ///< 实时优先级
+
+        Max = -2      ///< 最高优先级（确保与最大优先级一致）
     };
+
+    struct Attribute {
+        const char* name{};                   ///< 名称
+        Priority priority{Priority::Normal};  ///< 初始的优先级（默认为常规优先级）
+        void* cb_mem{nullptr};                ///< 控制块的内存
+        uint32_t cb_size{};                   ///< 控制块的大小
+        void* stack_mem{nullptr};             ///< 存储栈的内存
+        uint32_t stack_size{};                ///< 存储栈的内存大小
+    };
+
+    static consteval auto priorityMapRange() noexcept;
 
 private:
     struct StronglyTypedHandle {
         Handle value;
     };
+
+    static auto priorityMapToSystem(Priority priority);
 
 public:
     /**

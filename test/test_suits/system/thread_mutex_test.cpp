@@ -7,8 +7,6 @@
 
 #include "emdevif_test_framework.h"
 
-#include "cmsis_os.h"
-
 #include <cstdint>
 #include <utility>
 
@@ -119,7 +117,7 @@ TEST_SUIT(ThreadBasicTest)
         emdevif::Thread a_thread;
         Arg arga{&a_thread, &counter, &flag};
         a_thread = emdevif::Thread::create(
-            {.name = "Thread BasicTest a", .priority = osPriorityNormal, .stack_size = 256},
+            {.name = "Thread BasicTest a", .priority = emdevif::Thread::Priority::BelowNormal, .stack_size = 256},
             [](void* param) {
                 auto [thd, cnt, flg] = *static_cast<Arg*>(param);
 
@@ -140,7 +138,7 @@ TEST_SUIT(ThreadBasicTest)
         emdevif::Thread b_thread;
         Arg argb{&b_thread, &counter, &flag};
         b_thread = emdevif::Thread::create(
-            {.name = "Thread BasicTest b", .priority = osPriorityNormal, .stack_size = 256},
+            {.name = "Thread BasicTest b", .stack_size = 256},
             [](void* param) {
                 auto [thd, cnt, flg] = *static_cast<Arg*>(param);
 
@@ -206,7 +204,7 @@ TEST_SUIT(ThreadAssignAndMoveTest)
 
         Arg arga{a_thread, counter, flag};
         a_thread = emdevif::Thread::create(
-            {.name = "Thd Assign a", .priority = osPriorityNormal, .stack_size = 256},
+            {.name = "Thd Assign a", .stack_size = 256},
             [](void* param) {
                 const auto [thd, cnt, flg] = *static_cast<Arg*>(param);
 
@@ -226,7 +224,7 @@ TEST_SUIT(ThreadAssignAndMoveTest)
 
         Arg argb{b_thread, counter, flag};
         b_thread = emdevif::Thread::create(
-            {.name = "Thd Assign b", .priority = osPriorityNormal, .stack_size = 256},
+            {.name = "Thd Assign b", .priority = emdevif::Thread::Priority::High, .stack_size = 256},
             [](void* param) {
                 const auto [thd, cnt, flg] = *static_cast<Arg*>(param);
 
