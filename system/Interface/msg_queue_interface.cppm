@@ -8,7 +8,9 @@
 
 module;
 
-#include <cstddef>
+#include <cstdint>
+
+#include "emdevif/fault_handler.hpp"
 
 export module emdevif.sys.message_queue:interface;
 
@@ -16,45 +18,95 @@ export import emdevif.error_handler;
 
 namespace emdevif {
 
-template<class Impl>
-class MessageQueueInterface
+template<typename Type = void*, std::size_t size = 0>
+class MessageQueue
 {
 public:
-    using Type = typename Impl::DataType;
+    using Handle = void*;
 
-    ErrorCode push(bool in_isr, const Type& data, std::size_t timeout = 0U)
+    struct Attribute {
+        const char* name{};     ///< 名称
+        void* cb_mem{nullptr};  ///< 控制块的内存
+        uint32_t cb_size{};     ///< 控制块的大小
+        void* mq_mem{nullptr};  ///< 队列数据存储内存
+        uint32_t mq_size{};     ///< 队列数据存储的内存大小
+    };
+
+private:
+    struct StronglyTypedHandle {
+        Handle value;
+    };
+
+public:
+    static StronglyTypedHandle create(const Attribute& attribute);
+
+    static void destroy(MessageQueue& obj);
+
+    void destroy()
     {
-        return static_cast<Impl*>(this)->push_impl(in_isr, data, timeout);
+        destroy(*this);
+        handle_ = nullptr;
     }
 
-    ErrorCode pop(bool in_isr, Type& data, std::size_t timeout = 0U)
+    ErrorCode push(bool in_isr, const Type& data, std::size_t timeout = 0U);
+
+    ErrorCode pop(bool in_isr, Type& data, std::size_t timeout = 0U);
+
+    ErrorCode pop(bool in_isr);
+
+    ErrorCode peek(bool in_isr, Type& data, std::size_t timeout = 0U);
+
+    [[nodiscard]] std::size_t storeCount() const;
+
+    [[nodiscard]] std::size_t remainCount() const;
+
+    [[nodiscard]] Handle getHandle() const
     {
-        return static_cast<Impl*>(this)->pop_impl(in_isr, data, timeout);
+        return handle_;
     }
 
-    ErrorCode pop(bool in_isr)
+    MessageQueue() : handle_(nullptr) {}
+
+    explicit MessageQueue(const StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}
+
+    MessageQueue& operator=(const MessageQueue&) = delete;
+    MessageQueue(const MessageQueue&) = delete;
+
+    MessageQueue& operator=(const StronglyTypedHandle strongly_handle)
     {
-        return static_cast<Impl*>(this)->pop_impl(in_isr);
+        if (handle_ != nullptr) {
+            EMDEVIF_FAULT_HANDLER("Should not create message queue on non-deleted message queue!");
+            return *this;
+        }
+
+        handle_ = strongly_handle.value;
+
+        return *this;
     }
 
-    ErrorCode peek(bool in_isr, Type& data, std::size_t timeout = 0U)
+    explicit MessageQueue(const Attribute& attribute) : MessageQueue(create(attribute)) {}
+
+    MessageQueue(MessageQueue&& other) noexcept : handle_(other.handle_)
     {
-        return static_cast<Impl*>(this)->peek_impl(in_isr, data, timeout);
+        other.handle_ = nullptr;
     }
 
-    [[nodiscard]] std::size_t size() const
+    MessageQueue& operator=(MessageQueue&& other) noexcept
     {
-        return static_cast<const Impl*>(this)->size_impl();
+        if (this == &other) {
+            return *this;
+        }
+
+        this->handle_ = other.handle_;
+        other.handle_ = nullptr;
+
+        return *this;
     }
 
-    [[nodiscard]] std::size_t remainSize() const
-    {
-        return static_cast<const Impl*>(this)->remainSize_impl();
-    }
+    ~MessageQueue();
 
-protected:
-    MessageQueueInterface() = default;
-    ~MessageQueueInterface() = default;
+private:
+    Handle handle_;
 };
 
 }  // namespace emdevif

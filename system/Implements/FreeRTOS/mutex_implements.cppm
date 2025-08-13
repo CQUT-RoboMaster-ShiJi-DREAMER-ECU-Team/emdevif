@@ -31,6 +31,12 @@ Mutex::StronglyTypedHandle Mutex::create(const Attribute& attribute)
         handle = xSemaphoreCreateMutex();
     }
 
+#if (configQUEUE_REGISTRY_SIZE > 0)
+    if (handle != nullptr) {
+        vQueueAddToRegistry(handle, attribute.name);
+    }
+#endif
+
     return {.value = handle};
 }
 
@@ -38,6 +44,11 @@ void Mutex::destroy(Mutex& obj)  // NOLINT
 {
     if (obj.handle_ != nullptr) {
         vSemaphoreDelete(obj.handle_);
+
+#if (configQUEUE_REGISTRY_SIZE > 0)
+        vQueueUnregisterQueue(static_cast<QueueHandle_t>(obj.handle_));
+#endif
+
         obj.handle_ = nullptr;
     }
 }

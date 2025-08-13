@@ -13,162 +13,167 @@ module;
 #include "FreeRTOS.h"
 #include "queue.h"
 
-#include "emdevif/byte_type.h"
-
-#include "emdevif/fault_handler.hpp"
-
 export module emdevif.sys.message_queue:implements;
 import :interface;
 
-namespace emdevif {
+export namespace emdevif {
 
-export template<typename Type, std::size_t length>
-class MessageQueueView : public MessageQueueInterface<MessageQueueView<Type, length>>
+template<typename Type, std::size_t size>
+typename MessageQueue<Type, size>::StronglyTypedHandle MessageQueue<Type, size>::create(const Attribute& attribute)
 {
-public:
-    using DataType = Type;
+    Handle new_handle = nullptr;
 
-    MessageQueueView() = delete;
-
-    explicit MessageQueueView(QueueHandle_t handle) : handle_(handle)
-    {
-        if (handle == nullptr) {
-            EMDEVIF_FAULT_HANDLER("Failed to create message queue!");
-        }
+    if (attribute.cb_mem != nullptr && attribute.cb_size != 0 && attribute.mq_mem != nullptr &&
+        attribute.mq_size != 0) {
+        new_handle =
+            xQueueCreateStatic(size, sizeof(Type), attribute.mq_mem, static_cast<StaticQueue_t>(attribute.cb_mem));
+    }
+    else {
+        new_handle = xQueueCreate(size, sizeof(Type));
     }
 
-    [[nodiscard]] QueueHandle_t getHandle() const
-    {
-        return this->handle_;
+#if (configQUEUE_REGISTRY_SIZE > 0)
+    if (new_handle != nullptr) {
+        vQueueAddToRegistry(new_handle, attribute.name);
     }
+#endif
 
-protected:
-    ErrorCode push_impl(const bool in_isr, const Type& data, const std::size_t timeout)
-    {
-        if (in_isr) {
-            BaseType_t xHigherPriorityTaskWokenByPost = pdFALSE;
-            const auto ret = xQueueSendFromISR(handle_, &data, &xHigherPriorityTaskWokenByPost);
+    return {new_handle};
+}
 
-            ErrorCode final_ret;
-
-            if (ret == pdTRUE) {
-                final_ret = ErrorCode::Success;
-            }
-            else {
-                final_ret = ErrorCode::Full;
-            }
-
-            if (xHigherPriorityTaskWokenByPost) {
-                portYIELD_FROM_ISR(xHigherPriorityTaskWokenByPost);
-            }
-
-            return final_ret;
-        }
-        else {
-            const auto ret = xQueueSend(handle_, &data, timeout);
-            if (ret == pdTRUE) {
-                return ErrorCode::Success;
-            }
-            else {
-                return ErrorCode::Full;
-            }
-        }
-    }
-
-    ErrorCode pop_impl(const bool in_isr, Type& data, const std::size_t timeout)
-    {
-        if (in_isr) {
-            BaseType_t xHigherPriorityTaskWokenByPost = pdFALSE;
-            const auto ret = xQueueReceiveFromISR(handle_, &data, &xHigherPriorityTaskWokenByPost);
-
-            ErrorCode final_ret;
-
-            if (ret == pdTRUE) {
-                final_ret = ErrorCode::Success;
-            }
-            else {
-                final_ret = ErrorCode::Empty;
-            }
-
-            if (xHigherPriorityTaskWokenByPost) {
-                portYIELD_FROM_ISR(xHigherPriorityTaskWokenByPost);
-            }
-
-            return final_ret;
-        }
-        else {
-            const auto ret = xQueueReceive(handle_, &data, timeout);
-            if (ret == pdTRUE) {
-                return ErrorCode::Success;
-            }
-            else {
-                return ErrorCode::Empty;
-            }
-        }
-    }
-
-    ErrorCode pop_impl(const bool in_isr)
-    {
-        Type data;
-        return pop_impl(in_isr, &data, 0U);
-    }
-
-    ErrorCode peek_impl(bool in_isr, Type& data, std::size_t timeout)
-    {
-        if (in_isr) {
-            const auto ret = xQueuePeekFromISR(handle_, &data);
-
-            ErrorCode final_ret;
-
-            if (ret == pdTRUE) {
-                final_ret = ErrorCode::Success;
-            }
-            else {
-                final_ret = ErrorCode::Empty;
-            }
-
-            return final_ret;
-        }
-        else {
-            const auto ret = xQueuePeek(handle_, &data, timeout);
-            if (ret == pdTRUE) {
-                return ErrorCode::Success;
-            }
-            else {
-                return ErrorCode::Empty;
-            }
-        }
-    }
-
-    [[nodiscard]] std::size_t size_impl() const
-    {
-        return uxQueueMessagesWaiting(handle_);
-    }
-
-    [[nodiscard]] std::size_t remainSize_impl() const
-    {
-        return uxQueueSpacesAvailable(handle_);
-    }
-
-protected:
-    QueueHandle_t handle_;
-};
-
-export template<typename Type, std::size_t length>
-class MessageQueue : MessageQueueView<Type, length>
+template<typename Type, std::size_t size>
+void MessageQueue<Type, size>::destroy(MessageQueue& obj)
 {
-public:
-    MessageQueue()
-        : MessageQueueView<Type, length>(xQueueCreateStatic(length,
-                                                            sizeof(typename MessageQueueView<Type, length>::DataType),
-                                                            storge_memory,
-                                                            &queue_buffer))
-    {
-    }
+    if (obj.handle_ != nullptr) {
+        vQueueDelete(obj.handle_);
 
-private:
-    StaticQueue_t queue_buffer{};
-    ubyte_t storge_memory[length * sizeof(Type)]{};
-};
+#if (configQUEUE_REGISTRY_SIZE > 0)
+        vQueueUnregisterQueue(obj.handle_);
+#endif
+
+        obj.handle_ = nullptr;
+    }
+}
+
+template<typename Type, std::size_t size>
+ErrorCode MessageQueue<Type, size>::push(const bool in_isr, const Type& data, std::size_t timeout)
+{
+    if (in_isr) {
+        BaseType_t xHigherPriorityTaskWokenByPost = pdFALSE;
+        const auto ret = xQueueSendFromISR(handle_, &data, &xHigherPriorityTaskWokenByPost);
+
+        ErrorCode final_ret;
+
+        if (ret == pdTRUE) {
+            final_ret = ErrorCode::Success;
+        }
+        else {
+            final_ret = ErrorCode::Full;
+        }
+
+        if (xHigherPriorityTaskWokenByPost) {
+            portYIELD_FROM_ISR(xHigherPriorityTaskWokenByPost);
+        }
+
+        return final_ret;
+    }
+    else {
+        const auto ret = xQueueSend(handle_, &data, timeout);
+        if (ret == pdTRUE) {
+            return ErrorCode::Success;
+        }
+        else {
+            return ErrorCode::Full;
+        }
+    }
+}
+
+template<typename Type, std::size_t size>
+ErrorCode MessageQueue<Type, size>::pop(const bool in_isr, Type& data, std::size_t timeout)
+{
+    if (in_isr) {
+        BaseType_t xHigherPriorityTaskWokenByPost = pdFALSE;
+        const auto ret = xQueueReceiveFromISR(handle_, &data, &xHigherPriorityTaskWokenByPost);
+
+        ErrorCode final_ret;
+
+        if (ret == pdTRUE) {
+            final_ret = ErrorCode::Success;
+        }
+        else {
+            final_ret = ErrorCode::Empty;
+        }
+
+        if (xHigherPriorityTaskWokenByPost) {
+            portYIELD_FROM_ISR(xHigherPriorityTaskWokenByPost);
+        }
+
+        return final_ret;
+    }
+    else {
+        const auto ret = xQueueReceive(handle_, &data, timeout);
+        if (ret == pdTRUE) {
+            return ErrorCode::Success;
+        }
+        else {
+            return ErrorCode::Empty;
+        }
+    }
+}
+
+template<typename Type, std::size_t size>
+ErrorCode MessageQueue<Type, size>::pop(const bool in_isr)
+{
+    Type data;
+    return pop(in_isr, &data, 0U);
+}
+
+template<typename Type, std::size_t size>
+ErrorCode MessageQueue<Type, size>::peek(const bool in_isr, Type& data, std::size_t timeout)
+{
+    if (in_isr) {
+        const auto ret = xQueuePeekFromISR(handle_, &data);
+
+        ErrorCode final_ret;
+
+        if (ret == pdTRUE) {
+            final_ret = ErrorCode::Success;
+        }
+        else {
+            final_ret = ErrorCode::Empty;
+        }
+
+        return final_ret;
+    }
+    else {
+        const auto ret = xQueuePeek(handle_, &data, timeout);
+        if (ret == pdTRUE) {
+            return ErrorCode::Success;
+        }
+        else {
+            return ErrorCode::Empty;
+        }
+    }
+}
+
+template<typename Type, std::size_t size>
+std::size_t MessageQueue<Type, size>::storeCount() const
+{
+    return uxQueueMessagesWaiting(static_cast<QueueHandle_t>(handle_));
+}
+
+template<typename Type, std::size_t size>
+std::size_t MessageQueue<Type, size>::remainCount() const
+{
+    return uxQueueSpacesAvailable(static_cast<QueueHandle_t>(handle_));
+}
+
+template<typename Type, std::size_t size>
+MessageQueue<Type, size>::~MessageQueue()
+{
+    if (handle_ != nullptr) {
+        this->destroy();
+    }
+}
 
 }  // namespace emdevif
