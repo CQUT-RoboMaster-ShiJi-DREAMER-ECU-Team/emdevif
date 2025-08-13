@@ -29,7 +29,7 @@ if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
 
         target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_stm32cubemx_support)
     else ()
-        target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_freertos_support)
+        target_link_libraries(${PROJECT_NAME} PUBLIC freertos_kernel)
     endif ()
 
     target_sources(${PROJECT_NAME} PUBLIC
