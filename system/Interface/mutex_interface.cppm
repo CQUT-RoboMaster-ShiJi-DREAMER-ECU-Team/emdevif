@@ -47,7 +47,7 @@ public:
     }
 
     // NOLINTNEXTLINE
-    ErrorCode lock(uint32_t timeout_tick = Thread::MAX_DELAY()) const;
+    ErrorCode lock(SysTick_t timeout_tick = Thread::MAX_DELAY()) const;
 
     [[nodiscard]] ErrorCode try_lock() const;
 

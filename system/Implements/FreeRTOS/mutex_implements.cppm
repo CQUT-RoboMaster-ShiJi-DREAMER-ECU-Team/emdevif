@@ -53,7 +53,7 @@ void Mutex::destroy(Mutex& obj)  // NOLINT
     }
 }
 
-inline ErrorCode Mutex::lock(const uint32_t timeout_tick) const
+inline ErrorCode Mutex::lock(const SysTick_t timeout_tick) const
 {
     const auto ret = xSemaphoreTake(static_cast<SemaphoreHandle_t>(handle_), timeout_tick);
 

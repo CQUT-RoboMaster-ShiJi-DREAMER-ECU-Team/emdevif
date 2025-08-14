@@ -19,13 +19,27 @@ export import emdevif.error_handler;
 
 export namespace emdevif {
 
+#ifndef EMDEVIF_SYS_TICK_TYPE_UINT_BITS
+#define EMDEVIF_SYS_TICK_TYPE_UINT_BITS 64
+#endif
+
+#if (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 16)
+using SysTick_t = uint16_t;
+#elif (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 32)
+using SysTick_t = uint32_t;
+#elif (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 64)
+using SysTick_t = uint64_t;
+#else
+#error "The value of macro `EMDEVIF_SYS_TICK_TYPE_UINT_BITS' can only choose 16, 32 or 64."
+#endif
+
 class Thread
 {
 public:
     using ThreadEntry = void (*)(void*);
     using Handle = void*;
 
-    enum class Priority : int32_t {
+    enum class Priority : int_fast8_t {
         Idle = -1,    ///< 空闲任务优先级（确保与空闲优先级一致）
 
         Low = 0,      ///< 低优先级
@@ -64,11 +78,11 @@ public:
 
     static auto getTick(bool in_isr);
 
-    static void delay(uint32_t ticks);
+    static void delay(SysTick_t ticks);
 
-    static ErrorCode delayUntil(uint32_t ticks);
+    static ErrorCode delayUntil(SysTick_t ticks);
 
-    static auto msToTick(uint32_t ms);
+    static auto msToTick(SysTick_t ms);
 
     static StronglyTypedHandle create(const Attribute& attribute, ThreadEntry entry, void* arguments);
 

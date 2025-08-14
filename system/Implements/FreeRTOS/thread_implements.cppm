@@ -67,12 +67,12 @@ inline auto Thread::getTick(const bool in_isr)
     }
 }
 
-inline void Thread::delay(const uint32_t ticks)
+inline void Thread::delay(const SysTick_t ticks)
 {
     vTaskDelay(ticks);
 }
 
-inline ErrorCode Thread::delayUntil(const uint32_t ticks)
+inline ErrorCode Thread::delayUntil(const SysTick_t ticks)
 {
     auto tcnt = xTaskGetTickCount();
 
@@ -88,7 +88,7 @@ inline ErrorCode Thread::delayUntil(const uint32_t ticks)
     return ErrorCode::Success;
 }
 
-inline auto Thread::msToTick(const uint32_t ms)
+inline auto Thread::msToTick(const SysTick_t ms)
 {
     return pdMS_TO_TICKS(ms);
 }
