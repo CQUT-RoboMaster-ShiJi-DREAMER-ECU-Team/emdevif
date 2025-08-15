@@ -95,6 +95,10 @@ public:
 
     static void resume(bool in_isr, Handle handle);
 
+    static void startScheduler();
+
+    static void endScheduler();
+
     static void yield();
 
     void join();

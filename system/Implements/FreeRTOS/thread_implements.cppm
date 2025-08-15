@@ -197,9 +197,19 @@ inline void Thread::resume(bool in_isr, Handle handle)
     }
 }
 
+inline void Thread::startScheduler()
+{
+    vTaskStartScheduler();
+}
+
+inline void Thread::endScheduler()
+{
+    vTaskEndScheduler();
+}
+
 inline void Thread::yield()
 {
-    portYIELD();
+    taskYIELD();
 }
 
 [[maybe_unused]] inline void Thread::join() {}  // NOLINT
