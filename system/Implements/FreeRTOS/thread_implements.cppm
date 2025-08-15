@@ -27,6 +27,31 @@ import emdevif.error_handler;
 
 export namespace emdevif {
 
+template<std::size_t stack_depth>
+class Thread::StaticInstance
+{
+public:
+    static_assert(stack_depth > 0U, "Stack depth must be greater than 0.");
+
+    StaticInstance() noexcept : instance(), stack_buffer() {}
+
+    friend class Thread;
+
+    explicit operator StaticTask_t&() noexcept
+    {
+        return instance;
+    }
+
+    explicit operator StackType_t&() noexcept
+    {
+        return *stack_buffer;
+    }
+
+private:
+    StaticTask_t instance;
+    StackType_t stack_buffer[stack_depth];
+};
+
 consteval auto Thread::MAX_DELAY() noexcept
 {
     return portMAX_DELAY;
@@ -97,14 +122,18 @@ Thread::StronglyTypedHandle Thread::create(const Attribute& attribute, const Thr
 {
     TaskHandle_t handle = nullptr;
 
-    if (attribute.cb_mem != nullptr && attribute.stack_mem != nullptr && attribute.cb_size != 0U) {
+    if (attribute.static_instance != nullptr && attribute.stack_size != 0U) {
+        // 由于此处的 Thread::StaticInstance 是指针类型，且它的自定义类型转换过程不涉及这个模板参数，
+        // 因此它的模板参数的取值不影响结果，取 0 即可。
+        auto& static_instance = *static_cast<Thread::StaticInstance<1>*>(attribute.static_instance);
+
         handle = xTaskCreateStatic(entry,
                                    attribute.name,
                                    attribute.stack_size,
                                    arguments,
                                    priorityMapToSystem(attribute.priority),
-                                   static_cast<StackType_t*>(attribute.stack_mem),
-                                   static_cast<StaticTask_t*>(attribute.cb_mem));
+                                   &static_cast<StackType_t&>(static_instance),
+                                   &static_cast<StaticTask_t&>(static_instance));
     }
     else {
         const auto result = xTaskCreate(entry,

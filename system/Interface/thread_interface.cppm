@@ -39,6 +39,9 @@ public:
     using ThreadEntry = void (*)(void*);
     using Handle = void*;
 
+    template<std::size_t stack_depth>
+    class StaticInstance;
+
     enum class Priority : int_fast8_t {
         Idle = -1,    ///< 空闲任务优先级（确保与空闲优先级一致）
 
@@ -55,10 +58,8 @@ public:
     struct Attribute {
         const char* name{};                   ///< 名称
         Priority priority{Priority::Normal};  ///< 初始的优先级（默认为常规优先级）
-        void* cb_mem{nullptr};                ///< 控制块的内存
-        uint32_t cb_size{};                   ///< 控制块的大小
-        void* stack_mem{nullptr};             ///< 存储栈的内存
-        uint32_t stack_size{};                ///< 存储栈的内存大小
+        void* static_instance{nullptr};       ///< 静态实例内存
+        std::size_t stack_size{0U};           ///< 栈深度
     };
 
     static consteval auto priorityMapRange() noexcept;
