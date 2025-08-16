@@ -13,12 +13,14 @@ target_sources(${PROJECT_NAME}
         atomic.cppm
         mutex.cppm
         semaphore.cppm
+        event_group.cppm
 
-    PUBLIC FILE_SET emdevif_thread_modules TYPE CXX_MODULES FILES
+    PUBLIC FILE_SET emdevif_thread_interface_modules TYPE CXX_MODULES FILES
         Interface/msg_queue_interface.cppm
         Interface/thread_interface.cppm
         Interface/mutex_interface.cppm
         Interface/semaphore_interface.cppm
+        Interface/event_group_interface.cppm
 )
 
 if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
@@ -40,5 +42,6 @@ if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
             Implements/FreeRTOS/thread_implements.cppm
             Implements/FreeRTOS/mutex_implements.cppm
             Implements/FreeRTOS/semaphore_implements.cppm
+            Implements/FreeRTOS/event_group_implements.cppm
     )
 endif ()
