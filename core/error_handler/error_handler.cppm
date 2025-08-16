@@ -19,7 +19,7 @@ namespace emdevif {
 /**
  * 错误码
  */
-export enum class ErrorCode : std::int8_t {
+export enum class ErrorCode : std::int_fast8_t {
     Success = 0,            ///< 成功
     UnknownError = -1,      ///< 未知错误
     InvalidArgument = -2,   ///< 无效参数
@@ -29,9 +29,10 @@ export enum class ErrorCode : std::int8_t {
     Timeout = -6,           ///< 超时
     Full = -7,              ///< 已满
     Empty = -8,             ///< 为空
-    AlreadyExists = -9,     ///< 已存在
-    NotImplemented = -10,   ///< 未实现
-    InternalError = -11     ///< 内部错误
+    OperationFail = -9,     ///< 操作失败
+    AlreadyExists = -10,    ///< 已存在
+    NotImplemented = -11,   ///< 未实现
+    InternalError = -12     ///< 内部错误
 };
 
 /**

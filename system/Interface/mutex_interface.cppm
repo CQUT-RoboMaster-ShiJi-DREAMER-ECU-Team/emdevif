@@ -50,11 +50,14 @@ public:
     }
 
     // NOLINTNEXTLINE
-    ErrorCode lock(SysTick_t timeout_tick = Thread::MAX_DELAY()) const;
+    ErrorCode lock(SysTick_t timeout_tick = Thread::MAX_DELAY());
 
-    [[nodiscard]] ErrorCode try_lock() const;
+    [[nodiscard]] ErrorCode try_lock()
+    {
+        return lock(0U);
+    }
 
-    void unlock() const;
+    void unlock();
 
     [[nodiscard]] Handle getHandle() const
     {

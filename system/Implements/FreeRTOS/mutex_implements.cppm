@@ -6,6 +6,8 @@
  * @brief 互斥锁 FreeRTOS 实现
  */
 
+// ReSharper disable CppMemberFunctionMayBeConst
+
 module;
 
 #include "FreeRTOS.h"
@@ -69,7 +71,7 @@ void Mutex::destroy(Mutex& obj)  // NOLINT
     }
 }
 
-inline ErrorCode Mutex::lock(const SysTick_t timeout_tick) const
+inline ErrorCode Mutex::lock(const SysTick_t timeout_tick)
 {
     const auto ret = xSemaphoreTake(static_cast<SemaphoreHandle_t>(handle_), timeout_tick);
 
@@ -81,12 +83,7 @@ inline ErrorCode Mutex::lock(const SysTick_t timeout_tick) const
     }
 }
 
-inline ErrorCode Mutex::try_lock() const
-{
-    return lock(0U);
-}
-
-inline void Mutex::unlock() const
+inline void Mutex::unlock()
 {
     if (xSemaphoreGive(handle_) != pdTRUE) {
         EMDEVIF_FAULT_HANDLER("Failed to Unlock mutex!");

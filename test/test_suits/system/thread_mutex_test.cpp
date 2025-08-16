@@ -50,7 +50,7 @@ public:
         mutex.destroy();
     }
 
-    emdevif::Mutex mutex{};
+    mutable emdevif::Mutex mutex{};
     volatile T v;
 };
 
