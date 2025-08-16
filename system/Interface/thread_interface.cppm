@@ -58,6 +58,7 @@ public:
     struct Attribute {
         const char* name{};                   ///< 名称
         Priority priority{Priority::Normal};  ///< 初始的优先级（默认为常规优先级）
+
         void* static_instance{nullptr};       ///< 静态实例内存
         std::size_t stack_size{0U};           ///< 栈深度
     };

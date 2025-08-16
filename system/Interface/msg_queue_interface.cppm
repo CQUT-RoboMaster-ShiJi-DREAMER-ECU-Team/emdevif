@@ -18,18 +18,18 @@ export import emdevif.error_handler;
 
 namespace emdevif {
 
-template<typename Type = void*, std::size_t size = 0>
+template<typename Type = void*, std::size_t item_size = 0>
 class MessageQueue
 {
 public:
     using Handle = void*;
 
+    class StaticInstance;
+
     struct Attribute {
-        const char* name{};     ///< 名称
-        void* cb_mem{nullptr};  ///< 控制块的内存
-        uint32_t cb_size{};     ///< 控制块的大小
-        void* mq_mem{nullptr};  ///< 队列数据存储内存
-        uint32_t mq_size{};     ///< 队列数据存储的内存大小
+        const char* name{};                        ///< 名称
+
+        StaticInstance* static_instance{nullptr};  ///< 静态实例内存
     };
 
 private:
@@ -38,7 +38,7 @@ private:
     };
 
 public:
-    static StronglyTypedHandle create(const Attribute& attribute);
+    static auto create(const Attribute& attribute) -> StronglyTypedHandle;
 
     static void destroy(MessageQueue& obj);
 

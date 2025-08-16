@@ -18,18 +18,43 @@ import :interface;
 
 export namespace emdevif {
 
-template<typename Type, std::size_t size>
-typename MessageQueue<Type, size>::StronglyTypedHandle MessageQueue<Type, size>::create(const Attribute& attribute)
+template<typename Type, std::size_t item_size>
+class MessageQueue<Type, item_size>::StaticInstance
+{
+public:
+    StaticInstance() noexcept : instance(), queue_buffer() {}
+
+    explicit operator StaticQueue_t&() noexcept
+    {
+        return instance;
+    }
+
+    explicit operator void*() noexcept
+    {
+        return queue_buffer;
+    }
+
+private:
+    StaticQueue_t instance;        ///< 静态队列实例
+    Type queue_buffer[item_size];  ///< 队列数据存储缓冲区
+};
+
+template<typename Type, std::size_t item_size>
+auto MessageQueue<Type, item_size>::create(const Attribute& attribute)
+    -> MessageQueue<Type, item_size>::StronglyTypedHandle
 {
     Handle new_handle = nullptr;
 
-    if (attribute.cb_mem != nullptr && attribute.cb_size != 0 && attribute.mq_mem != nullptr &&
-        attribute.mq_size != 0) {
-        new_handle =
-            xQueueCreateStatic(size, sizeof(Type), attribute.mq_mem, static_cast<StaticQueue_t>(attribute.cb_mem));
+    if (attribute.static_instance != nullptr) {
+        auto& static_instance = *static_cast<MessageQueue<Type, item_size>::StaticInstance*>(attribute.static_instance);
+
+        new_handle = xQueueCreateStatic(item_size,
+                                        sizeof(Type),
+                                        static_cast<void*>(static_instance),
+                                        &static_cast<StaticQueue_t&>(static_instance));
     }
     else {
-        new_handle = xQueueCreate(size, sizeof(Type));
+        new_handle = xQueueCreate(item_size, sizeof(Type));
     }
 
 #if (configQUEUE_REGISTRY_SIZE > 0)
@@ -41,8 +66,8 @@ typename MessageQueue<Type, size>::StronglyTypedHandle MessageQueue<Type, size>:
     return {new_handle};
 }
 
-template<typename Type, std::size_t size>
-void MessageQueue<Type, size>::destroy(MessageQueue& obj)
+template<typename Type, std::size_t item_size>
+void MessageQueue<Type, item_size>::destroy(MessageQueue& obj)
 {
     if (obj.handle_ != nullptr) {
         vQueueDelete(obj.handle_);
@@ -55,8 +80,8 @@ void MessageQueue<Type, size>::destroy(MessageQueue& obj)
     }
 }
 
-template<typename Type, std::size_t size>
-ErrorCode MessageQueue<Type, size>::push(const bool in_isr, const Type& data, std::size_t timeout)
+template<typename Type, std::size_t item_size>
+ErrorCode MessageQueue<Type, item_size>::push(const bool in_isr, const Type& data, std::size_t timeout)
 {
     if (in_isr) {
         BaseType_t xHigherPriorityTaskWokenByPost = pdFALSE;
@@ -88,8 +113,8 @@ ErrorCode MessageQueue<Type, size>::push(const bool in_isr, const Type& data, st
     }
 }
 
-template<typename Type, std::size_t size>
-ErrorCode MessageQueue<Type, size>::pop(const bool in_isr, Type& data, std::size_t timeout)
+template<typename Type, std::size_t item_size>
+ErrorCode MessageQueue<Type, item_size>::pop(const bool in_isr, Type& data, std::size_t timeout)
 {
     if (in_isr) {
         BaseType_t xHigherPriorityTaskWokenByPost = pdFALSE;
@@ -121,15 +146,15 @@ ErrorCode MessageQueue<Type, size>::pop(const bool in_isr, Type& data, std::size
     }
 }
 
-template<typename Type, std::size_t size>
-ErrorCode MessageQueue<Type, size>::pop(const bool in_isr)
+template<typename Type, std::size_t item_size>
+ErrorCode MessageQueue<Type, item_size>::pop(const bool in_isr)
 {
     Type data;
     return pop(in_isr, &data, 0U);
 }
 
-template<typename Type, std::size_t size>
-ErrorCode MessageQueue<Type, size>::peek(const bool in_isr, Type& data, std::size_t timeout)
+template<typename Type, std::size_t item_size>
+ErrorCode MessageQueue<Type, item_size>::peek(const bool in_isr, Type& data, std::size_t timeout)
 {
     if (in_isr) {
         const auto ret = xQueuePeekFromISR(handle_, &data);
@@ -156,20 +181,20 @@ ErrorCode MessageQueue<Type, size>::peek(const bool in_isr, Type& data, std::siz
     }
 }
 
-template<typename Type, std::size_t size>
-std::size_t MessageQueue<Type, size>::storeCount() const
+template<typename Type, std::size_t item_size>
+std::size_t MessageQueue<Type, item_size>::storeCount() const
 {
     return uxQueueMessagesWaiting(static_cast<QueueHandle_t>(handle_));
 }
 
-template<typename Type, std::size_t size>
-std::size_t MessageQueue<Type, size>::remainCount() const
+template<typename Type, std::size_t item_size>
+std::size_t MessageQueue<Type, item_size>::remainCount() const
 {
     return uxQueueSpacesAvailable(static_cast<QueueHandle_t>(handle_));
 }
 
-template<typename Type, std::size_t size>
-MessageQueue<Type, size>::~MessageQueue()
+template<typename Type, std::size_t item_size>
+MessageQueue<Type, item_size>::~MessageQueue()
 {
     if (handle_ != nullptr) {
         this->destroy();

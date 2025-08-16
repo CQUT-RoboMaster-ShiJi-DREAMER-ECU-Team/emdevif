@@ -20,12 +20,28 @@ import emdevif.error_handler;
 
 export namespace emdevif {
 
+class Mutex::StaticInstance
+{
+public:
+    StaticInstance() noexcept : instance() {}
+
+    explicit operator StaticSemaphore_t&() noexcept
+    {
+        return instance;
+    }
+
+private:
+    StaticSemaphore_t instance;
+};
+
 Mutex::StronglyTypedHandle Mutex::create(const Attribute& attribute)
 {
     QueueHandle_t handle = nullptr;
 
-    if (attribute.cb_mem != nullptr && attribute.cb_size != 0U) {
-        handle = xSemaphoreCreateMutexStatic(static_cast<StaticQueue_t*>(attribute.cb_mem));
+    if (attribute.static_instance != nullptr && attribute.cb_size != 0U) {
+        auto& static_instance = *static_cast<Mutex::StaticInstance*>(attribute.static_instance);
+
+        handle = xSemaphoreCreateMutexStatic(&static_cast<StaticSemaphore_t&>(static_instance));
     }
     else {
         handle = xSemaphoreCreateMutex();

@@ -24,10 +24,13 @@ class Mutex
 public:
     using Handle = void*;
 
+    class StaticInstance;
+
     struct Attribute {
-        const char* name{};     ///< 名称
-        void* cb_mem{nullptr};  ///< 控制块内存
-        uint32_t cb_size{};     ///< 控制块大小
+        const char* name{};                        ///< 名称
+
+        StaticInstance* static_instance{nullptr};  ///< 静态实例内存
+        std::size_t cb_size{0U};                   ///< 控制块大小
     };
 
 private:
