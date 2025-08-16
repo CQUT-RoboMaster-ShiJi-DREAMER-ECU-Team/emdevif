@@ -30,7 +30,7 @@ public:
         const char* name{};                        ///< 名称
 
         StaticInstance* static_instance{nullptr};  ///< 静态实例内存
-        std::size_t cb_size{0U};                   ///< 控制块大小
+        std::size_t instance_size{0U};             ///< 实例大小
     };
 
 private:

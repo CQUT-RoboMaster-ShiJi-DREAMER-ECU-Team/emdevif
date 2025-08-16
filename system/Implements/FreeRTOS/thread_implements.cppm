@@ -124,7 +124,7 @@ Thread::StronglyTypedHandle Thread::create(const Attribute& attribute, const Thr
 
     if (attribute.static_instance != nullptr && attribute.stack_size != 0U) {
         // 由于此处的 Thread::StaticInstance 是指针类型，且它的自定义类型转换过程不涉及这个模板参数，
-        // 因此它的模板参数的取值不影响结果，取 0 即可。
+        // 因此它的模板参数的取值不影响结果。但不能为 0，因为这样做会构造出零长数组。
         auto& static_instance = *static_cast<Thread::StaticInstance<1>*>(attribute.static_instance);
 
         handle = xTaskCreateStatic(entry,
