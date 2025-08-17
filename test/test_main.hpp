@@ -10,6 +10,7 @@
 #define EMDEVIF_TEST_MAIN_HPP
 
 void initOnceTest();
+void bitIntTest();
 
 void threadAndMutexTest();
 
