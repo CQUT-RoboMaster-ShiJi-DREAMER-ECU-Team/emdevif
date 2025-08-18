@@ -71,7 +71,7 @@ template<BitsType_t bits>
     requires ValidBitIntWidth<bits>
 class BitInt
 {
-private:
+protected:  // for testing
     /* clang-format off */
 
     using RealType =
@@ -125,7 +125,7 @@ public:
 
     static constexpr SignedType min() noexcept
     {
-        return -static_cast<RealType>(max() + 1);
+        return -(1 << (bits - 1));
     }
 
     constexpr BitInt() noexcept : value() {}
@@ -165,71 +165,71 @@ public:
     // ---------------------------- 一元 ---------------------------------
     // =========================== ~
 
-    constexpr BitInt operator~() const noexcept
+    constexpr SignedType operator~() const noexcept
     {
         const SignedType tmp = transToSigned(value);
 
-        return BitInt(~tmp);
+        return ~tmp;
     }
 
     // =========================== +/-
 
-    constexpr BitInt operator+() const noexcept
+    constexpr SignedType operator+() const noexcept
     {
-        return *this;
+        return SignedType(*this);
     }
-    constexpr BitInt operator-() const noexcept
+    constexpr SignedType operator-() const noexcept
     {
-        return BitInt(-transToSigned(value));
+        return -transToSigned(value);
     }
 
     // ---------------------------- 二元 ---------------------------------
     // =========================== +
 
     template<typename OtherType>
-    constexpr BitInt operator+(const OtherType& other) const noexcept
+    constexpr SignedType operator+(const OtherType& other) const noexcept
     {
-        return BitInt(transToSigned(this->value) + static_cast<SignedType>(other));
+        return transToSigned(this->value) + static_cast<SignedType>(other);
     }
 
     template<ArithmeticType OtherType>
-    friend constexpr BitInt operator+(const OtherType& lhs, const BitInt& rhs) noexcept
+    friend constexpr SignedType operator+(const OtherType& lhs, const BitInt& rhs) noexcept
     {
-        return BitInt(static_cast<SignedType>(lhs) + transToSigned(rhs.value));
+        return static_cast<SignedType>(lhs) + transToSigned(rhs.value);
     }
 
     // =========================== -
 
     template<typename OtherType>
-    constexpr BitInt operator-(const OtherType& other) const noexcept
+    constexpr SignedType operator-(const OtherType& other) const noexcept
     {
-        return BitInt(transToSigned(this->value) - static_cast<SignedType>(other));
+        return transToSigned(this->value) - static_cast<SignedType>(other);
     }
 
     template<ArithmeticType OtherType>
-    friend constexpr BitInt operator-(const OtherType& lhs, const BitInt& rhs) noexcept
+    friend constexpr SignedType operator-(const OtherType& lhs, const BitInt& rhs) noexcept
     {
-        return BitInt(static_cast<SignedType>(lhs) - transToSigned(rhs.value));
+        return (static_cast<SignedType>(lhs) - transToSigned(rhs.value));
     }
 
     // =========================== *
 
     template<typename OtherType>
-    constexpr BitInt operator*(const OtherType& other) const noexcept
+    constexpr SignedType operator*(const OtherType& other) const noexcept
     {
-        return BitInt(transToSigned(this->value) * static_cast<SignedType>(other));
+        return (transToSigned(this->value) * static_cast<SignedType>(other));
     }
 
     template<ArithmeticType OtherType>
-    friend constexpr BitInt operator*(const OtherType& lhs, const BitInt& rhs) noexcept
+    friend constexpr SignedType operator*(const OtherType& lhs, const BitInt& rhs) noexcept
     {
-        return BitInt(static_cast<SignedType>(lhs) * transToSigned(rhs.value));
+        return (static_cast<SignedType>(lhs) * transToSigned(rhs.value));
     }
 
     // =========================== /
 
     template<typename OtherType>
-    constexpr BitInt operator/(const OtherType& other) const EMDEVIF_UTIL_BITINT_NOEXCEPT
+    constexpr SignedType operator/(const OtherType& other) const EMDEVIF_UTIL_BITINT_NOEXCEPT
     {
         const auto other_signed = static_cast<SignedType>(other);
 
@@ -239,11 +239,11 @@ public:
         }
 #endif
 
-        return BitInt(transToSigned(this->value) / other_signed);
+        return (transToSigned(this->value) / other_signed);
     }
 
     template<ArithmeticType OtherType>
-    friend constexpr BitInt operator/(const OtherType& lhs, const BitInt& rhs) EMDEVIF_UTIL_BITINT_NOEXCEPT
+    friend constexpr SignedType operator/(const OtherType& lhs, const BitInt& rhs) EMDEVIF_UTIL_BITINT_NOEXCEPT
     {
         const auto rhs_signed = transToSigned(rhs.value);
 
@@ -253,13 +253,13 @@ public:
         }
 #endif
 
-        return BitInt(static_cast<SignedType>(lhs) / rhs_signed);
+        return (static_cast<SignedType>(lhs) / rhs_signed);
     }
 
     // =========================== %
 
     template<typename OtherType>
-    constexpr BitInt operator%(const OtherType& other) const EMDEVIF_UTIL_BITINT_NOEXCEPT
+    constexpr SignedType operator%(const OtherType& other) const EMDEVIF_UTIL_BITINT_NOEXCEPT
     {
         const auto other_signed = static_cast<SignedType>(other);
 
@@ -269,11 +269,11 @@ public:
         }
 #endif
 
-        return BitInt(transToSigned(this->value) % other_signed);
+        return (transToSigned(this->value) % other_signed);
     }
 
     template<ArithmeticType OtherType>
-    friend constexpr BitInt operator%(const OtherType& lhs, const BitInt& rhs) EMDEVIF_UTIL_BITINT_NOEXCEPT
+    friend constexpr SignedType operator%(const OtherType& lhs, const BitInt& rhs) EMDEVIF_UTIL_BITINT_NOEXCEPT
     {
         const auto rhs_signed = transToSigned(rhs.value);
 
@@ -283,63 +283,63 @@ public:
         }
 #endif
 
-        return BitInt(static_cast<SignedType>(lhs) % rhs_signed);
+        return (static_cast<SignedType>(lhs) % rhs_signed);
     }
 
     // =========================== &
 
     template<typename OtherType>
-    constexpr BitInt operator&(const OtherType& other) const noexcept
+    constexpr SignedType operator&(const OtherType& other) const noexcept
     {
-        return BitInt(transToSigned(this->value) & static_cast<SignedType>(other));
+        return (transToSigned(this->value) & static_cast<SignedType>(other));
     }
 
     template<ArithmeticType OtherType>
-    friend constexpr BitInt operator&(const OtherType& lhs, const BitInt& rhs) noexcept
+    friend constexpr SignedType operator&(const OtherType& lhs, const BitInt& rhs) noexcept
     {
-        return BitInt(static_cast<SignedType>(lhs) & transToSigned(rhs.value));
+        return (static_cast<SignedType>(lhs) & transToSigned(rhs.value));
     }
 
     // =========================== |
 
     template<typename OtherType>
-    constexpr BitInt operator|(const OtherType& other) const noexcept
+    constexpr SignedType operator|(const OtherType& other) const noexcept
     {
-        return BitInt(transToSigned(this->value) | static_cast<SignedType>(other));
+        return (transToSigned(this->value) | static_cast<SignedType>(other));
     }
 
     template<ArithmeticType OtherType>
-    friend constexpr BitInt operator|(const OtherType& lhs, const BitInt& rhs) noexcept
+    friend constexpr SignedType operator|(const OtherType& lhs, const BitInt& rhs) noexcept
     {
-        return BitInt(static_cast<SignedType>(lhs) | transToSigned(rhs.value));
+        return (static_cast<SignedType>(lhs) | transToSigned(rhs.value));
     }
 
     // =========================== ^
 
     template<typename OtherType>
-    constexpr BitInt operator^(const OtherType& other) const noexcept
+    constexpr SignedType operator^(const OtherType& other) const noexcept
     {
-        return BitInt(transToSigned(this->value) ^ static_cast<SignedType>(other));
+        return (transToSigned(this->value) ^ static_cast<SignedType>(other));
     }
 
     template<ArithmeticType OtherType>
-    friend constexpr BitInt operator^(const OtherType& lhs, const BitInt& rhs) noexcept
+    friend constexpr SignedType operator^(const OtherType& lhs, const BitInt& rhs) noexcept
     {
-        return BitInt(static_cast<SignedType>(lhs) ^ transToSigned(rhs.value));
+        return (static_cast<SignedType>(lhs) ^ transToSigned(rhs.value));
     }
 
     // =========================== <<
 
-    constexpr BitInt operator<<(const BitsType_t shift) const noexcept
+    constexpr SignedType operator<<(const BitsType_t shift) const noexcept
     {
-        return BitInt(transToSigned(value) << shift);
+        return (transToSigned(value) << shift);
     }
 
     // =========================== >>
 
-    constexpr BitInt operator>>(const BitsType_t shift) const noexcept
+    constexpr SignedType operator>>(const BitsType_t shift) const noexcept
     {
-        return BitInt(transToSigned(value) >> shift);
+        return (transToSigned(value) >> shift);
     }
 
     // ---------------------------- 复合赋值 -------------------------------
@@ -440,11 +440,11 @@ public:
     // ---------------------------- 自增/自减 ----------------------------
     // =========================== ++
 
-    constexpr BitInt operator++() noexcept
+    constexpr SignedType operator++() noexcept
     {
         return *this += 1;
     }
-    constexpr BitInt operator++(int) noexcept
+    constexpr SignedType operator++(int) noexcept
     {
         auto tmp = *this;
         ++(*this);
@@ -453,11 +453,11 @@ public:
 
     // =========================== --
 
-    constexpr BitInt operator--() noexcept
+    constexpr SignedType operator--() noexcept
     {
         return *this -= 1;
     }
-    constexpr BitInt operator--(int) noexcept
+    constexpr SignedType operator--(int) noexcept
     {
         auto tmp = *this;
         --(*this);
@@ -589,7 +589,7 @@ public:
     template<std::integral Type>
     operator Type() const noexcept  // NOLINT(*-explicit-constructor)
     {
-        return value;
+        return static_cast<Type>(value);
     }
 
 private:
