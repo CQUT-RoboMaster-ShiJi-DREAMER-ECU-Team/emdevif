@@ -21,7 +21,7 @@ endif ()
 target_compile_options(${PROJECT_NAME} PUBLIC
     -Wall -Wextra -Wpedantic
     ${EMDEVIF__COMPILE_OPTIMIZE}
-    $<$<COMPILE_LANGUAGE:CXX>:-fno-rtti -fmodules-ts -fno-exceptions>
+    $<$<COMPILE_LANGUAGE:CXX>: -fmodules-ts>
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC inc/)
