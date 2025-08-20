@@ -14,6 +14,7 @@ module;
 #include <cstdint>
 
 #include <bit>
+#include <numeric>
 #include <concepts>
 #include <iostream>
 
@@ -54,17 +55,6 @@ consteval BitsType_t bitsOf() noexcept
     else {
         return 0U;
     }
-}
-
-constexpr std::size_t bitsSetValue(const BitsType_t bits) noexcept
-{
-    std::size_t result = 0U;
-
-    for (BitsType_t i = 0U; i < bits; ++i) {
-        result |= (1U << i);
-    }
-
-    return result;
 }
 
 template<BitsType_t bits>
@@ -117,6 +107,17 @@ protected:  // for testing
         }
     }
 
+    static constexpr SignedType bitsSetValue(const BitsType_t value_bits) noexcept
+    {
+        SignedType result = 0U;
+
+        for (BitsType_t i = 0U; i < value_bits; ++i) {
+            result |= (static_cast<SignedType>(1) << i);
+        }
+
+        return result;
+    }
+
 public:
     static constexpr SignedType max() noexcept
     {
@@ -125,7 +126,12 @@ public:
 
     static constexpr SignedType min() noexcept
     {
-        return -(1 << (bits - 1));
+        if constexpr (bits == 64) {
+            return std::numeric_limits<int64_t>::min();
+        }
+        else {
+            return -static_cast<int64_t>(RealType(1) << RealType(bits - 1));
+        }
     }
 
     constexpr BitInt() noexcept : value() {}
