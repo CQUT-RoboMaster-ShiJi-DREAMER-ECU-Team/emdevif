@@ -22,30 +22,7 @@
 
 /* Attributes ================================================================================== */
 #include "private/attribute_implements/gnu_attributes.h"
-
-#ifndef EMDEVIF_NO_RETURN
-#error "EMDEVIF_NO_RETURN 属性未实现！"
-#endif  // !EMDEVIF_NO_RETURN
-
-#ifndef EMDEVIF_MAYBE_UNUSED
-#error "EMDEVIF_MAYBE_UNUSED 属性未实现！"
-#endif  // !EMDEVIF_MAYBE_UNUSED
-
-#ifndef EMDEVIF_USED
-#error "EMDEVIF_USED 属性未实现！"
-#endif
-
-#ifndef EMDEVIF_WEAK
-#error "WEAK 属性未实现！"
-#endif  // !EMDEVIF_WEAK
-
-#ifndef EMDEVIF_ALWAYS_INLINE
-#error "EMDEVIF_ALWAYS_INLINE 属性未实现！"
-#endif  // !EMDEVIF_ALWAYS_INLINE
-
-#ifndef EMDEVIF_FALL_THROUGH
-#error "EMDEVIF_FALL_THROUGH 属性未实现！"
-#endif  // !EMDEVIF_FALL_THROUGH
+#include "private/attribute_implements/msvc_attributes.h"
 
 /* Useful Macros =============================================================================== */
 

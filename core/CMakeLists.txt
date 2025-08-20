@@ -5,24 +5,45 @@ project(emdevif_core C CXX)
 add_library(${PROJECT_NAME} OBJECT)
 
 if (NOT (DEFINED EMDEVIF_RELEASE_OPTIMIZE_LEVEL))
-    set(EMDEVIF_RELEASE_OPTIMIZE_LEVEL -O2)
+    if (MSVC)
+        set(EMDEVIF_RELEASE_OPTIMIZE_LEVEL /O2)
+    else ()
+        set(EMDEVIF_RELEASE_OPTIMIZE_LEVEL -O2)
+    endif ()
 endif ()
 
-if (CMAKE_BUILD_TYPE MATCHES "Debug")
-    set(EMDEVIF__COMPILE_OPTIMIZE -O0 -g3)
-elseif (CMAKE_BUILD_TYPE MATCHES "Release")
-    set(EMDEVIF__COMPILE_OPTIMIZE ${EMDEVIF_RELEASE_OPTIMIZE_LEVEL} -g0)
-elseif (CMAKE_BUILD_TYPE MATCHES "RelWithDebugInfo")
-    set(EMDEVIF__COMPILE_OPTIMIZE ${EMDEVIF_RELEASE_OPTIMIZE_LEVEL} -g3)
+if (MSVC)
+    if (CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(EMDEVIF__COMPILE_OPTIMIZE /Od /DEBUG)
+    elseif (CMAKE_BUILD_TYPE MATCHES "Release")
+        set(EMDEVIF__COMPILE_OPTIMIZE ${EMDEVIF_RELEASE_OPTIMIZE_LEVEL})
+    elseif (CMAKE_BUILD_TYPE MATCHES "RelWithDebugInfo")
+        set(EMDEVIF__COMPILE_OPTIMIZE ${EMDEVIF_RELEASE_OPTIMIZE_LEVEL} /DEBUG)
+    else ()
+        set(EMDEVIF__COMPILE_OPTIMIZE /Od /DEBUG)
+    endif ()
+
+    target_compile_options(${PROJECT_NAME} PUBLIC
+        /W4 /source-charset:utf-8 /execution-charset:gb2312
+        ${EMDEVIF__COMPILE_OPTIMIZE}
+    )
 else ()
-    set(EMDEVIF__COMPILE_OPTIMIZE -O0 -g3)
-endif ()
+    if (CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(EMDEVIF__COMPILE_OPTIMIZE -O0 -g3)
+    elseif (CMAKE_BUILD_TYPE MATCHES "Release")
+        set(EMDEVIF__COMPILE_OPTIMIZE ${EMDEVIF_RELEASE_OPTIMIZE_LEVEL} -g0)
+    elseif (CMAKE_BUILD_TYPE MATCHES "RelWithDebugInfo")
+        set(EMDEVIF__COMPILE_OPTIMIZE ${EMDEVIF_RELEASE_OPTIMIZE_LEVEL} -g3)
+    else ()
+        set(EMDEVIF__COMPILE_OPTIMIZE -O0 -g3)
+    endif ()
 
-target_compile_options(${PROJECT_NAME} PUBLIC
-    -Wall -Wextra -Wpedantic
-    ${EMDEVIF__COMPILE_OPTIMIZE}
-    $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:GNU>>: -fmodules-ts>
-)
+    target_compile_options(${PROJECT_NAME} PUBLIC
+        -Wall -Wextra -Wpedantic
+        ${EMDEVIF__COMPILE_OPTIMIZE}
+        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:GNU>>: -fmodules-ts>
+    )
+endif ()
 
 target_include_directories(${PROJECT_NAME} PUBLIC inc/)
 
