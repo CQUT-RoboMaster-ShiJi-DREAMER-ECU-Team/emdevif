@@ -336,16 +336,32 @@ public:
 
     // =========================== <<
 
-    constexpr SignedType operator<<(const BitsType_t shift) const noexcept
+    template<std::integral OtherType>
+    constexpr SignedType operator<<(const OtherType shift) const noexcept
     {
         return (transToSigned(value) << shift);
     }
 
+    template<BitsType_t other_bits>
+        requires ValidBitIntWidth<other_bits>
+    constexpr SignedType operator<<(const BitInt<other_bits> shift) const noexcept
+    {
+        return (transToSigned(value) << SignedType(shift));
+    }
+
     // =========================== >>
 
-    constexpr SignedType operator>>(const BitsType_t shift) const noexcept
+    template<std::integral OtherType>
+    constexpr SignedType operator>>(const OtherType shift) const noexcept
     {
         return (transToSigned(value) >> shift);
+    }
+
+    template<BitsType_t other_bits>
+        requires ValidBitIntWidth<other_bits>
+    constexpr SignedType operator>>(const BitInt<other_bits> shift) const noexcept
+    {
+        return (transToSigned(value) >> SignedType(shift));
     }
 
     // ---------------------------- 复合赋值 -------------------------------
@@ -431,14 +447,30 @@ public:
 
     // =========================== <<=
 
-    constexpr BitInt& operator<<=(const BitsType_t shift) const noexcept
+    template<std::integral OtherType>
+    constexpr BitInt& operator<<=(const OtherType shift) const noexcept
+    {
+        return *this = *this << shift;
+    }
+
+    template<BitsType_t other_bits>
+        requires ValidBitIntWidth<other_bits>
+    constexpr BitInt& operator<<=(const BitInt<other_bits> shift) const noexcept
     {
         return *this = *this << shift;
     }
 
     // =========================== >>=
 
-    constexpr BitInt& operator>>=(const BitsType_t shift) const noexcept
+    template<std::integral OtherType>
+    constexpr BitInt& operator>>=(const OtherType shift) const noexcept
+    {
+        return *this = *this >> shift;
+    }
+
+    template<BitsType_t other_bits>
+        requires ValidBitIntWidth<other_bits>
+    constexpr BitInt& operator>>=(const BitInt<other_bits> shift) const noexcept
     {
         return *this = *this >> shift;
     }
