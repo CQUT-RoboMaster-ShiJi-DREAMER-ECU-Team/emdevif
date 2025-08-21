@@ -134,7 +134,7 @@ public:
         }
     }
 
-    constexpr BitInt() noexcept : value() {}
+    constexpr BitInt() noexcept = default;
 
     template<std::integral OtherType>  // NOLINTNEXTLINE(*-explicit-constructor)
     constexpr BitInt(const OtherType other) noexcept : value(truncateToReal(other))
