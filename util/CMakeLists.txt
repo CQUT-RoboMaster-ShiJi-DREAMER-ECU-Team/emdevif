@@ -11,7 +11,11 @@ target_sources(${PROJECT_NAME}
         InitOnce.cppm
         BitInt.cppm
 
-    PUBLIC FILE_SET emdevif_module TYPE CXX_MODULES FILES
+    PUBLIC FILE_SET emdevif_util_modules TYPE CXX_MODULES FILES
         Implements/BitInt/signed_bit_int.cppm
         Implements/BitInt/unsigned_bit_int.cppm
+
+    PRIVATE FILE_SET emdevif_util_internal_headers TYPE HEADERS
+        BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/internal_headers/
+        FILES internal_headers/BitInt_exception_config.hpp
 )

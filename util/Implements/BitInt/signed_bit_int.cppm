@@ -18,15 +18,9 @@ module;
 #include <concepts>
 #include <iostream>
 
-#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
-#include <stdexcept>
-
-#define EMDEVIF_UTIL_BITINT_NOEXCEPT
-#else
-#define EMDEVIF_UTIL_BITINT_NOEXCEPT noexcept
-#endif
-
 #include "emdevif/concepts.hpp"
+
+#include "BitInt_exception_config.hpp"
 
 export module emdevif.util.BitInt:signed_partial;
 
@@ -176,6 +170,13 @@ public:
         const SignedType tmp = transToSigned(value);
 
         return ~tmp;
+    }
+
+    // =========================== !
+
+    constexpr bool operator!() const noexcept
+    {
+        return !static_cast<bool>(transToSigned(value));
     }
 
     // =========================== +/-
@@ -484,7 +485,7 @@ public:
     }
     constexpr SignedType operator++(int) noexcept
     {
-        auto tmp = *this;
+        const auto tmp = *this;
         ++(*this);
         return tmp;
     }

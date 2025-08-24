@@ -14,14 +14,11 @@ module;
 #include <cstdint>
 #include <type_traits>
 #include <concepts>
+#include <iostream>
 
-#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
-#include <stdexcept>
+#include  "emdevif/concepts.hpp"
 
-#define EMDEVIF_UTIL_BITINT_NOEXCEPT
-#else
-#define EMDEVIF_UTIL_BITINT_NOEXCEPT noexcept
-#endif
+#include "BitInt_exception_config.hpp"
 
 export module emdevif.util.BitInt:unsigned_partial;
 import :signed_partial;
@@ -73,6 +70,486 @@ public:
     }
 
     constexpr UBitInt() noexcept = default;
+
+    template<std::integral OtherType>  // NOLINTNEXTLINE(*-explicit-constructor)
+    constexpr UBitInt(const OtherType other) noexcept : value(overflowCast(static_cast<RealType>(other)))
+    {
+    }
+
+    template<std::integral OtherType>
+    constexpr UBitInt& operator=(const OtherType other) noexcept
+    {
+        value = overflowCast(static_cast<RealType>(other));
+
+        return *this;
+    }
+
+    template<BitsType_t other_bits>
+        requires ValidBitIntWidth<other_bits>  // NOLINTNEXTLINE(*-explicit-constructor)
+    constexpr UBitInt(const BitInt<other_bits>& other) noexcept : value(overflowCast(static_cast<RealType>(other)))
+    {
+    }
+
+    template<BitsType_t other_bits>
+        requires ValidBitIntWidth<other_bits>
+    constexpr UBitInt& operator=(const BitInt<other_bits>& other) noexcept
+    {
+        value = overflowCast(static_cast<RealType>(other));
+
+        return *this;
+    }
+
+    // ---------------------------- 一元 ---------------------------------
+    // =========================== ~
+
+    constexpr RealType operator~() const noexcept
+    {
+        return overflowCast(~value);
+    }
+
+    // =========================== !
+
+    constexpr bool operator!() const noexcept
+    {
+        return !static_cast<bool>(overflowCast(value));
+    }
+
+    // =========================== +/-
+
+    constexpr RealType operator+() const noexcept
+    {
+        return RealType(*this);
+    }
+    constexpr RealType operator-() const noexcept
+    {
+        return overflowCast(-value);
+    }
+
+    // ---------------------------- 二元 ---------------------------------
+    // =========================== +
+
+    template<typename OtherType>
+    constexpr RealType operator+(const OtherType& other) const noexcept
+    {
+        return overflowCast(this->value + static_cast<RealType>(other));
+    }
+
+    template<ArithmeticType OtherType>
+    friend constexpr RealType operator+(const OtherType& lhs, const UBitInt& rhs) noexcept
+    {
+        return overflowCast(static_cast<RealType>(lhs) + rhs.value);
+    }
+
+    // =========================== -
+
+    template<typename OtherType>
+    constexpr RealType operator-(const OtherType& other) const noexcept
+    {
+        return overflowCast(this->value - static_cast<RealType>(other));
+    }
+
+    template<ArithmeticType OtherType>
+    friend constexpr RealType operator-(const OtherType& lhs, const UBitInt& rhs) noexcept
+    {
+        return overflowCast(static_cast<RealType>(lhs) - rhs.value);
+    }
+
+    // =========================== *
+
+    template<typename OtherType>
+    constexpr RealType operator*(const OtherType& other) const noexcept
+    {
+        return overflowCast(this->value * static_cast<RealType>(other));
+    }
+
+    template<ArithmeticType OtherType>
+    friend constexpr RealType operator*(const OtherType& lhs, const UBitInt& rhs) noexcept
+    {
+        return overflowCast(static_cast<RealType>(lhs) * rhs.value);
+    }
+
+    // =========================== /
+
+    template<typename OtherType>
+    constexpr RealType operator/(const OtherType& other) const EMDEVIF_UTIL_BITINT_NOEXCEPT
+    {
+        const auto other_val = static_cast<RealType>(other);
+
+#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+        if (other_val == 0) {
+            throw std::invalid_argument("Division by zero is not allowed.");
+        }
+#endif
+
+        return overflowCast(this->value / other_val);
+    }
+
+    template<ArithmeticType OtherType>
+    friend constexpr RealType operator/(const OtherType& lhs, const UBitInt& rhs) EMDEVIF_UTIL_BITINT_NOEXCEPT
+    {
+        const auto rhs_val = static_cast<RealType>(rhs.value);
+
+#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+        if (rhs_val == 0) {
+            throw std::invalid_argument("Division by zero is not allowed.");
+        }
+#endif
+
+        return overflowCast(static_cast<RealType>(lhs) / rhs_val);
+    }
+
+    // =========================== %
+
+    template<typename OtherType>
+    constexpr RealType operator%(const OtherType& other) const EMDEVIF_UTIL_BITINT_NOEXCEPT
+    {
+        const auto other_val = static_cast<RealType>(other);
+
+#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+        if (other_val == 0) {
+            throw std::invalid_argument("Division by zero is not allowed.");
+        }
+#endif
+
+        return overflowCast(this->value % other_val);
+    }
+
+    template<ArithmeticType OtherType>
+    friend constexpr RealType operator%(const OtherType& lhs, const UBitInt& rhs) EMDEVIF_UTIL_BITINT_NOEXCEPT
+    {
+        const auto rhs_val = static_cast<RealType>(rhs.value);
+
+#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+        if (rhs_val == 0) {
+            throw std::invalid_argument("Division by zero is not allowed.");
+        }
+#endif
+
+        return overflowCast(static_cast<RealType>(lhs) % rhs_val);
+    }
+
+    // =========================== &
+
+    template<typename OtherType>
+    constexpr RealType operator&(const OtherType& other) const noexcept
+    {
+        return overflowCast(this->value & static_cast<RealType>(other));
+    }
+
+    template<ArithmeticType OtherType>
+    friend constexpr RealType operator&(const OtherType& lhs, const UBitInt& rhs) noexcept
+    {
+        return overflowCast(static_cast<RealType>(lhs) & rhs.value);
+    }
+
+    // =========================== |
+
+    template<typename OtherType>
+    constexpr RealType operator|(const OtherType& other) const noexcept
+    {
+        return overflowCast(this->value | static_cast<RealType>(other));
+    }
+
+    template<ArithmeticType OtherType>
+    friend constexpr RealType operator|(const OtherType& lhs, const UBitInt& rhs) noexcept
+    {
+        return overflowCast(static_cast<RealType>(lhs) | rhs.value);
+    }
+
+    // =========================== ^
+
+    template<typename OtherType>
+    constexpr RealType operator^(const OtherType& other) const noexcept
+    {
+        return overflowCast(this->value ^ static_cast<RealType>(other));
+    }
+
+    template<ArithmeticType OtherType>
+    friend constexpr RealType operator^(const OtherType& lhs, const UBitInt& rhs) noexcept
+    {
+        return overflowCast(static_cast<RealType>(lhs) ^ rhs.value);
+    }
+
+    // =========================== <<
+
+    template<std::integral OtherType>
+    constexpr RealType operator<<(const OtherType shift) const noexcept
+    {
+        return overflowCast(value << shift);
+    }
+
+    template<BitsType_t other_bits>
+        requires ValidBitIntWidth<other_bits>
+    constexpr RealType operator<<(const BitInt<other_bits> shift) const noexcept
+    {
+        return overflowCast(value << RealType(shift));
+    }
+
+    // =========================== >>
+
+    template<std::integral OtherType>
+    constexpr RealType operator>>(const OtherType shift) const noexcept
+    {
+        return overflowCast(value >> shift);
+    }
+
+    template<BitsType_t other_bits>
+        requires ValidBitIntWidth<other_bits>
+    constexpr RealType operator>>(const BitInt<other_bits> shift) const noexcept
+    {
+        return overflowCast(value >> RealType(shift));
+    }
+
+    // ---------------------------- 复合赋值 -------------------------------
+    // =========================== +=
+
+    template<typename OtherType>
+    constexpr UBitInt& operator+=(const OtherType& other) noexcept
+    {
+        return *this = *this + other;
+    }
+
+    // =========================== -=
+
+    template<typename OtherType>
+    constexpr UBitInt& operator-=(const OtherType& other) noexcept
+    {
+        return *this = *this - other;
+    }
+
+    // =========================== *=
+
+    template<typename OtherType>
+    constexpr UBitInt& operator*=(const OtherType& other) noexcept
+    {
+        return *this = *this * other;
+    }
+
+    // =========================== /=
+
+    template<typename OtherType>
+    constexpr UBitInt& operator/=(const OtherType& other) EMDEVIF_UTIL_BITINT_NOEXCEPT
+    {
+#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+        RealType res;
+
+        try {
+            res = *this / other;
+        }
+        catch (std::invalid_argument&) {
+            throw std::invalid_argument("Division by zero is not allowed.");
+        }
+
+        return *this = res;
+#else
+        return *this = *this / other;
+#endif
+    }
+
+    // =========================== %=
+
+    template<typename OtherType>
+    constexpr UBitInt& operator%=(const OtherType& other) EMDEVIF_UTIL_BITINT_NOEXCEPT
+    {
+#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+        RealType res;
+
+        try {
+            res = *this % other;
+        }
+        catch (std::invalid_argument&) {
+            throw std::invalid_argument("Division by zero is not allowed.");
+        }
+
+        return *this = res;
+#else
+        return *this = *this % other;
+#endif
+    }
+
+    // =========================== &=
+
+    template<typename OtherType>
+    constexpr UBitInt& operator&=(const OtherType& other) noexcept
+    {
+        return *this = *this & other;
+    }
+
+    // =========================== |=
+
+    template<typename OtherType>
+    constexpr UBitInt& operator|=(const OtherType& other) noexcept
+    {
+        return *this = *this | other;
+    }
+
+    // =========================== ^=
+
+    template<typename OtherType>
+    constexpr UBitInt& operator^=(const OtherType& other) noexcept
+    {
+        return *this = *this ^ other;
+    }
+
+    // =========================== <<=
+
+    template<std::integral OtherType>
+    constexpr UBitInt& operator<<=(const OtherType shift) const noexcept
+    {
+        return *this = *this << shift;
+    }
+
+    template<BitsType_t other_bits>
+        requires ValidBitIntWidth<other_bits>
+    constexpr UBitInt& operator<<=(const BitInt<other_bits> shift) const noexcept
+    {
+        return *this = *this << shift;
+    }
+
+    // =========================== >>=
+
+    template<std::integral OtherType>
+    constexpr UBitInt& operator>>=(const OtherType shift) const noexcept
+    {
+        return *this = *this >> shift;
+    }
+
+    template<BitsType_t other_bits>
+        requires ValidBitIntWidth<other_bits>
+    constexpr UBitInt& operator>>=(const BitInt<other_bits> shift) const noexcept
+    {
+        return *this = *this >> shift;
+    }
+
+    // ---------------------------- 自增/自减 ----------------------------
+    // =========================== ++
+
+    constexpr RealType operator++() noexcept
+    {
+        return *this += 1;
+    }
+    constexpr RealType operator++(int) noexcept
+    {
+        const auto tmp = *this;
+        ++(*this);
+        return tmp;
+    }
+
+    // =========================== --
+
+    constexpr RealType operator--() noexcept
+    {
+        return *this -= 1;
+    }
+    constexpr RealType operator--(int) noexcept
+    {
+        const auto tmp = *this;
+        --(*this);
+        return tmp;
+    }
+
+    // ---------------------------- 比较 ----------------------------
+    // =========================== ==
+
+    template<typename OtherType>
+    constexpr bool operator==(const OtherType& other) const noexcept
+    {
+        return (value == static_cast<RealType>(other));
+    }
+
+    template<ArithmeticType OtherType>
+    friend constexpr bool operator==(const OtherType& lhs, const UBitInt& rhs) noexcept
+    {
+        return (static_cast<RealType>(lhs) == rhs.value);
+    }
+
+    // =========================== !=
+
+    template<typename OtherType>
+    constexpr bool operator!=(const OtherType& other) const noexcept
+    {
+        return (value != static_cast<RealType>(other));
+    }
+
+    template<ArithmeticType OtherType>
+    friend constexpr bool operator!=(const OtherType& lhs, const UBitInt& rhs) noexcept
+    {
+        return (static_cast<RealType>(lhs) != rhs.value);
+    }
+
+    // =========================== >
+
+    template<typename OtherType>
+    constexpr bool operator>(const OtherType& other) const noexcept
+    {
+        return (value > static_cast<RealType>(other));
+    }
+
+    template<ArithmeticType OtherType>
+    friend constexpr bool operator>(const OtherType& lhs, const UBitInt& rhs) noexcept
+    {
+        return (static_cast<RealType>(lhs) > rhs.value);
+    }
+
+    // =========================== <
+
+    template<typename OtherType>
+    constexpr bool operator<(const OtherType& other) const noexcept
+    {
+        return (value < static_cast<RealType>(other));
+    }
+
+    template<ArithmeticType OtherType>
+    friend constexpr bool operator<(const OtherType& lhs, const UBitInt& rhs) noexcept
+    {
+        return (static_cast<RealType>(lhs) < rhs.value);
+    }
+
+    // =========================== >=
+
+    template<typename OtherType>
+    constexpr bool operator>=(const OtherType& other) const noexcept
+    {
+        return (value >= static_cast<RealType>(other));
+    }
+
+    template<ArithmeticType OtherType>
+    friend constexpr bool operator>=(const OtherType& lhs, const UBitInt& rhs) noexcept
+    {
+        return (static_cast<RealType>(lhs) >= rhs.value);
+    }
+
+    // =========================== <=
+
+    template<typename OtherType>
+    constexpr bool operator<=(const OtherType& other) const noexcept
+    {
+        return (value <= static_cast<RealType>(other));
+    }
+
+    template<ArithmeticType OtherType>
+    friend constexpr bool operator<=(const OtherType& lhs, const UBitInt& rhs) noexcept
+    {
+        return (static_cast<RealType>(lhs) <= rhs.value);
+    }
+
+    // --------------------------- stream ------------------------------
+
+    friend std::ostream& operator<<(std::ostream& os, const UBitInt& bit_int)
+    {
+        os << static_cast<RealType>(bit_int);
+        return os;
+    }
+
+    // end operators ---------------------------------------------------
+
+    template<std::integral OtherType>
+    operator OtherType() const noexcept  // NOLINT(*-explicit-constructor)
+    {
+        return static_cast<OtherType>(overflowCast(value));
+    }
+
+    constexpr ~UBitInt() noexcept = default;
 
 private:
     RealType value;
