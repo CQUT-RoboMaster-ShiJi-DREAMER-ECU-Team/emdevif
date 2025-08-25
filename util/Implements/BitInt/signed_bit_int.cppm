@@ -590,7 +590,7 @@ public:
 
     // --------------------------- stream ------------------------------
 
-    friend std::ostream& operator<<(std::ostream& os, const BitInt& bit_int)
+    inline friend std::ostream& operator<<(std::ostream& os, const BitInt& bit_int)
     {
         os << static_cast<SignedType>(bit_int);
         return os;
@@ -622,6 +622,12 @@ public:
     static constexpr int8_t min() noexcept
     {
         return 0;
+    }
+
+    inline friend std::ostream& operator<<(std::ostream& os, const BitInt&)
+    {
+        os << 0;
+        return os;
     }
 
     // ReSharper disable once CppDFAConstantFunctionResult

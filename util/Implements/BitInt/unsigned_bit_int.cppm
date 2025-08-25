@@ -16,7 +16,7 @@ module;
 #include <concepts>
 #include <iostream>
 
-#include  "emdevif/concepts.hpp"
+#include "emdevif/concepts.hpp"
 
 #include "BitInt_exception_config.hpp"
 
@@ -535,7 +535,7 @@ public:
 
     // --------------------------- stream ------------------------------
 
-    friend std::ostream& operator<<(std::ostream& os, const UBitInt& bit_int)
+    inline friend std::ostream& operator<<(std::ostream& os, const UBitInt& bit_int)
     {
         os << static_cast<RealType>(bit_int);
         return os;
@@ -567,6 +567,12 @@ public:
     static constexpr uint8_t min() noexcept
     {
         return 0;
+    }
+
+    inline friend std::ostream& operator<<(std::ostream& os, const UBitInt&)
+    {
+        os << 0;
+        return os;
     }
 
     // ReSharper disable once CppDFAConstantFunctionResult
