@@ -22,11 +22,6 @@ if (MSVC)
     else ()
         set(EMDEVIF__COMPILE_OPTIMIZE /Od /DEBUG)
     endif ()
-
-    target_compile_options(${PROJECT_NAME} PUBLIC
-        /W4 /source-charset:utf-8 /execution-charset:gb2312
-        ${EMDEVIF__COMPILE_OPTIMIZE}
-    )
 else ()
     if (CMAKE_BUILD_TYPE MATCHES "Debug")
         set(EMDEVIF__COMPILE_OPTIMIZE -O0 -g3)
@@ -37,7 +32,25 @@ else ()
     else ()
         set(EMDEVIF__COMPILE_OPTIMIZE -O0 -g3)
     endif ()
+endif ()
 
+option(EMDEVIF_NOT_SET_OPTIMIZE
+    "Enabled this to unset EMDEVIF__COMPILE_OPTIMIZE in order to add compile \
+option repeatedly (for example, if you have add_compile_option(-O2) already, \
+it's best to set EMDEVIF_NOT_SET_OPTIMIZE on to avoid add compile option repeatedly)."
+    OFF
+)
+
+if (EMDEVIF_NOT_SET_OPTIMIZE)
+    unset(EMDEVIF__COMPILE_OPTIMIZE)
+endif ()
+
+if (MSVC)
+    target_compile_options(${PROJECT_NAME} PUBLIC
+        /W4 /source-charset:utf-8 /execution-charset:gb2312
+        ${EMDEVIF__COMPILE_OPTIMIZE}
+    )
+else ()
     target_compile_options(${PROJECT_NAME} PUBLIC
         -Wall -Wextra -Wpedantic
         ${EMDEVIF__COMPILE_OPTIMIZE}
