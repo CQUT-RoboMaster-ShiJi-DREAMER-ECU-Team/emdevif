@@ -86,13 +86,13 @@ public:
 
     template<BitsType_t other_bits>
         requires ValidBitIntWidth<other_bits>  // NOLINTNEXTLINE(*-explicit-constructor)
-    constexpr UBitInt(const BitInt<other_bits>& other) noexcept : value(overflowCast(static_cast<RealType>(other)))
+    constexpr UBitInt(const UBitInt<other_bits>& other) noexcept : value(overflowCast(static_cast<RealType>(other)))
     {
     }
 
     template<BitsType_t other_bits>
         requires ValidBitIntWidth<other_bits>
-    constexpr UBitInt& operator=(const BitInt<other_bits>& other) noexcept
+    constexpr UBitInt& operator=(const UBitInt<other_bits>& other) noexcept
     {
         value = overflowCast(static_cast<RealType>(other));
 
@@ -280,7 +280,7 @@ public:
 
     template<BitsType_t other_bits>
         requires ValidBitIntWidth<other_bits>
-    constexpr RealType operator<<(const BitInt<other_bits> shift) const noexcept
+    constexpr RealType operator<<(const UBitInt<other_bits> shift) const noexcept
     {
         return overflowCast(value << RealType(shift));
     }
@@ -295,7 +295,7 @@ public:
 
     template<BitsType_t other_bits>
         requires ValidBitIntWidth<other_bits>
-    constexpr RealType operator>>(const BitInt<other_bits> shift) const noexcept
+    constexpr RealType operator>>(const UBitInt<other_bits> shift) const noexcept
     {
         return overflowCast(value >> RealType(shift));
     }
@@ -401,7 +401,7 @@ public:
 
     template<BitsType_t other_bits>
         requires ValidBitIntWidth<other_bits>
-    constexpr UBitInt& operator<<=(const BitInt<other_bits> shift) const noexcept
+    constexpr UBitInt& operator<<=(const UBitInt<other_bits> shift) const noexcept
     {
         return *this = *this << shift;
     }
@@ -416,7 +416,7 @@ public:
 
     template<BitsType_t other_bits>
         requires ValidBitIntWidth<other_bits>
-    constexpr UBitInt& operator>>=(const BitInt<other_bits> shift) const noexcept
+    constexpr UBitInt& operator>>=(const UBitInt<other_bits> shift) const noexcept
     {
         return *this = *this >> shift;
     }
