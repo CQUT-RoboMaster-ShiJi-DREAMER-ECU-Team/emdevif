@@ -12,6 +12,7 @@
 
 import emdevif.util.BitInt;
 
+// 更详细的测试见 https://github.com/du-yicheng23/emdevif_util_BitInt_test
 static TEST_SUIT(BitIntTest)
 {
     using emdevif::BitInt;
