@@ -36,6 +36,8 @@ if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
         target_link_libraries(${PROJECT_NAME} PUBLIC freertos_kernel)
     endif ()
 
+    target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_util)
+
     target_sources(${PROJECT_NAME} PUBLIC
         FILE_SET emdevif__freertos_impl_modules TYPE CXX_MODULES FILES
             Implements/FreeRTOS/msg_queue_implements.cppm
