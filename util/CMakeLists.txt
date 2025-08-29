@@ -12,6 +12,7 @@ target_sources(${PROJECT_NAME}
         BitInt.cppm
 
     PUBLIC FILE_SET emdevif_util_modules TYPE CXX_MODULES FILES
+        Implements/BitInt/bit_int_base.cppm
         Implements/BitInt/signed_bit_int.cppm
         Implements/BitInt/unsigned_bit_int.cppm
 

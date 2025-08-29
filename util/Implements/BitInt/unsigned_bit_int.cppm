@@ -21,7 +21,7 @@ module;
 #include "BitInt_exception_config.hpp"
 
 export module emdevif.util.BitInt:unsigned_partial;
-import :signed_partial;
+import :base;
 
 export namespace emdevif {
 
@@ -43,9 +43,11 @@ protected:  // for testing
 
     /* clang-format on */
 
+    static_assert(BitInt_internal::bitsOf<RealType>() != 0);
+
     static constexpr RealType overflowCast(const RealType value) noexcept
     {
-        if constexpr (bits == bitsOf<RealType>()) {
+        if constexpr (bits == BitInt_internal::bitsOf<RealType>()) {
             return value;
         }
         else {
@@ -56,7 +58,7 @@ protected:  // for testing
 public:
     static constexpr RealType max() noexcept
     {
-        if constexpr (bits == bitsOf<RealType>()) {
+        if constexpr (bits == BitInt_internal::bitsOf<RealType>()) {
             return std::numeric_limits<RealType>::max();
         }
         else {

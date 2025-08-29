@@ -124,6 +124,16 @@ static TEST_SUIT(BitIntTest)
 
         c6 = 0b11101;
         INT_EXPECT_EQ(c6 & 0b11111, 0b11101);
+
+        uint32_t c = 31;
+        emdevif::UBitInt<24> u24 = c;
+        INT_EXPECT_EQ(c, u24);
+
+        auto func = []() {
+            uint32_t a_ = 24;
+            return emdevif::UBitInt<18>(a_);
+        };
+        INT_EXPECT_EQ(func(), 24);
     }
     TEST_CASE_END();
 }

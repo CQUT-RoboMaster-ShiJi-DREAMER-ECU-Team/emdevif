@@ -9,5 +9,6 @@
 module;
 
 export module emdevif.util.BitInt;
+export import :base;
 export import :signed_partial;
 export import :unsigned_partial;

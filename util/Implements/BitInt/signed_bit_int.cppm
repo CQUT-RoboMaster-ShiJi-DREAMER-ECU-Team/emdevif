@@ -23,33 +23,9 @@ module;
 #include "BitInt_exception_config.hpp"
 
 export module emdevif.util.BitInt:signed_partial;
+import :base;
 
 export namespace emdevif {
-
-using BitsType_t = uint_fast8_t;
-
-template<BitsType_t bits>
-concept ValidBitIntWidth = (bits <= 64U);
-
-template<std::integral T>
-consteval BitsType_t bitsOf() noexcept
-{
-    if constexpr (std::is_same_v<T, int8_t> || std::is_same_v<T, uint8_t>) {
-        return 8U;
-    }
-    else if constexpr (std::is_same_v<T, int16_t> || std::is_same_v<T, uint16_t>) {
-        return 16U;
-    }
-    else if constexpr (std::is_same_v<T, int32_t> || std::is_same_v<T, uint32_t>) {
-        return 32U;
-    }
-    else if constexpr (std::is_same_v<T, int64_t> || std::is_same_v<T, uint64_t>) {
-        return 64U;
-    }
-    else {
-        return 0U;
-    }
-}
 
 template<BitsType_t bits>
     requires ValidBitIntWidth<bits>
@@ -79,10 +55,11 @@ protected:  // for testing
     /* clang-format on */
 
     static_assert(sizeof(SignedType) == sizeof(RealType));
+    static_assert(BitInt_internal::bitsOf<RealType>() != 0);
 
     static constexpr RealType truncateToReal(const SignedType v) noexcept
     {
-        if constexpr (bits == bitsOf<RealType>()) {
+        if constexpr (bits == BitInt_internal::bitsOf<RealType>()) {
             return std::bit_cast<RealType>(v);
         }
         else {
@@ -92,11 +69,11 @@ protected:  // for testing
 
     static constexpr SignedType transToSigned(const RealType v) noexcept
     {
-        if constexpr (bits == bitsOf<RealType>()) {
+        if constexpr (bits == BitInt_internal::bitsOf<RealType>()) {
             return std::bit_cast<SignedType>(v);
         }
         else {
-            constexpr auto shift = bitsOf<RealType>() - bits;
+            constexpr auto shift = BitInt_internal::bitsOf<RealType>() - bits;
             return (static_cast<SignedType>(v << shift)) >> shift;
         }
     }
