@@ -8,14 +8,17 @@
 
 module;
 
-#include <cstddef>
+#include <cstdint>
 
 #include "emdevif/fault_handler.hpp"
 
 export module emdevif.sys.event_group:interface;
+import :definitions;
 
 export import emdevif.error_handler;
 export import emdevif.sys.thread;
+export import emdevif.util.BitInt;
+import emdevif.sys.thread;
 
 export namespace emdevif {
 
@@ -49,7 +52,24 @@ public:
         handle_ = nullptr;
     }
 
-    static consteval auto maxEventBits() noexcept;
+    static constexpr BitsType_t maxEventBits = EventGroup_internal::maxEventBits();
+
+    using EventBits_t = UBitInt<maxEventBits>;
+
+    auto getBits(bool in_isr) noexcept -> EventBits_t;
+
+    auto setBits(bool in_isr, EventBits_t bits) noexcept -> EventBits_t;
+
+    auto clearBits(bool in_isr, EventBits_t bits) noexcept -> EventBits_t;
+
+    auto waitBits(EventBits_t bits_wait_for,
+                  bool clear_on_exit,
+                  bool wait_for_all_bits,
+                  SysTick_t timeout_tick = Thread::MAX_DELAY()) noexcept -> EventBits_t;
+
+    EventBits_t sync(EventBits_t bits_to_set,
+                     EventBits_t bits_wait_for,
+                     SysTick_t timeout_tick = Thread::MAX_DELAY()) noexcept;
 
     [[nodiscard]] Handle getHandle() const
     {

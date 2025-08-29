@@ -45,5 +45,6 @@ if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
             Implements/FreeRTOS/mutex_implements.cppm
             Implements/FreeRTOS/semaphore_implements.cppm
             Implements/FreeRTOS/event_group_implements.cppm
+            Implements/FreeRTOS/event_group_definitions.cppm
     )
 endif ()

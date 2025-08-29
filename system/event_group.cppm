@@ -9,5 +9,6 @@
 module;
 
 export module emdevif.sys.event_group;
+export import :definitions;
 export import :interface;
 export import :implements;
