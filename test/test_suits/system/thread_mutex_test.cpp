@@ -241,7 +241,7 @@ TEST_SUIT(ThreadAssignAndMoveTest)
                 thd.exit();
             },
             &argb);
-        ASSERT_TRUE(!b_thread.getHandle().has_value(), "Thread Create failed!");
+        ASSERT_TRUE(b_thread.getHandle().has_value(), "Thread Create failed!");
         ASSERT_TRUE(a_thread.getHandle().value_or(nullptr) != b_thread.getHandle().value_or(nullptr),
                     "a_thread = %p, b_thread = %p",
                     a_thread.getHandle().value_or(nullptr),
