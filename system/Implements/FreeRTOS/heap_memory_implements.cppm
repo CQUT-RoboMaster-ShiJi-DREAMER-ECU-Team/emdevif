@@ -1,0 +1,123 @@
+/**
+ * @file heap_memory_implements.cppm
+ * @module emdevif.sys.heap:implements
+ * @author DuYicheng
+ * @date 2025-08-30
+ * @brief 堆内存 - FreeRTOS 实现
+ */
+
+module;
+
+#include <memory>
+#include <utility>
+
+#include "FreeRTOS.h"
+
+export module emdevif.sys.heap:implements;
+import :interface;
+
+namespace emdevif::heap::heap_internal {
+
+void* mallocByte(const std::size_t size_in_bytes) noexcept
+{
+    return pvPortMalloc(size_in_bytes);
+}
+
+void free(void* block) noexcept
+{
+    vPortFree(block);
+}
+
+}  // namespace emdevif::heap::heap_internal
+
+export namespace emdevif::heap {
+
+template<typename T, typename... Args>
+T* construct(Args&&... args)
+{
+    auto ret = static_cast<T*>(heap_internal::mallocByte(sizeof(T)));
+    if (ret == nullptr) {
+        throw std::bad_alloc();
+    }
+
+    try {
+        std::construct_at(ret, std::forward<Args>(args)...);
+    }
+    catch (...) {
+        heap_internal::free(ret);
+        throw;
+    }
+
+    return ret;
+}
+
+template<typename T, typename... Args>
+T* construct(std::nothrow_t, Args&&... args) noexcept
+{
+    auto ret = static_cast<T*>(heap_internal::mallocByte(sizeof(T)));
+    if (ret == nullptr) {
+        return nullptr;
+    }
+
+    std::construct_at(ret, std::forward<Args>(args)...);
+
+    return ret;
+}
+
+template<typename T>
+void destruct(T*& p) noexcept
+{
+    if (p == nullptr) {
+        return;
+    }
+
+    std::destroy_at(p);
+    heap_internal::free(p);
+
+    p = nullptr;
+}
+
+class Deleter
+{
+public:
+    void operator()(void* p) const
+    {
+        heap_internal::free(p);
+    }
+};
+
+template<typename T>
+using unique_ptr = std::unique_ptr<T, Deleter>;
+
+template<typename T, typename... Args>
+unique_ptr<T> make_unique(Args&&... args)
+{
+    auto p = static_cast<T*>(heap_internal::mallocByte(sizeof(T)));
+    if (p == nullptr) {
+        throw std::bad_alloc();
+    }
+
+    try {
+        std::construct_at(p, std::forward<Args>(args)...);
+        return unique_ptr<T>(p);
+    }
+    catch (...) {
+        heap_internal::free(p);
+        throw;
+    }
+}
+
+template<typename T, typename... Args>
+unique_ptr<T> make_unique(std::nothrow_t, Args&&... args) noexcept
+{
+    auto p = static_cast<T*>(heap_internal::mallocByte(sizeof(T)));
+    if (p == nullptr) {
+        return nullptr;
+    }
+
+    std::construct_at(p, std::forward<Args>(args)...);
+
+    return unique_ptr<T>(p);
+}
+
+}  // namespace emdevif::heap
