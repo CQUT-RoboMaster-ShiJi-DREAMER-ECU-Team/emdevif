@@ -152,11 +152,11 @@ Thread::StronglyTypedHandle Thread::create(const Attribute& attribute, const Thr
 
 ErrorCode Thread::destroy(Thread& obj)
 {
-    if (obj.getHandle() == nullptr) {
+    if (obj.handle_ == nullptr) {
         return ErrorCode::InvalidArgument;
     }
 
-    const auto handle_value = static_cast<TaskHandle_t>(obj.getHandle());
+    const auto handle_value = static_cast<TaskHandle_t>(obj.handle_);
     obj.handle_ = nullptr;
 
     if (eTaskGetState(handle_value) != eDeleted) {

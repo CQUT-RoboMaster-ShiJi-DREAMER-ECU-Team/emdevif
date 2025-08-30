@@ -9,6 +9,7 @@
 module;
 
 #include <cstdint>
+#include <optional>
 
 #include "emdevif/fault_handler.hpp"
 
@@ -71,8 +72,12 @@ public:
                      EventBits_t bits_wait_for,
                      SysTick_t timeout_tick = Thread::MAX_DELAY()) noexcept;
 
-    [[nodiscard]] Handle getHandle() const
+    [[nodiscard]] std::optional<Handle> getHandle() const
     {
+        if (handle_ == nullptr) {
+            return std::nullopt;
+        }
+
         return handle_;
     }
 

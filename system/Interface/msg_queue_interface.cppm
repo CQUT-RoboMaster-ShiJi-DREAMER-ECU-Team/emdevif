@@ -9,6 +9,7 @@
 module;
 
 #include <cstdint>
+#include <optional>
 
 #include "emdevif/fault_handler.hpp"
 
@@ -60,8 +61,12 @@ public:
 
     [[nodiscard]] std::size_t remainCount() const;
 
-    [[nodiscard]] Handle getHandle() const
+    [[nodiscard]] std::optional<Handle> getHandle() const
     {
+        if (handle_ == nullptr) {
+            return std::nullopt;
+        }
+
         return handle_;
     }
 

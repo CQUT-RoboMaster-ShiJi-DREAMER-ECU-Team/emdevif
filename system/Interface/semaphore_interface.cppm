@@ -9,6 +9,7 @@
 module;
 
 #include <cstddef>
+#include <optional>
 
 #include "emdevif/fault_handler.hpp"
 
@@ -61,8 +62,12 @@ public:
         return acquire(in_isr, 0U);
     }
 
-    [[nodiscard]] Handle getHandle() const
+    [[nodiscard]] std::optional<Handle> getHandle() const
     {
+        if (handle_ == nullptr) {
+            return std::nullopt;
+        }
+
         return handle_;
     }
 

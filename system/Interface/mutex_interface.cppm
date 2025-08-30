@@ -8,9 +8,10 @@
 
 module;
 
-#include "emdevif/fault_handler.hpp"
-
 #include <cstdint>
+#include <optional>
+
+#include "emdevif/fault_handler.hpp"
 
 export module emdevif.sys.mutex:interface;
 
@@ -59,8 +60,12 @@ public:
 
     void unlock();
 
-    [[nodiscard]] Handle getHandle() const
+    [[nodiscard]] std::optional<Handle> getHandle() const
     {
+        if (handle_ == nullptr) {
+            return std::nullopt;
+        }
+
         return handle_;
     }
 

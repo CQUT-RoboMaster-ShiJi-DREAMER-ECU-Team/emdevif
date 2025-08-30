@@ -8,10 +8,12 @@
 
 module;
 
+#include <cstdint>
+
+#include <optional>
+
 #include "emdevif/attributes_and_useful_macros.h"
 #include "emdevif/fault_handler.hpp"
-
-#include <cstdint>
 
 export module emdevif.sys.thread:interface;
 
@@ -104,8 +106,12 @@ public:
 
     void join();
 
-    [[nodiscard]] Handle getHandle() const
+    [[nodiscard]] std::optional<Handle> getHandle() const
     {
+        if (handle_ == nullptr) {
+            return std::nullopt;
+        }
+
         return handle_;
     }
 
