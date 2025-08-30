@@ -13,4 +13,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     ${EMDEVIF_TEST_SUITS_SRC}
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE emdevif emdevif_test_framework)
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE emdevif emdevif_test_framework emdevif_compile_options
+)

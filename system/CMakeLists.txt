@@ -4,7 +4,10 @@ project(emdevif_system C CXX)
 
 add_library(${PROJECT_NAME} STATIC)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_core)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC emdevif_core
+    PRIVATE emdevif_compile_options
+)
 
 target_sources(${PROJECT_NAME}
     PUBLIC FILE_SET emdevif_thread_exported_modules_unit TYPE CXX_MODULES FILES
