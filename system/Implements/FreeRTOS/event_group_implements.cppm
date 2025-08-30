@@ -78,7 +78,7 @@ inline auto EventGroup::getBits(const bool in_isr) noexcept -> EventGroup::Event
         ret = xEventGroupGetBits(static_cast<EventGroupHandle_t>(handle_));
     }
 
-    return ret;
+    return EventGroup::EventBits_t(ret);
 }
 
 inline auto EventGroup::setBits(const bool in_isr, const EventBits_t bits) noexcept -> EventGroup::EventBits_t
@@ -98,7 +98,7 @@ inline auto EventGroup::setBits(const bool in_isr, const EventBits_t bits) noexc
         ret = xEventGroupSetBits(static_cast<EventGroupHandle_t>(handle_), bits);
     }
 
-    return ret;
+    return EventGroup::EventBits_t(ret);
 }
 
 inline auto EventGroup::clearBits(const bool in_isr, const EventBits_t bits) noexcept -> EventGroup::EventBits_t
@@ -116,7 +116,7 @@ inline auto EventGroup::clearBits(const bool in_isr, const EventBits_t bits) noe
         ret = xEventGroupClearBits(static_cast<EventGroupHandle_t>(handle_), bits);
     }
 
-    return ret;
+    return EventGroup::EventBits_t(ret);
 }
 
 inline auto EventGroup::waitBits(const EventBits_t bits_wait_for,
@@ -124,18 +124,19 @@ inline auto EventGroup::waitBits(const EventBits_t bits_wait_for,
                                  const bool wait_for_all_bits,
                                  const SysTick_t timeout_tick) noexcept -> EventGroup::EventBits_t
 {
-    return xEventGroupWaitBits(static_cast<EventGroupHandle_t>(handle_),
-                               bits_wait_for,
-                               clear_on_exit,
-                               wait_for_all_bits,
-                               timeout_tick);
+    return EventGroup::EventBits_t(xEventGroupWaitBits(static_cast<EventGroupHandle_t>(handle_),
+                                                       bits_wait_for,
+                                                       clear_on_exit,
+                                                       wait_for_all_bits,
+                                                       timeout_tick));
 }
 
 inline EventGroup::EventBits_t EventGroup::sync(const EventBits_t bits_to_set,
                                                 const EventBits_t bits_wait_for,
                                                 const SysTick_t timeout_tick) noexcept
 {
-    return xEventGroupSync(static_cast<EventGroupHandle_t>(handle_), bits_to_set, bits_wait_for, timeout_tick);
+    return EventGroup::EventBits_t(
+        xEventGroupSync(static_cast<EventGroupHandle_t>(handle_), bits_to_set, bits_wait_for, timeout_tick));
 }
 
 EventGroup::~EventGroup()
