@@ -12,6 +12,7 @@
 void initOnceTest();
 void bitIntTest();
 
+void heapTest();
 void threadAndMutexTest();
 
 #endif // !EMDEVIF_TEST_MAIN_HPP

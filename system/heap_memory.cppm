@@ -9,5 +9,4 @@
 module;
 
 export module emdevif.sys.heap;
-export import :interface;
 export import :implements;

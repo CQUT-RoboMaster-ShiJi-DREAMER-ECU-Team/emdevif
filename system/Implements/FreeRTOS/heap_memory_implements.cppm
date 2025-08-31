@@ -14,7 +14,6 @@ module;
 #include "FreeRTOS.h"
 
 export module emdevif.sys.heap:implements;
-import :interface;
 
 namespace emdevif::heap::heap_internal {
 
@@ -119,5 +118,43 @@ unique_ptr<T> make_unique(std::nothrow_t, Args&&... args) noexcept
 
     return unique_ptr<T>(p);
 }
+
+template<typename T>
+class Allocator
+{
+public:
+    using pointer = T*;
+    using const_pointer = const T*;
+
+    using void_pointer = void*;
+    using const_void_pointer = const void*;
+
+    using value_type = T;
+
+    using size_type = std::size_t;
+    using difference_type = std::ptrdiff_t;
+
+public:
+    Allocator() noexcept = default;
+
+    // ReSharper disable once CppNonExplicitConvertingConstructor
+    template<typename U>
+    Allocator(const Allocator<U>&) noexcept  // NOLINT(*-explicit-constructor)
+    {
+    }
+
+    // ReSharper disable once CppMemberFunctionMayBeStatic
+    pointer allocate(const size_type n)
+    {
+        return static_cast<pointer>(heap_internal::mallocByte(n * sizeof(value_type)));
+    }
+
+    // ReSharper disable once CppMemberFunctionMayBeStatic
+    // ReSharper disable once CppParameterMayBeConst
+    void deallocate(pointer p, const size_type)
+    {
+        heap_internal::free(p);
+    }
+};
 
 }  // namespace emdevif::heap

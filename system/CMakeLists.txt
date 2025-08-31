@@ -25,7 +25,6 @@ target_sources(${PROJECT_NAME}
         Interface/mutex_interface.cppm
         Interface/semaphore_interface.cppm
         Interface/event_group_interface.cppm
-        Interface/heap_memory_interface.cppm
 )
 
 if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")

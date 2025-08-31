@@ -12,5 +12,6 @@ extern "C" void emdevif_testEntry(void)
     initOnceTest();
     bitIntTest();
 
+    heapTest();
     threadAndMutexTest();
 }
