@@ -7,11 +7,17 @@
 
 #include "test_main.hpp"
 
+#include "heap_usage_logger.hpp"
+
 extern "C" void emdevif_testEntry(void)
 {
+    logSystemHeapUsage();
+
     initOnceTest();
     bitIntTest();
 
     heapTest();
     threadAndMutexTest();
+
+    logSystemHeapUsage();
 }

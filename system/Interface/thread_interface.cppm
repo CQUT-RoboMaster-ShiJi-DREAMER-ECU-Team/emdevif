@@ -11,6 +11,8 @@ module;
 #include <cstdint>
 
 #include <optional>
+#include <tuple>
+#include <utility>
 
 #include "emdevif/attributes_and_useful_macros.h"
 #include "emdevif/fault_handler.hpp"
@@ -18,6 +20,7 @@ module;
 export module emdevif.sys.thread:interface;
 
 export import emdevif.error_handler;
+import emdevif.sys.heap;
 
 export namespace emdevif {
 
@@ -88,7 +91,105 @@ public:
 
     static auto msToTick(SysTick_t ms);
 
-    static StronglyTypedHandle create(const Attribute& attribute, ThreadEntry entry, void* arguments);
+    static StronglyTypedHandle create(const Attribute& attribute, ThreadEntry entry, void* arguments) noexcept;
+
+private:
+    template<typename Func, typename... Args>
+    class FuncWrapper final
+    {
+    public:
+        explicit FuncWrapper(const Func& func, Args&&... args) noexcept
+            : func_(func), args_(std::forward<Args>(args)...)
+        {
+        }
+
+        static void realFunc(void* arguments) noexcept
+        {
+            auto arg_pack = static_cast<FuncWrapper*>(arguments);
+
+            constexpr auto element_count = std::tuple_size_v<decltype(arg_pack->args_)>;
+            static_assert(element_count <= 8, "The parameter of function should be less than or equal to 8.");
+            if constexpr (element_count == 1) {
+                arg_pack->func_(std::get<0>(arg_pack->args_));
+            }
+            else if constexpr (element_count == 2) {
+                arg_pack->func_(std::get<0>(arg_pack->args_), std::get<1>(arg_pack->args_));
+            }
+            else if constexpr (element_count == 3) {
+                arg_pack->func_(std::get<0>(arg_pack->args_),
+                                std::get<1>(arg_pack->args_),
+                                std::get<2>(arg_pack->args_));
+            }
+            else if constexpr (element_count == 4) {
+                arg_pack->func_(std::get<0>(arg_pack->args_),
+                                std::get<1>(arg_pack->args_),
+                                std::get<2>(arg_pack->args_),
+                                std::get<3>(arg_pack->args_));
+            }
+            else if constexpr (element_count == 5) {
+                arg_pack->func_(std::get<0>(arg_pack->args_),
+                                std::get<1>(arg_pack->args_),
+                                std::get<2>(arg_pack->args_),
+                                std::get<3>(arg_pack->args_),
+                                std::get<4>(arg_pack->args_));
+            }
+            else if constexpr (element_count == 6) {
+                arg_pack->func_(std::get<0>(arg_pack->args_),
+                                std::get<1>(arg_pack->args_),
+                                std::get<2>(arg_pack->args_),
+                                std::get<3>(arg_pack->args_),
+                                std::get<4>(arg_pack->args_),
+                                std::get<5>(arg_pack->args_));
+            }
+            else if constexpr (element_count == 7) {
+                arg_pack->func_(std::get<0>(arg_pack->args_),
+                                std::get<1>(arg_pack->args_),
+                                std::get<2>(arg_pack->args_),
+                                std::get<3>(arg_pack->args_),
+                                std::get<4>(arg_pack->args_),
+                                std::get<5>(arg_pack->args_),
+                                std::get<6>(arg_pack->args_));
+            }
+            else if constexpr (element_count == 8) {
+                arg_pack->func_(std::get<0>(arg_pack->args_),
+                                std::get<1>(arg_pack->args_),
+                                std::get<2>(arg_pack->args_),
+                                std::get<3>(arg_pack->args_),
+                                std::get<4>(arg_pack->args_),
+                                std::get<5>(arg_pack->args_),
+                                std::get<6>(arg_pack->args_),
+                                std::get<7>(arg_pack->args_));
+            }
+        }
+
+        Func func_;
+        std::tuple<Args...> args_;
+    };
+
+    struct MulParamThreadFuncHandle {
+        Handle handle;
+        void* func_wrapper_memory_block;
+    };
+
+public:
+    enum class MulParam {
+        mulparam
+    };
+    static constexpr auto mulparam = MulParam::mulparam;
+
+    template<typename Func, typename... Args>
+    static auto create(const Attribute& attribute, MulParam, const Func& entry, Args&&... args) noexcept
+        -> MulParamThreadFuncHandle
+    {
+        auto func_wrapper =
+            heap::construct<FuncWrapper<Func, Args...>>(std::nothrow, entry, std::forward<Args>(args)...);
+        if (func_wrapper == nullptr) {
+            return {.handle = nullptr, .func_wrapper_memory_block = nullptr};
+        }
+
+        return {.handle = create(attribute, func_wrapper->realFunc, func_wrapper).value,
+                .func_wrapper_memory_block = static_cast<void*>(func_wrapper)};
+    }
 
     static ErrorCode destroy(Thread& obj);
 
@@ -136,12 +237,39 @@ public:
     {
     }
 
+    explicit Thread(const MulParamThreadFuncHandle mul_param_thread_func_handle)
+        : handle_(mul_param_thread_func_handle.handle),
+          func_wrapper_memory_block_(mul_param_thread_func_handle.func_wrapper_memory_block)
+    {
+    }
+
+    Thread& operator=(const MulParamThreadFuncHandle mul_param_thread_func_handle)
+    {
+        if (handle_ != nullptr || func_wrapper_memory_block_ != nullptr) {
+            EMDEVIF_FAULT_HANDLER("Should not create thread on non-deleted thread!");
+            return *this;
+        }
+
+        handle_ = mul_param_thread_func_handle.handle;
+        func_wrapper_memory_block_ = mul_param_thread_func_handle.func_wrapper_memory_block;
+
+        return *this;
+    }
+
+    template<typename Func, typename... Args>
+    Thread(const Attribute& attribute, MulParam, const Func& entry, Args&&... args)
+        : Thread(create(attribute, mulparam, entry, std::forward<Args>(args)...))
+    {
+    }
+
     Thread(const Thread&) = delete;
     Thread& operator=(const Thread&) = delete;
 
-    Thread(Thread&& other) noexcept : handle_(other.handle_)
+    Thread(Thread&& other) noexcept
+        : handle_(other.handle_), func_wrapper_memory_block_(other.func_wrapper_memory_block_)
     {
         other.handle_ = nullptr;
+        other.func_wrapper_memory_block_ = nullptr;
     }
 
     Thread& operator=(Thread&& other) noexcept
@@ -151,7 +279,10 @@ public:
         }
 
         this->handle_ = other.handle_;
+        this->func_wrapper_memory_block_ = other.func_wrapper_memory_block_;
+
         other.handle_ = nullptr;
+        other.func_wrapper_memory_block_ = nullptr;
 
         return *this;
     }
@@ -160,6 +291,7 @@ public:
 
 private:
     Handle handle_;
+    void* func_wrapper_memory_block_{nullptr};
 };
 
 }  // namespace emdevif

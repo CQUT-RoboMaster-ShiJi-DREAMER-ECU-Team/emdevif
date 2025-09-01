@@ -10,6 +10,9 @@ module;
 
 #include <memory>
 #include <utility>
+#include <type_traits>
+
+#include "emdevif/concepts.hpp"
 
 #include "FreeRTOS.h"
 
@@ -63,14 +66,17 @@ T* construct(std::nothrow_t, Args&&... args) noexcept
     return ret;
 }
 
-template<typename T>
-void destruct(T*& p) noexcept
+template<PointerType T>
+void destruct(T& p) noexcept
 {
     if (p == nullptr) {
         return;
     }
 
-    std::destroy_at(p);
+    if constexpr (!std::is_same_v<std::remove_pointer_t<T> , void>) {
+        std::destroy_at(p);
+    }
+
     heap_internal::free(p);
 
     p = nullptr;

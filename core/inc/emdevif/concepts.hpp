@@ -28,6 +28,13 @@ template<typename Type>
 concept FloatingPointType = std::is_floating_point_v<Type>;
 
 /**
+ * 指针类型概念
+ * @tparam Type 类型
+ */
+template<typename Type>
+concept PointerType = std::is_pointer_v<Type>;
+
+/**
  * 矩阵可以相乘的概念
  * @tparam row1 乘号左边的矩阵的行数
  * @tparam col1 乘号左边的矩阵的列数

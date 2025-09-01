@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.28)
 project(emdevif_unit_test C CXX)
 
 add_subdirectory(emdevif_test_framework)
+add_subdirectory(heap_usage_logger)
 
 add_library(${PROJECT_NAME} STATIC)
 
@@ -15,4 +16,5 @@ target_sources(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE emdevif emdevif_test_framework emdevif_compile_options
+            emdevif_test_heap_logger
 )

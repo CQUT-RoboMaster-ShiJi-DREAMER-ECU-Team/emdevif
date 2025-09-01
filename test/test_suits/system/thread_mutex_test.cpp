@@ -8,7 +8,12 @@
 #include "emdevif_test_framework.h"
 
 #include <cstdint>
+#include <cmath>
+#include <cstdio>
+
 #include <utility>
+#include <functional>
+#include <string>
 
 import emdevif.sys.thread;
 import emdevif.sys.mutex;
@@ -275,9 +280,62 @@ TEST_SUIT(ThreadAssignAndMoveTest)
     TEST_CASE_END();
 }
 
+TEST_SUIT(MulParamFuncTest)
+{
+    TEST_CASE_BEGIN(Test)
+    {
+        static bool is_pass = true;
+
+        int outside = 42795;
+        emdevif::Thread th;
+
+        char error_msg[100];
+        error_msg[0] = '\0';
+
+        MutexGuard<uint8_t> flag{0b000};
+
+        auto func = [outside, &th, &flag, &error_msg](const int a, const float f, int& ref) noexcept -> void {
+            while (!(flag.get() & 0b011)) {
+                emdevif::Thread::delay(1);
+            }
+
+            if (outside != 42795 || a != 123 || std::abs(f - 114.514f) > 0.0001f || ref != 5) {
+                std::sprintf(error_msg, "outside = %d, a = %d, f = %f, ref = %d", outside, a, f, ref);
+                is_pass = false;
+            }
+
+            ref = -352;
+
+            flag.set(flag.get() | 0b100);
+
+            th.exit();
+        };
+
+        int num_for_ref = 5;
+        th = emdevif::Thread::create({.name = "MulParamThread", .stack_size = 128},
+                                     emdevif::Thread::mulparam,
+                                     func,
+                                     123,
+                                     114.514f,
+                                     std::ref(num_for_ref));
+
+        flag.set(flag.get() | 0b011);
+
+        while (flag.get() != 0b111) {
+            emdevif::Thread::delay(1);
+        }
+
+        ASSERT_TRUE(!th.getHandle().has_value(), "");
+        INT_EXPECT_EQ(num_for_ref, -352);
+        EXPECT_TRUE(is_pass)->MESSAGE("%s", error_msg);
+    }
+    TEST_CASE_END();
+}
+
 void threadAndMutexTest()
 {
     RUN_SUIT(MutexTest);
     RUN_SUIT(ThreadBasicTest);
     RUN_SUIT(ThreadAssignAndMoveTest);
+    RUN_SUIT(MulParamFuncTest);
 }

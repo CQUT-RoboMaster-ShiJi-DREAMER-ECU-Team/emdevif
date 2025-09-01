@@ -118,7 +118,9 @@ inline auto Thread::msToTick(const SysTick_t ms)
     return pdMS_TO_TICKS(ms);
 }
 
-Thread::StronglyTypedHandle Thread::create(const Attribute& attribute, const ThreadEntry entry, void* arguments)
+Thread::StronglyTypedHandle Thread::create(const Attribute& attribute,
+                                           const ThreadEntry entry,
+                                           void* arguments) noexcept
 {
     TaskHandle_t handle = nullptr;
 
@@ -218,6 +220,11 @@ Thread::~Thread()
 {
     if (handle_ != nullptr) {
         destroy(*this);
+        handle_ = nullptr;
+    }
+
+    if (func_wrapper_memory_block_ != nullptr) {
+        heap::destruct(func_wrapper_memory_block_);
     }
 }
 
