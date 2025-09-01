@@ -130,6 +130,7 @@ public:
      * 绝对延时
      *
      * 示例：@code
+     * import emdevif.sys.thread;
      * using namespace emdevif;
      *
      * constexpr auto delay_ticks = Thread::msToTick(100);
@@ -151,6 +152,7 @@ public:
      * 创建线程
      *
      * 动态创建的使用示例：@code
+     * import emdevif.sys.thread;
      * using namespace emdevif;
      *
      * void threadEntry(void* arguments)
@@ -175,6 +177,7 @@ public:
      * @endcode
      *
      * 静态创建的使用示例：@code
+     * import emdevif.sys.thread;
      * using namespace emdevif;
      *
      * constexpr auto thread_instance_stack_size = 128;
@@ -201,15 +204,15 @@ public:
 private:
     /**
      * 线程任意入口的函数包装器
-     * @tparam Func 线程的入口函数（函数返回值必须是 void，参数任意但不能超过 8 个）
+     * @tparam Func 线程的入口函数（函数返回值必须是 void，参数任意）
      * @tparam Args 这个入口函数的参数包
      */
     template<typename Func, typename... Args>
     class FuncWrapper final
     {
     public:
-        explicit FuncWrapper(const Func& func, Args&&... args) noexcept
-            : func_(func), args_(std::forward<Args>(args)...)
+        explicit FuncWrapper(Func&& func, Args&&... args) noexcept
+            : func_(std::forward<Func>(func)), args_(std::forward<Args>(args)...)
         {
         }
 
@@ -221,59 +224,7 @@ private:
         {
             auto arg_pack = static_cast<FuncWrapper*>(arguments);
 
-            constexpr auto element_count = std::tuple_size_v<decltype(arg_pack->args_)>;
-            static_assert(element_count <= 8, "The parameter of function should be less than or equal to 8.");
-            if constexpr (element_count == 1) {
-                arg_pack->func_(std::get<0>(arg_pack->args_));
-            }
-            else if constexpr (element_count == 2) {
-                arg_pack->func_(std::get<0>(arg_pack->args_), std::get<1>(arg_pack->args_));
-            }
-            else if constexpr (element_count == 3) {
-                arg_pack->func_(std::get<0>(arg_pack->args_),
-                                std::get<1>(arg_pack->args_),
-                                std::get<2>(arg_pack->args_));
-            }
-            else if constexpr (element_count == 4) {
-                arg_pack->func_(std::get<0>(arg_pack->args_),
-                                std::get<1>(arg_pack->args_),
-                                std::get<2>(arg_pack->args_),
-                                std::get<3>(arg_pack->args_));
-            }
-            else if constexpr (element_count == 5) {
-                arg_pack->func_(std::get<0>(arg_pack->args_),
-                                std::get<1>(arg_pack->args_),
-                                std::get<2>(arg_pack->args_),
-                                std::get<3>(arg_pack->args_),
-                                std::get<4>(arg_pack->args_));
-            }
-            else if constexpr (element_count == 6) {
-                arg_pack->func_(std::get<0>(arg_pack->args_),
-                                std::get<1>(arg_pack->args_),
-                                std::get<2>(arg_pack->args_),
-                                std::get<3>(arg_pack->args_),
-                                std::get<4>(arg_pack->args_),
-                                std::get<5>(arg_pack->args_));
-            }
-            else if constexpr (element_count == 7) {
-                arg_pack->func_(std::get<0>(arg_pack->args_),
-                                std::get<1>(arg_pack->args_),
-                                std::get<2>(arg_pack->args_),
-                                std::get<3>(arg_pack->args_),
-                                std::get<4>(arg_pack->args_),
-                                std::get<5>(arg_pack->args_),
-                                std::get<6>(arg_pack->args_));
-            }
-            else if constexpr (element_count == 8) {
-                arg_pack->func_(std::get<0>(arg_pack->args_),
-                                std::get<1>(arg_pack->args_),
-                                std::get<2>(arg_pack->args_),
-                                std::get<3>(arg_pack->args_),
-                                std::get<4>(arg_pack->args_),
-                                std::get<5>(arg_pack->args_),
-                                std::get<6>(arg_pack->args_),
-                                std::get<7>(arg_pack->args_));
-            }
+            std::apply(arg_pack->func_, arg_pack->args_);
         }
 
         Func func_;                 ///< 函数对象
@@ -301,6 +252,7 @@ public:
      * 使用示例：@code
      * #include <functional>  // std::ref requires
      *
+     * import emdevif.sys.thread;
      * using namespace emdevif;
      *
      * Thread thread;
@@ -313,7 +265,7 @@ public:
      *
      *     thread = Thread::create(
      *         {.name = "thread"},
-     *         Thread::mulparam,  // 用于表示这个函数是任意类型的参数
+     *         Thread::mulparam,  // 这个参数用于表示这个函数是任意类型的参数
      *         [capture, &ref_capture](int a, float f, int& ref) {  // 函数对象、有捕获列表的 lambda 表达式也可以
      *             // do something...
      *         },
@@ -323,21 +275,22 @@ public:
      *     );
      * }
      * @endcode
-     * @attention 会使用系统的堆内存，因此需要启动调度器后才能创建。
+     * @attention 会使用系统的堆内存，因此需要启动调度器后才能创建（不能静态创建）。
      * @tparam Func 线程的入口函数的类型
      * @tparam Args 这个入口函数的参数包
      * @param attribute 属性
      * @param Mulparam 必须传入 Thread::mulparam 以表示创建的线程的入口函数的参数类型、数量是任意的
-     * @param entry 线程的入口函数（可以是函数对象。函数返回值必须是 void，参数类型任意但不能超过 8 个）
+     * @param entry 线程的入口函数（可以是函数对象。函数返回值必须是 void，参数类型任意）
      * @param args 入口函数的参数
      * @return 创建好的多参数的线程函数的线程的强类型句柄
      */
     template<typename Func, typename... Args>
-    static auto create(const Attribute& attribute, MulParam, const Func& entry, Args&&... args) noexcept
+    static auto create(const Attribute& attribute, MulParam, Func&& entry, Args&&... args) noexcept
         -> MulParamThreadFuncHandle
     {
-        auto func_wrapper =
-            heap::construct<FuncWrapper<Func, Args...>>(std::nothrow, entry, std::forward<Args>(args)...);
+        auto func_wrapper = heap::construct<FuncWrapper<Func, Args...>>(std::nothrow,
+                                                                        std::forward<Func>(entry),
+                                                                        std::forward<Args>(args)...);
         if (func_wrapper == nullptr) {
             return {.handle = nullptr, .func_wrapper_memory_block = nullptr};
         }
@@ -346,8 +299,38 @@ public:
                 .func_wrapper_memory_block = static_cast<void*>(func_wrapper)};
     }
 
+    /**
+     * 删除线程
+     * @attention 不能删除静态创建的线程
+     * @param obj 待删除的线程实例
+     * @return 成功删除返回 Success；传入未创建好的或者已删除的线程实例返回 InvalidArgument
+     */
     static ErrorCode destroy(Thread& obj);
 
+    /**
+     * 退出当前线程
+     *
+     * 使用示例：@code
+     * import emdevif.sys.thread;
+     * using namespace emdevif;
+     *
+     * Thread thread;
+     *
+     * void threadEntry(Thread& th)
+     * {
+     *     // do something...
+     *
+     *     th.exit();  // 退出当前线程
+     *     // 注意：如果需要退出线程，不能直接退出，必须调用 th.exit() 才行。
+     *
+     *     // 程序不应该运行到此处
+     * }
+     *
+     * // 创建线程的示例参考 Thread::create 方法
+     * @endcode
+     * @attention[1] 这个函数一旦调用就不会返回。
+     * @attention[2] 静态创建的线程不能退出。
+     */
     EMDEVIF_NO_RETURN void exit();
 
     static void suspend(Handle handle);
