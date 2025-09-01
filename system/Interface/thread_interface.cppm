@@ -81,7 +81,7 @@ public:
     /**
      * 等待时间最大值
      */
-    static consteval auto MAX_DELAY() noexcept;
+    static consteval auto maxDelay() noexcept;
 
     static auto getTick(bool in_isr);
 

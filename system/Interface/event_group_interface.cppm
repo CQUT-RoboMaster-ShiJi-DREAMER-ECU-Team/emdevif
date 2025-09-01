@@ -66,11 +66,11 @@ public:
     auto waitBits(EventBits_t bits_wait_for,
                   bool clear_on_exit,
                   bool wait_for_all_bits,
-                  SysTick_t timeout_tick = Thread::MAX_DELAY()) noexcept -> EventBits_t;
+                  SysTick_t timeout_tick = Thread::maxDelay()) noexcept -> EventBits_t;
 
     EventBits_t sync(EventBits_t bits_to_set,
                      EventBits_t bits_wait_for,
-                     SysTick_t timeout_tick = Thread::MAX_DELAY()) noexcept;
+                     SysTick_t timeout_tick = Thread::maxDelay()) noexcept;
 
     [[nodiscard]] std::optional<Handle> getHandle() const
     {

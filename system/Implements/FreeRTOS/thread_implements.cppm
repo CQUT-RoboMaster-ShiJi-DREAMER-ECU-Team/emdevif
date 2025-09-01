@@ -52,7 +52,7 @@ private:
     StackType_t stack_buffer[stack_depth];
 };
 
-consteval auto Thread::MAX_DELAY() noexcept
+consteval auto Thread::maxDelay() noexcept
 {
     return portMAX_DELAY;
 }

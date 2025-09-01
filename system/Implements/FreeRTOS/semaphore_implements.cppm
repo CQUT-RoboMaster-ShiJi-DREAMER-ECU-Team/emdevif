@@ -151,7 +151,7 @@ public:
 
     void release(bool in_isr) noexcept;
 
-    ErrorCode acquire(bool in_isr, SysTick_t timeout_tick = Thread::MAX_DELAY()) noexcept;
+    ErrorCode acquire(bool in_isr, SysTick_t timeout_tick = Thread::maxDelay()) noexcept;
 
     ErrorCode try_acquire(const bool in_isr) noexcept
     {
