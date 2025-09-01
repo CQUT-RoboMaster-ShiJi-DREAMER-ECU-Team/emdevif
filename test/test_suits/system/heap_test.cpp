@@ -31,6 +31,8 @@ TEST_SUIT(HeapTest)
         a = heap::construct<int>(std::nothrow, 114514);
         ASSERT_TRUE(a != nullptr, "");
         INT_EXPECT_EQ(*a, 114514);
+
+        heap::destruct(a);
     }
     TEST_CASE_END();
 
@@ -63,15 +65,16 @@ TEST_SUIT(HeapTest)
         ASSERT_TRUE(b != nullptr, "");
 
         is_pass = true;
-        for (const auto i : {0, 1, 2}) {
-            for (const auto j : {1, 2, 3, 4}) {
-                if ((*b)[i][j - 1] != i * 4 + j) {
-                    is_pass = false;
-                    goto end_2dim_arr_test;
+        [&] {
+            for (const auto i : {0, 1, 2}) {
+                for (const auto j : {1, 2, 3, 4}) {
+                    if ((*b)[i][j - 1] != i * 4 + j) {
+                        is_pass = false;
+                        return;
+                    }
                 }
             }
-        }
-    end_2dim_arr_test:
+        }();
         EXPECT_TRUE(is_pass);
 
         heap::destruct(b);

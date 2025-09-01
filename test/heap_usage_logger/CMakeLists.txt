@@ -10,6 +10,7 @@ target_sources(${PROJECT_NAME} PUBLIC FILE_SET header TYPE HEADERS
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     freertos_kernel emdevif_test_framework emdevif_compile_options
+    nva_print
 )
 
 if ((DEFINED EMDEVIF_THREAD_SYSTEM) AND (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS"))
