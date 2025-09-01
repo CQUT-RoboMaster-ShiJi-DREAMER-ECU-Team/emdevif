@@ -12,6 +12,7 @@ module;
 #include "task.h"
 
 #include <utility>
+#include <type_traits>
 
 #include "emdevif/fault_handler.hpp"
 
@@ -26,6 +27,8 @@ import :interface;
 import emdevif.error_handler;
 
 export namespace emdevif {
+
+static_assert(std::is_same_v<SysTick_t, ::TickType_t>, "We need to keep SysTick_t same to TickType_t in FreeRTOS");
 
 template<std::size_t stack_depth>
 class Thread::StaticInstance
@@ -52,7 +55,7 @@ private:
     StackType_t stack_buffer[stack_depth];
 };
 
-consteval auto Thread::maxDelay() noexcept
+consteval SysTick_t Thread::maxDelay() noexcept
 {
     return portMAX_DELAY;
 }
@@ -66,7 +69,7 @@ consteval auto Thread::priorityMapRange() noexcept
                                                centered_priority + static_cast<UBaseType_t>(Priority::Realtime)};
 }
 
-auto Thread::priorityMapToSystem(const Priority priority)
+constexpr auto Thread::priorityMapToSystem(const Priority priority)
 {
     if (priority == Priority::Idle) {
         return static_cast<UBaseType_t>(0U);
@@ -82,7 +85,7 @@ auto Thread::priorityMapToSystem(const Priority priority)
     return static_cast<UBaseType_t>(centered_priority + static_cast<UBaseType_t>(priority));
 }
 
-inline auto Thread::getTick(const bool in_isr)
+inline SysTick_t Thread::getTick(const bool in_isr)
 {
     if (in_isr) {
         return xTaskGetTickCount();
@@ -113,7 +116,7 @@ inline ErrorCode Thread::delayUntil(const SysTick_t ticks)
     return ErrorCode::Success;
 }
 
-inline auto Thread::msToTick(const SysTick_t ms)
+inline SysTick_t Thread::msToTick(const SysTick_t ms)
 {
     return pdMS_TO_TICKS(ms);
 }
