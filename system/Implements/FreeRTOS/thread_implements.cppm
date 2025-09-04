@@ -217,7 +217,15 @@ inline void Thread::yield()
     taskYIELD();
 }
 
-[[maybe_unused]] inline void Thread::join() {}  // NOLINT
+[[maybe_unused]] inline bool Thread::joinable() noexcept  // NOLINT
+{
+    return false;
+}
+
+[[maybe_unused]] inline void Thread::join()  // NOLINT
+{
+    EMDEVIF_FAULT_HANDLER("FreeRTOS can not join!");
+}
 
 Thread::~Thread()
 {

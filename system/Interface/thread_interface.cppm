@@ -323,7 +323,7 @@ public:
      *     th.exit();  // 退出当前线程
      *     // 注意：如果需要退出线程，不能直接退出，必须调用 th.exit() 才行。
      *
-     *     // 程序不应该运行到此处
+     *     // 程序将不会运行到此处
      * }
      *
      * // 创建线程的示例参考 Thread::create 方法
@@ -333,18 +333,50 @@ public:
      */
     EMDEVIF_NO_RETURN void exit();
 
+    /**
+     * 挂起线程
+     * @param handle 待挂起的线程的句柄（可以通过 getHandle 方法获取）
+     */
     static void suspend(Handle handle);
 
+    /**
+     * 恢复被挂起的线程
+     * @param in_isr 是否在中断里调用
+     * @param handle 待恢复的线程的句柄（可以通过 getHandle 方法获取）
+     */
     static void resume(bool in_isr, Handle handle);
 
+    /**
+     * 启动调度器
+     */
     static void startScheduler();
 
+    /**
+     * 关闭调度器
+     */
     static void endScheduler();
 
+    /**
+     * 向实现提供一个提示，以重新调度当前线程的执行，允许其他线程运行。
+     * @attention 此函数的具体行为取决于底层系统的实现，需要参考实际系统的文档。
+     */
     static void yield();
 
+    /**
+     * 检查当前对象是否可连接的
+     * @return 可连接的状态
+     */
+    bool joinable() noexcept;
+
+    /**
+     * 连接线程。即阻塞当前线程，直到实例线程执行完毕
+     */
     void join();
 
+    /**
+     * 获得底层实现的句柄
+     * @return 一个可选值，如果线程存在，返回底层实现的句柄，否则返回 std::nullopt
+     */
     [[nodiscard]] std::optional<Handle> getHandle() const
     {
         if (handle_ == nullptr) {
