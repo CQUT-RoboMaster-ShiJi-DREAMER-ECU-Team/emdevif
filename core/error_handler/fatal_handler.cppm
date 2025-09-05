@@ -41,12 +41,12 @@ using FatalHandlerCallBack = void (*)(const char* file, int line, const char* me
  * @param line 所在行号
  * @param message 错误消息
  */
-EMDEVIF_NO_RETURN void defaultFaultHandler(const char* file, int line, const char* message);
+EMDEVIF_NO_RETURN void defaultFatalHandler(const char* file, int line, const char* message);
 
 /**
  * 致命错误回调函数（编译期初始化为默认的回调函数）
  */
-constinit FatalHandlerCallBack fatalHandlerCallback = defaultFaultHandler;
+constinit FatalHandlerCallBack fatalHandlerCallback = defaultFatalHandler;
 
 /**
  * 致命错误处理函数
@@ -66,6 +66,6 @@ export void fatalHandler(const char* file, const int line, const char* message =
  * 如果不调用这个函数，那么将采用默认的致命错误回调函数
  * @param callback 回调函数
  */
-export void registerFaultHandler(FatalHandlerCallBack callback);
+export void registerFatalHandler(FatalHandlerCallBack callback);
 
 }  // namespace emdevif

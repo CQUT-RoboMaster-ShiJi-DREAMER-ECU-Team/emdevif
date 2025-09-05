@@ -13,7 +13,7 @@ module emdevif.error_handler;
 
 namespace emdevif {
 
-EMDEVIF_NO_RETURN void defaultFaultHandler(const char* file, const int line, const char* message)
+EMDEVIF_NO_RETURN void defaultFatalHandler(const char* file, const int line, const char* message)
 {
     EMDEVIF_UNUSED(file);
     EMDEVIF_UNUSED(line);
@@ -23,7 +23,7 @@ EMDEVIF_NO_RETURN void defaultFaultHandler(const char* file, const int line, con
     }
 }
 
-void registerFaultHandler(const FatalHandlerCallBack callback)
+void registerFatalHandler(const FatalHandlerCallBack callback)
 {
     if (callback != nullptr) {
         fatalHandlerCallback = callback;
