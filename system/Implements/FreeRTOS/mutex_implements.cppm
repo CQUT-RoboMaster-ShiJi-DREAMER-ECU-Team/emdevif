@@ -13,7 +13,7 @@ module;
 #include "FreeRTOS.h"
 #include "semphr.h"
 
-#include "emdevif/fault_handler.hpp"
+#include "emdevif/fatal_handler.hpp"
 
 export module emdevif.sys.mutex:implements;
 import :interface;
@@ -86,7 +86,7 @@ inline ErrorCode Mutex::lock(const SysTick_t timeout_tick)
 inline void Mutex::unlock()
 {
     if (xSemaphoreGive(handle_) != pdTRUE) {
-        EMDEVIF_FAULT_HANDLER("Failed to Unlock mutex!");
+        EMDEVIF_FATAL_HANDLER("Failed to Unlock mutex!");
     }
 }
 

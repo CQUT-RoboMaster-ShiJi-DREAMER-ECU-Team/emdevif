@@ -11,7 +11,7 @@ module;
 #include <cstddef>
 #include <optional>
 
-#include "emdevif/fault_handler.hpp"
+#include "emdevif/fatal_handler.hpp"
 
 export module emdevif.sys.semaphore:interface;
 
@@ -81,7 +81,7 @@ public:
     CountingSemaphore& operator=(const StronglyTypedHandle strongly_handle)
     {
         if (handle_ != nullptr) {
-            EMDEVIF_FAULT_HANDLER("Should not create counting semaphore on non-deleted counting semaphore!");
+            EMDEVIF_FATAL_HANDLER("Should not create counting semaphore on non-deleted counting semaphore!");
             return *this;
         }
 

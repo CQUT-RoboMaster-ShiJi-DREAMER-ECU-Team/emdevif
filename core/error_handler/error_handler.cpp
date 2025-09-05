@@ -23,10 +23,10 @@ EMDEVIF_NO_RETURN void defaultFaultHandler(const char* file, const int line, con
     }
 }
 
-void registerFaultHandler(const FaultHandlerCallBack callback)
+void registerFaultHandler(const FatalHandlerCallBack callback)
 {
     if (callback != nullptr) {
-        faultHandlerCallback = callback;
+        fatalHandlerCallback = callback;
     }
 }
 

@@ -15,7 +15,7 @@ module;
 #include <utility>
 
 #include "emdevif/attributes_and_useful_macros.h"
-#include "emdevif/fault_handler.hpp"
+#include "emdevif/fatal_handler.hpp"
 
 export module emdevif.sys.thread:interface;
 
@@ -393,7 +393,7 @@ public:
     Thread& operator=(const StronglyTypedHandle strongly_handle)
     {
         if (handle_ != nullptr) {
-            EMDEVIF_FAULT_HANDLER("Should not create thread on non-deleted thread!");
+            EMDEVIF_FATAL_HANDLER("Should not create thread on non-deleted thread!");
             return *this;
         }
 
@@ -416,7 +416,7 @@ public:
     Thread& operator=(const MulParamThreadFuncHandle mul_param_thread_func_handle)
     {
         if (handle_ != nullptr || func_wrapper_memory_block_ != nullptr) {
-            EMDEVIF_FAULT_HANDLER("Should not create thread on non-deleted thread!");
+            EMDEVIF_FATAL_HANDLER("Should not create thread on non-deleted thread!");
             return *this;
         }
 

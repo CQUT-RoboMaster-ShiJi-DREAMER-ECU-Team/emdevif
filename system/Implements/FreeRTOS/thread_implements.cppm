@@ -14,7 +14,7 @@ module;
 #include <utility>
 #include <type_traits>
 
-#include "emdevif/fault_handler.hpp"
+#include "emdevif/fatal_handler.hpp"
 
 #if (configMAX_PRIORITIES < 6)
 #error \
@@ -180,7 +180,7 @@ inline void Thread::exit()
     vTaskDelete(nullptr);
 
     // 程序不应当执行到此处
-    EMDEVIF_FAULT_HANDLER("Should not running here.");
+    EMDEVIF_FATAL_HANDLER("Should not running here.");
     while (true) {
     }
 }
@@ -224,7 +224,7 @@ inline void Thread::yield()
 
 [[maybe_unused]] inline void Thread::join()  // NOLINT
 {
-    EMDEVIF_FAULT_HANDLER("FreeRTOS can not join!");
+    EMDEVIF_FATAL_HANDLER("FreeRTOS can not join!");
 }
 
 Thread::~Thread()

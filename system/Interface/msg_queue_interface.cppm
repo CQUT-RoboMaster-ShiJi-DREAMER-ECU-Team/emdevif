@@ -11,7 +11,7 @@ module;
 #include <cstdint>
 #include <optional>
 
-#include "emdevif/fault_handler.hpp"
+#include "emdevif/fatal_handler.hpp"
 
 export module emdevif.sys.message_queue:interface;
 
@@ -80,7 +80,7 @@ public:
     MessageQueue& operator=(const StronglyTypedHandle strongly_handle)
     {
         if (handle_ != nullptr) {
-            EMDEVIF_FAULT_HANDLER("Should not create message queue on non-deleted message queue!");
+            EMDEVIF_FATAL_HANDLER("Should not create message queue on non-deleted message queue!");
             return *this;
         }
 

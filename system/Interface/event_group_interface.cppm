@@ -11,7 +11,7 @@ module;
 #include <cstdint>
 #include <optional>
 
-#include "emdevif/fault_handler.hpp"
+#include "emdevif/fatal_handler.hpp"
 
 export module emdevif.sys.event_group:interface;
 import :definitions;
@@ -91,7 +91,7 @@ public:
     EventGroup& operator=(const StronglyTypedHandle strongly_handle)
     {
         if (handle_ != nullptr) {
-            EMDEVIF_FAULT_HANDLER("Should not create event group on non-deleted event group!");
+            EMDEVIF_FATAL_HANDLER("Should not create event group on non-deleted event group!");
             return *this;
         }
 
