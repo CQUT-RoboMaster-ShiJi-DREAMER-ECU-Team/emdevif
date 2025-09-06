@@ -16,6 +16,7 @@ target_sources(${PROJECT_NAME}
         error_handler/error_handler.cppm
         error_handler/error_code.cppm
         error_handler/fatal_handler.cppm
+        error_handler/ErrorMessage.cppm
 
     PRIVATE error_handler/error_handler.cpp
 )

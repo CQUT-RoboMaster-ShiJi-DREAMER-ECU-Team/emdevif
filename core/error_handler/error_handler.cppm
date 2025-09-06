@@ -11,3 +11,4 @@ module;
 export module emdevif.error_handler;
 export import :error_code;
 export import :fatal_handler;
+export import :ErrorMessage;
