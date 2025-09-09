@@ -36,12 +36,15 @@ public:
 
     using ReceiveCallback = ErrorCode (*)(bool in_isr, void* handle, std::span<uint8_t> received_data);
 
-    using TransmitFunction = ErrorCode (&)(bool in_isr, void* handle, std::span<uint8_t> data, uint32_t timeout_ms);
+    using TransmitFunction = ErrorCode (&)(bool in_isr,
+                                           void* handle,
+                                           std::span<const uint8_t> data,
+                                           uint32_t timeout_ms);
 
     struct BehaviourFunction {
-        ReceiveFunction receive_function;
+        const ReceiveFunction receive_function;
         ReceiveCallback receive_callback{nullptr};
-        TransmitFunction transmit_function;
+        const TransmitFunction transmit_function;
     };
 
 private:
@@ -90,14 +93,14 @@ public:
     }
 
     ErrorCode transmit(const bool in_isr,  // NOLINT(*-use-nodiscard)
-                       std::span<uint8_t> transmit_data,
+                       const std::span<const uint8_t> transmit_data,
                        const uint32_t timeout_ms) const noexcept
     {
         const auto status = transmit_function_(in_isr, handle_, transmit_data, timeout_ms);
         return status;
     }
 
-    static ErrorCode noTransmit(bool, void*, std::span<uint8_t>, uint32_t) noexcept;
+    static ErrorCode noTransmit(bool, void*, std::span<const uint8_t>, uint32_t) noexcept;
 
     static ErrorCode noReceive(bool, void*, std::span<uint8_t>, uint32_t) noexcept;
 };
@@ -109,7 +112,7 @@ public:
 
 namespace emdevif {
 
-ErrorCode Serial::noTransmit(bool, void*, std::span<uint8_t>, uint32_t) noexcept
+ErrorCode Serial::noTransmit(bool, void*, const std::span<const uint8_t>, uint32_t) noexcept
 {
     return ErrorCode::NotImplemented;
 }
