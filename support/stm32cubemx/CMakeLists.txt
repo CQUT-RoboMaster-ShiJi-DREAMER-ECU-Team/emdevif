@@ -12,5 +12,3 @@ target_link_libraries(${PROJECT_NAME}
 if (EMDEVIF_USE_STM32CUBEMX AND EMDEVIF_FREERTOS_USE_STM32CUBEMX)
     target_link_libraries(${PROJECT_NAME} PUBLIC FreeRTOS)
 endif ()
-
-target_compile_options(${PROJECT_NAME} PUBLIC ${EMDEVIF__COMPILE_OPTIMIZE})
