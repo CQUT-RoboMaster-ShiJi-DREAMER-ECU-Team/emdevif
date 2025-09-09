@@ -34,10 +34,7 @@ public:
                                           std::span<uint8_t> received_data,
                                           uint32_t timeout_ms);
 
-    using ReceiveCallback = ErrorCode (*)(bool in_isr,
-                                          void* handle,
-                                          ErrorCode received_status,
-                                          std::span<uint8_t> received_data);
+    using ReceiveCallback = ErrorCode (*)(bool in_isr, void* handle, std::span<uint8_t> received_data);
 
     using TransmitFunction = ErrorCode (&)(bool in_isr, void* handle, std::span<uint8_t> data, uint32_t timeout_ms);
 
@@ -80,13 +77,16 @@ public:
                       std::span<uint8_t> received_data,
                       const uint32_t timeout_ms) const noexcept
     {
-        const auto status = receive_function_(in_isr, handle_, received_data, timeout_ms);
+        return receive_function_(in_isr, handle_, received_data, timeout_ms);
+    }
 
-        if (timeout_ms == 0U && receive_callback_ != nullptr) {
-            return receive_callback_(in_isr, handle_, status, received_data);
+    ErrorCode receiveCallbackEntry(const bool in_isr, void* handle, std::span<uint8_t> received_data) const noexcept
+    {
+        if (receive_callback_ == nullptr) {
+            return ErrorCode::NotImplemented;
         }
 
-        return status;
+        return receive_callback_(in_isr, handle, received_data);
     }
 
     ErrorCode transmit(const bool in_isr,  // NOLINT(*-use-nodiscard)
