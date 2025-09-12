@@ -8,6 +8,6 @@
 
 module;
 
-export module emdevif.sys.message_queue;
+export module emdevif.sys.messageQueue;
 export import :interface;
 export import :implements;

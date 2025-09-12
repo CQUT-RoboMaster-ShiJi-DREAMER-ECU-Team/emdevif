@@ -20,11 +20,11 @@ module;
 #include "FreeRTOS.h"
 #include "event_groups.h"
 
-export module emdevif.sys.event_group:implements;
+export module emdevif.sys.eventGroup:implements;
 import :definitions;
 import :interface;
 
-import emdevif.util.BitInt;
+import emdevif.util.bitInt;
 
 export namespace emdevif {
 

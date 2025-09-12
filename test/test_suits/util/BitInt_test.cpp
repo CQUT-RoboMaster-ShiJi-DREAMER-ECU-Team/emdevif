@@ -10,7 +10,7 @@
 
 #include "emdevif_test_framework.h"
 
-import emdevif.util.BitInt;
+import emdevif.util.bitInt;
 
 // 更详细的测试见 https://github.com/du-yicheng23/emdevif_util_BitInt_test
 static TEST_SUIT(BitIntTest)

@@ -14,7 +14,7 @@ module;
 #define EMDEVIF_ERROR_HANDLER_FATAL_HANDLER_MESSAGE_BUFFER_LENGTH 0
 #endif
 
-export module emdevif.error_handler:fatal_handler;
+export module emdevif.errorHandler:fatalHandler;
 
 namespace emdevif {
 

@@ -10,7 +10,7 @@ module;
 
 #include <cstdint>
 
-export module emdevif.error_handler:error_code;
+export module emdevif.errorHandler:errorCode;
 
 namespace emdevif {
 

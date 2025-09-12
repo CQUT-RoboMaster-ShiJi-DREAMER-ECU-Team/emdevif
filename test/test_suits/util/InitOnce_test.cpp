@@ -9,7 +9,7 @@
 
 #include "emdevif_test_framework.h"
 
-import emdevif.util.InitOnce;
+import emdevif.util.initOnce;
 
 static TEST_SUIT(InitOnceBasicTest)
 {

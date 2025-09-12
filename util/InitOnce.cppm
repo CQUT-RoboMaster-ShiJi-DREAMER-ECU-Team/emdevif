@@ -11,9 +11,9 @@ module;
 #include <type_traits>
 #include <utility>
 
-export module emdevif.util.InitOnce;
+export module emdevif.util.initOnce;
 
-export import emdevif.error_handler;
+export import emdevif.errorHandler;
 
 export namespace emdevif {
 

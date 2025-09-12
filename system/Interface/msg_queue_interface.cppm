@@ -13,9 +13,9 @@ module;
 
 #include "emdevif/fatal_handler.hpp"
 
-export module emdevif.sys.message_queue:interface;
+export module emdevif.sys.messageQueue:interface;
 
-export import emdevif.error_handler;
+export import emdevif.errorHandler;
 
 namespace emdevif {
 

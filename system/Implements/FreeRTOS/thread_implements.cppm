@@ -24,7 +24,7 @@ module;
 export module emdevif.sys.thread:implements;
 import :interface;
 
-import emdevif.error_handler;
+import emdevif.errorHandler;
 
 export namespace emdevif {
 

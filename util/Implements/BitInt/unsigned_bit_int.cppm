@@ -20,7 +20,7 @@ module;
 
 #include "BitInt_exception_config.hpp"
 
-export module emdevif.util.BitInt:unsigned_partial;
+export module emdevif.util.bitInt:unsigned_partial;
 import :base;
 
 export namespace emdevif {

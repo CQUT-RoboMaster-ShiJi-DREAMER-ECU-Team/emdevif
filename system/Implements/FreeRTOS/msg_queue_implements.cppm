@@ -13,7 +13,7 @@ module;
 #include "FreeRTOS.h"
 #include "queue.h"
 
-export module emdevif.sys.message_queue:implements;
+export module emdevif.sys.messageQueue:implements;
 import :interface;
 
 export namespace emdevif {

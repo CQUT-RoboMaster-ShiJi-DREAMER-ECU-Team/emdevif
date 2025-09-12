@@ -7,7 +7,7 @@
 
 #include <string_view>
 
-import emdevif.container.Map;
+import emdevif.container.map;
 
 using emdevif::StaticMap;
 

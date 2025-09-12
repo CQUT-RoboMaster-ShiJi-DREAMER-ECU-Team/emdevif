@@ -16,7 +16,7 @@ module;
 #define EMDEVIF_ERROR_HANDLER_ERROR_MESSAGE_BUFFER_MAX_LENGTH 128
 #endif
 
-export module emdevif.error_handler:ErrorMessage;
+export module emdevif.errorHandler:errorMessage;
 
 namespace emdevif {
 

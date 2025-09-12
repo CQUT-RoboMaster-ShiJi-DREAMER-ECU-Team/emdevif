@@ -17,10 +17,10 @@ module;
 #include "emdevif/simplify_decl_macros.hpp"
 #include "emdevif/fatal_handler.hpp"
 
-export module emdevif.connectivity.Serial;
+export module emdevif.connectivity.serial;
 
-export import emdevif.error_handler;
-import emdevif.PeripheralHandleMap;
+export import emdevif.errorHandler;
+import emdevif.peripheralHandleMap;
 
 export namespace emdevif {
 

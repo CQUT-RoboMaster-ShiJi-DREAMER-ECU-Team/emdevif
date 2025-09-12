@@ -12,7 +12,7 @@ module;
 #include <type_traits>
 #include <concepts>
 
-export module emdevif.util.BitInt:base;
+export module emdevif.util.bitInt:base;
 
 namespace emdevif {
 

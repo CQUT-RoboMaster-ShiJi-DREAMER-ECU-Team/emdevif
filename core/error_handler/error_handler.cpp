@@ -9,7 +9,7 @@ module;
 
 #include "emdevif/attributes_and_useful_macros.h"
 
-module emdevif.error_handler;
+module emdevif.errorHandler;
 
 namespace emdevif {
 

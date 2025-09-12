@@ -19,7 +19,7 @@ module;
 
 export module emdevif.sys.thread:interface;
 
-export import emdevif.error_handler;
+export import emdevif.errorHandler;
 import emdevif.sys.heap;
 
 export namespace emdevif {

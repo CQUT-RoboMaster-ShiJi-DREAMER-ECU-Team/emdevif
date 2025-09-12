@@ -8,7 +8,7 @@
 
 module;
 
-export module emdevif.util.BitInt;
+export module emdevif.util.bitInt;
 export import :base;
 export import :signed_partial;
 export import :unsigned_partial;

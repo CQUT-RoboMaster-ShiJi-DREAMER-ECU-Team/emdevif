@@ -13,7 +13,7 @@ module;
 #include <algorithm>
 #include <iterator>
 
-export module emdevif.container.Map:StaticMap;
+export module emdevif.container.map:staticMap;
 
 export namespace emdevif {
 

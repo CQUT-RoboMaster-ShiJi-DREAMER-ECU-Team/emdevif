@@ -8,5 +8,5 @@
 
 module;
 
-export module emdevif.container.Map;
-export import :StaticMap;
+export module emdevif.container.map;
+export import :staticMap;

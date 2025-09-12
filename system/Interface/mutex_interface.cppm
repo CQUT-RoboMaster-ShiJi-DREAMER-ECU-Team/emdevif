@@ -15,7 +15,7 @@ module;
 
 export module emdevif.sys.mutex:interface;
 
-import emdevif.error_handler;
+import emdevif.errorHandler;
 import emdevif.sys.thread;
 
 export namespace emdevif {

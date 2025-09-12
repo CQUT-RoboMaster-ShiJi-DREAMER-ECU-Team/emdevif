@@ -13,12 +13,12 @@ module;
 
 #include "emdevif/fatal_handler.hpp"
 
-export module emdevif.sys.event_group:interface;
+export module emdevif.sys.eventGroup:interface;
 import :definitions;
 
-export import emdevif.error_handler;
+export import emdevif.errorHandler;
 export import emdevif.sys.thread;
-export import emdevif.util.BitInt;
+export import emdevif.util.bitInt;
 import emdevif.sys.thread;
 
 export namespace emdevif {

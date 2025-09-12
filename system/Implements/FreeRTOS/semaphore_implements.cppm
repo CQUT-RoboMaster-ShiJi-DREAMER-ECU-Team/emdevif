@@ -21,7 +21,7 @@ module;
 export module emdevif.sys.semaphore:implements;
 import :interface;
 
-export import emdevif.error_handler;
+export import emdevif.errorHandler;
 
 // for template<std::ptrdiff_t least_max_value> CountingSemaphore
 export namespace emdevif {

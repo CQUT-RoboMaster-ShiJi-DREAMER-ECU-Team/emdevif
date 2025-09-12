@@ -12,7 +12,7 @@ module;
 #include <optional>
 #include <type_traits>
 
-export module emdevif.PeripheralHandleMap;
+export module emdevif.peripheralHandleMap;
 
 import emdevif.from_user_impl;
 

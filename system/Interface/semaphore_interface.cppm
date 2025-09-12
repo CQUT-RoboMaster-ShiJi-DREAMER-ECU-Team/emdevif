@@ -15,7 +15,7 @@ module;
 
 export module emdevif.sys.semaphore:interface;
 
-export import emdevif.error_handler;
+export import emdevif.errorHandler;
 export import emdevif.sys.thread;
 
 export namespace emdevif {
