@@ -12,6 +12,7 @@ module;
 
 #include <string_view>
 #include <span>
+#include <type_traits>
 
 #include "emdevif/simplify_decl_macros.hpp"
 #include "emdevif/fatal_handler.hpp"
@@ -55,14 +56,23 @@ private:
 
     const TransmitFunction transmit_function_;
 
+private:
+    // 用于在编译期求值时提供报错信息
+    static void ThisIsACompileTimeMessage_CouldNotFoundHandle() {}
+
 public:
-    Serial(const std::string_view name, const BehaviourFunction& behaviour_function) noexcept
+    constexpr Serial(const std::string_view name, const BehaviourFunction& behaviour_function) noexcept
         : handle_(PeripheralHandleMap::findHandle(name).value_or(nullptr)),
           receive_function_(behaviour_function.receive_function),
           receive_callback_(behaviour_function.receive_callback),
           transmit_function_(behaviour_function.transmit_function)
     {
         if (handle_ == nullptr) {
+            if (std::is_constant_evaluated()) {
+                ThisIsACompileTimeMessage_CouldNotFoundHandle();
+                return;
+            }
+
             using namespace std::literals;
 
             constexpr auto begin_str = "Could not find the serial handle named \""sv;
