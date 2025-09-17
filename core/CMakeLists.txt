@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-include(cmake/config_optimize.cmake)
+include(cmake/config_compile_options.cmake)
 
 project(emdevif_core C CXX)
 
