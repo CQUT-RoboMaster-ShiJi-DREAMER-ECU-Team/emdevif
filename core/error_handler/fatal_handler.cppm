@@ -1,16 +1,16 @@
 /**
  * @file fatal_handler.cppm
- * @module emdevif.error_handler:fatal_handler
+ * @module emdevif.error_handler:fatalHandlerAndAssert
  * @author DuYicheng
  * @date 2025-09-05
- * @brief 致命错误处理函数
+ * @brief 致命错误处理函数与断言
  */
 
 module;
 
 #include "emdevif/attributes_and_useful_macros.h"
 
-export module emdevif.errorHandler:fatalHandler;
+export module emdevif.errorHandler:fatalHandlerAndAssert;
 
 namespace emdevif {
 

@@ -10,5 +10,5 @@ module;
 
 export module emdevif.errorHandler;
 export import :errorCode;
-export import :fatalHandler;
+export import :fatalHandlerAndAssert;
 export import :errorMessage;
