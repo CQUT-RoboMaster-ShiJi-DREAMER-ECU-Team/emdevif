@@ -20,6 +20,13 @@ export module emdevif.util.ringBuffer;
 
 export namespace emdevif {
 
+/**
+ * 环形无符号整型类
+ *
+ * 可以用于环形缓冲区的指针的实现，当值达到最大值时会回绕到 0，值小于零之后会回到最大值减一
+ * @tparam ValueType 储存值的类型
+ * @tparam max_num 最大值
+ */
 template<std::unsigned_integral ValueType, ValueType max_num>
 class RingUnsigned
 {
@@ -46,16 +53,15 @@ public:
     }
     constexpr RingUnsigned operator++(int) noexcept
     {
-        const auto temp = value_;
+        const auto temp = *this;
         ++(*this);
-        value_ = temp;
-        return *this;
+        return temp;
     }
 
     constexpr RingUnsigned operator--() noexcept
     {
         if (value_ == 0U) {
-            value_ = max_num;
+            value_ = max_num - 1;
         }
         else {
             --value_;
@@ -90,7 +96,7 @@ public:
         }
     }
 
-    explicit constexpr operator ValueType() const noexcept
+    constexpr operator ValueType() const noexcept  // NOLINT
     {
         return value_;
     }
@@ -203,6 +209,14 @@ public:
         }
     }
 
+    void discard(const std::size_t slots) noexcept
+    {
+        if (slots > usedSlots()) {
+            slots = usedSlots();
+        }
+        tail_ += slots;
+    }
+
     [[nodiscard]] constexpr std::size_t usedSlots() const noexcept
     {
         return head_ - tail_;
@@ -213,9 +227,19 @@ public:
         return sizeof(Type) * usedSlots();
     }
 
+    [[nodiscard]] constexpr bool isEmpty() const noexcept
+    {
+        return usedSlots() == 0;
+    }
+
+    [[nodiscard]] constexpr bool isFull() const noexcept
+    {
+        return remainSlots() == 0;
+    }
+
     [[nodiscard]] constexpr std::size_t remainSlots() const noexcept
     {
-        return tail_ - head_;
+        return item_size - usedSlots();
     }
 
     [[nodiscard]] constexpr std::size_t remainSizeByte() const noexcept
@@ -240,6 +264,15 @@ public:
     constexpr const Type& nextSlot() const noexcept
     {
         return buffer_[head_];
+    }
+
+    constexpr Type& useNextSlot() noexcept
+    {
+        return buffer_[head_++];
+    }
+    constexpr const Type& useNextSlot() const noexcept
+    {
+        return buffer_[head_++];
     }
 
 private:

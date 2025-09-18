@@ -11,6 +11,7 @@
 
 void initOnceTest();
 void bitIntTest();
+void ringBufferTest();
 
 void heapTest();
 void threadAndMutexTest();
