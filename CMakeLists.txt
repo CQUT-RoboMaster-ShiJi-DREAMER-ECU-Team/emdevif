@@ -16,6 +16,7 @@ if (EMDEVIF_USE_STM32CUBEMX)
 endif ()
 
 add_subdirectory(core)
+add_subdirectory(logger)
 add_subdirectory(container)
 add_subdirectory(system)
 add_subdirectory(peripheral_handle_map)
@@ -26,6 +27,7 @@ add_library(${PROJECT_NAME} STATIC)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     emdevif_core
+    emdevif_logger
     emdevif_container
     emdevif_system
     emdevif_peripheral_handle_map
