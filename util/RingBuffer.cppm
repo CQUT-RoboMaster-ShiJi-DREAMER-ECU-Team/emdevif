@@ -131,7 +131,7 @@ public:
 
     constexpr void push(const std::span<const Type> items) noexcept
     {
-        if (std::is_constant_evaluated()) {
+        if (std::is_constant_evaluated() || !std::is_trivially_copyable_v<Type>) {
             for (const auto& item : items) {
                 push(item);
             }
@@ -160,8 +160,7 @@ public:
 
     constexpr Type pop() noexcept
     {
-        const auto& temp = buffer_[tail_++];
-        return temp;
+        return buffer_[tail_++];
     }
 
     constexpr Type peek() const noexcept
@@ -171,7 +170,7 @@ public:
 
     constexpr void pop(std::span<Type> items) noexcept
     {
-        if (std::is_constant_evaluated()) {
+        if (std::is_constant_evaluated() || !std::is_trivially_copyable_v<Type>) {
             for (auto& item : items) {
                 item = pop();
             }
@@ -209,7 +208,16 @@ public:
         }
     }
 
-    void discard(const std::size_t slots) noexcept
+    constexpr Type& peekRef() noexcept
+    {
+        return buffer_[tail_];
+    }
+    constexpr const Type& peekRef() const noexcept
+    {
+        return buffer_[tail_];
+    }
+
+    constexpr void discard(const std::size_t slots) noexcept
     {
         if (slots > usedSlots()) {
             slots = usedSlots();
