@@ -33,14 +33,12 @@ void registerTerminateFunction(const TerminateFunction func)
     }
 }
 
-void defaultAssertFailedHandler(const bool condition,
-                                const char* file,
+void defaultAssertFailedHandler(const char* file,
                                 const int line,
                                 const char* func_name,
                                 const char* condition_name,
                                 const char* message)
 {
-    EMDEVIF_UNUSED(condition);
     EMDEVIF_UNUSED(file);
     EMDEVIF_UNUSED(line);
     EMDEVIF_UNUSED(func_name);

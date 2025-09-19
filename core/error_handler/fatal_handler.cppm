@@ -85,15 +85,13 @@ export void registerFatalHandler(FatalHandlerCallBack callback);
 
 /**
  * 默认的断言失败处理函数
- * @param condition 待断言的表达式
  * @param file 调用函数所在文件
  * @param line 调用函数所在行号
  * @param func_name 包含函数名称
  * @param condition_name 表达式名称
  * @param message 信息
  */
-void defaultAssertFailedHandler(bool condition,
-                                const char* file,
+void defaultAssertFailedHandler(const char* file,
                                 int line,
                                 const char* func_name,
                                 const char* condition_name,
@@ -102,12 +100,8 @@ void defaultAssertFailedHandler(bool condition,
 /**
  * 断言失败处理函数指针类型
  */
-export using AssertFailedHandler = void(*)(bool condition,
-                                           const char* file,
-                                           int line,
-                                           const char* func_name,
-                                           const char* condition_name,
-                                           const char* message);
+export using AssertFailedHandler =
+    void(*)(const char* file, int line, const char* func_name, const char* condition_name, const char* message);
 
 /**
  * 断言失败处理函数指针（编译期初始化为默认的断言失败处理函数）
@@ -135,7 +129,7 @@ export inline void emdevif_assert(const bool condition,
                                   const char* message = "")
 {
     if (!condition) {
-        assertFailedHandler(condition, file, line, func_name, condition_name, message);
+        assertFailedHandler(file, line, func_name, condition_name, message);
     }
 }
 

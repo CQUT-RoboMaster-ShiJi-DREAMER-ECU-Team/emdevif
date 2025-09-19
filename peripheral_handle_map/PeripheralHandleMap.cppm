@@ -17,6 +17,7 @@ module;
 export module emdevif.peripheralHandleMap;
 
 import emdevif.userDeclares;
+import emdevif.container.map;
 
 namespace emdevif {
 
