@@ -8,15 +8,15 @@ if ((NOT (TARGET emdevif_compile_options)) OR
     message(FATAL_ERROR "${PROJECT_NAME} requires emdevif_compile_options, emdevif_core and emdevif_container!")
 endif ()
 
-if (NOT (TARGET emdevif_from_user_impl))
-    message(FATAL_ERROR "${PROJECT_NAME} requires user to implements lib \"emdevif_from_user_impl\". \
+if (NOT (TARGET emdevif_user_declares))
+    message(FATAL_ERROR "${PROJECT_NAME} requires user to implements lib \"emdevif_user_declares\". \
 Please implements it.")
 endif ()
 
 add_library(${PROJECT_NAME} STATIC)
 
 target_link_libraries(${PROJECT_NAME}
-    PUBLIC emdevif_core emdevif_container emdevif_from_user_impl
+    PUBLIC emdevif_core emdevif_container emdevif_user_declares
     PRIVATE emdevif_compile_options
 )
 

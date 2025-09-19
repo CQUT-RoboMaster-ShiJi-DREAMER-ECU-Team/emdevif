@@ -16,12 +16,12 @@ module;
 
 export module emdevif.peripheralHandleMap;
 
-import emdevif.from_user_impl;
+import emdevif.userDeclares;
 
 namespace emdevif {
 
 static_assert(
-    std::is_same_v<decltype(from_user_impl::peripheral_handle_map)::MapStoreType, std::pair<std::string_view, void*>>,
+    std::is_same_v<decltype(user_declares::peripheral_handle_map)::MapStoreType, std::pair<std::string_view, void*>>,
     "Variable `peripheral_handle_map\' should be declared as `constexpr auto peripheral_handle_map = "
     "makeStaticMap<std::string_view, void*>\'");
 
@@ -34,7 +34,7 @@ public:
 
     static constexpr std::optional<void*> findHandle(const std::string_view name) noexcept
     {
-        const auto handle = from_user_impl::peripheral_handle_map.at(name);
+        const auto handle = user_declares::peripheral_handle_map.at(name);
         if (handle == nullptr) {
             return std::nullopt;
         }
