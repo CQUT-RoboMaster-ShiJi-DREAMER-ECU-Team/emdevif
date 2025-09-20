@@ -12,12 +12,11 @@ module;
 #include <cstdio>
 #include <cstdarg>
 
-#include <string_view>
-
 export module emdevif.logger;
 
 import emdevif.userDeclares;
 import emdevif.util.ringBuffer;
+import emdevif.errorHandler;
 
 namespace emdevif {
 
@@ -88,7 +87,7 @@ public:
              const char* format,
              ...) noexcept
     {
-        if (level <= logger_ignore_level) {
+        if (level < logger_ignore_level) {
             return;
         }
 
@@ -118,8 +117,16 @@ public:
             if (len < 0) {
                 return;
             }
+
+            printLogMessage(getBuffer());
         }();
+
+        if (level == LogLevel::Fatal) {
+            terminate();
+        }
+
         unlock();
+
         va_end(args);
 #else   // (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_SYNC)
 #endif  // (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_SYNC)
@@ -145,6 +152,11 @@ private:
     static std::size_t getTimeLine() noexcept
     {
         return ::emdevif::user_declares::logger::getTimeLine();
+    }
+
+    static void printLogMessage(const char* msg) noexcept
+    {
+        ::emdevif::user_declares::logger::printLogMessage(msg);
     }
 
 #if (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_SYNC)

@@ -17,6 +17,8 @@ extern "C" void emdevif_testEntry(void)
     bitIntTest();
     ringBufferTest();
 
+    loggerTest();
+
     heapTest();
     threadAndMutexTest();
 

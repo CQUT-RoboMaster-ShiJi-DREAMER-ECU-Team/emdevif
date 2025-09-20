@@ -13,6 +13,8 @@ void initOnceTest();
 void bitIntTest();
 void ringBufferTest();
 
+void loggerTest();
+
 void heapTest();
 void threadAndMutexTest();
 
