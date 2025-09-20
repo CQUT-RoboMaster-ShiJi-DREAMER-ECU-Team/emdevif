@@ -5,9 +5,6 @@ project(emdevif_unit_test C CXX)
 add_subdirectory(emdevif_test_framework)
 add_subdirectory(heap_usage_logger)
 
-add_subdirectory(nva_print)
-target_compile_definitions(nva_print PUBLIC NVA_STACK_DEFAULT_SIZE=128)
-
 add_library(${PROJECT_NAME} STATIC)
 
 file(GLOB_RECURSE EMDEVIF_TEST_SUITS_SRC "test_suits/*.cpp")
@@ -19,5 +16,5 @@ target_sources(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE emdevif emdevif_test_framework emdevif_compile_options
-            emdevif_test_heap_logger
+            emdevif_test_heap_logger emdevif_user_declares
 )

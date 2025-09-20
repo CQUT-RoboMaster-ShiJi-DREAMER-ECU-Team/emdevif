@@ -9,11 +9,12 @@
 
 #include <cstdint>
 #include <cmath>
-#include <cstdio>
 
 #include <utility>
 #include <functional>
 #include <string>
+
+#include "printf.h"
 
 import emdevif.sys.thread;
 import emdevif.sys.mutex;
@@ -300,7 +301,7 @@ TEST_SUIT(MulParamFuncTest)
             }
 
             if (outside != 42795 || a != 123 || std::abs(f - 114.514f) > 0.0001f || ref != 5) {
-                std::sprintf(error_msg, "outside = %d, a = %d, f = %f, ref = %d", outside, a, f, ref);
+                ::sprintf(error_msg, "outside = %d, a = %d, f = %f, ref = %d", outside, a, f, ref);
                 is_pass = false;
             }
 
