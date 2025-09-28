@@ -40,6 +40,7 @@ public:
 
     friend class Thread;
 
+private:
     explicit operator StaticTask_t&() noexcept
     {
         return instance;
@@ -48,6 +49,17 @@ public:
     explicit operator StackType_t&() noexcept
     {
         return *stack_buffer;
+    }
+
+public:
+    void* getInstanceAddr() noexcept
+    {
+        return &instance;
+    }
+
+    std::size_t getStackDepth() noexcept  // NOLINT
+    {
+        return stack_depth;
     }
 
 private:
