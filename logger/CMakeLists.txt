@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 3.28)
 
 project(emdevif_logger C CXX)
 
-if ((NOT (TARGET emdevif_compile_options)) OR (NOT (TARGET emdevif_core)))
-    message(FATAL_ERROR "${PROJECT_NAME} requires emdevif_compile_options and emdevif_core!")
-endif ()
-
 add_library(${PROJECT_NAME} STATIC)
 
 target_link_libraries(${PROJECT_NAME}

@@ -7,12 +7,14 @@ add_subdirectory(heap_usage_logger)
 
 add_library(${PROJECT_NAME} STATIC)
 
-file(GLOB_RECURSE EMDEVIF_TEST_SUITS_SRC "test_suits/*.cpp")
-target_sources(${PROJECT_NAME} PRIVATE
-    test_main.cpp
+block()
+    file(GLOB_RECURSE emdevifTestSuitsSrc "test_suits/*.cpp")
+    target_sources(${PROJECT_NAME} PRIVATE
+        test_main.cpp
 
-    ${EMDEVIF_TEST_SUITS_SRC}
-)
+        ${emdevifTestSuitsSrc}
+    )
+endblock()
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE emdevif emdevif_test_framework emdevif_compile_options

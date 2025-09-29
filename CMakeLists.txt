@@ -8,6 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 
+option(EMDEVIF_ENABLE_TESTS "Enable the test for emdevif." OFF)
 option(EMDEVIF_USE_STM32CUBEMX "Enable it will link stm32cubemx lib to emdevif" OFF)
 
 if (EMDEVIF_USE_STM32CUBEMX)

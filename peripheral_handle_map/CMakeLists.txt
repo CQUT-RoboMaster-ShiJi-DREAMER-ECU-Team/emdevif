@@ -2,17 +2,6 @@ cmake_minimum_required(VERSION 3.28)
 
 project(emdevif_peripheral_handle_map CXX)
 
-if ((NOT (TARGET emdevif_compile_options)) OR
-    (NOT (TARGET emdevif_core)) OR
-    (NOT (TARGET emdevif_container)))
-    message(FATAL_ERROR "${PROJECT_NAME} requires emdevif_compile_options, emdevif_core and emdevif_container!")
-endif ()
-
-if (NOT (TARGET emdevif_user_declares))
-    message(FATAL_ERROR "${PROJECT_NAME} requires user to implements lib \"emdevif_user_declares\". \
-Please implements it.")
-endif ()
-
 add_library(${PROJECT_NAME} STATIC)
 
 target_link_libraries(${PROJECT_NAME}
