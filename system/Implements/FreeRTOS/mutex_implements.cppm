@@ -10,6 +10,8 @@
 
 module;
 
+#include <cstddef>
+
 #include "FreeRTOS.h"
 #include "semphr.h"
 
@@ -27,6 +29,14 @@ class Mutex::StaticInstance
 public:
     StaticInstance() noexcept : instance() {}
 
+    friend class Mutex;
+
+    std::size_t getInstanceSize() noexcept
+    {
+        return sizeof instance;
+    }
+
+private:
     explicit operator StaticSemaphore_t&() noexcept
     {
         return instance;
