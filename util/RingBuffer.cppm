@@ -217,7 +217,7 @@ public:
         return buffer_[tail_];
     }
 
-    constexpr void discard(const std::size_t slots) noexcept
+    constexpr void discard(std::size_t slots) noexcept
     {
         if (slots > usedSlots()) {
             slots = usedSlots();
