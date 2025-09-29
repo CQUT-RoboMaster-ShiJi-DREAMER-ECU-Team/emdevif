@@ -14,6 +14,9 @@ module;
 
 #include <array>
 
+#include "emdevif/attributes_and_useful_macros.h"
+#include "emdevif/fatal_handler.hpp"
+
 #ifndef EMDEVIF_LOGGER_BUFFER_SIZE
 #define EMDEVIF_LOGGER_BUFFER_SIZE 256U
 #endif
@@ -33,6 +36,10 @@ module;
 #define EMDEVIF_LOGGER_SYNC_USE_LOCK true
 #endif
 
+#ifndef EMDEVIF_LOGGER_ASYNC_THREAD_STACK_SIZE
+#define EMDEVIF_LOGGER_ASYNC_THREAD_STACK_SIZE 128
+#endif
+
 export module emdevif.logger;
 
 import emdevif.userDeclares;
@@ -40,6 +47,15 @@ import emdevif.errorHandler;
 
 #if (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_ASYNC)
 import emdevif.util.ringBuffer;
+#endif
+
+#if (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_ASYNC || \
+     (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_SYNC && EMDEVIF_LOGGER_SYNC_USE_LOCK))
+import emdevif.sys.thread;
+import emdevif.sys.mutex;
+#define EMDEVIF_LOGGER_USE_MUTEX true
+#else
+#define EMDEVIF_LOGGER_USE_MUTEX false
 #endif
 
 namespace emdevif {
@@ -79,6 +95,8 @@ static_assert(
 
 export constexpr auto logger_ignore_level = static_cast<LogLevel>(EMDEVIF_LOGGER_IGNORE_LEVEL);
 
+export constexpr auto logger_async_thread_stack_size = static_cast<std::size_t>(EMDEVIF_LOGGER_ASYNC_THREAD_STACK_SIZE);
+
 export class Logger
 {
 public:
@@ -92,9 +110,9 @@ public:
 
     using VSPrintfFunction = int (*)(char* dst, const char* format, std::va_list args);
 
-    void registerVSPrintfFunction(const VSPrintfFunction function) noexcept
+    static void registerVSPrintfFunction(const VSPrintfFunction function) noexcept
     {
-        vsprintf_ = function;
+        getInstance().vsprintf_ = function;
     }
 
 private:
@@ -192,24 +210,62 @@ private:
         return ::emdevif::user_declares::logger::getTimeLine();
     }
 
-    static void printLogMessage(const char* msg) noexcept
+    static ErrorCode printLogMessage(const char* msg) noexcept
     {
-        ::emdevif::user_declares::logger::printLogMessage(msg);
+        return ::emdevif::user_declares::logger::printLogMessage(msg);
     }
 
-    static void lock() noexcept
+    void lock() noexcept  // NOLINT
     {
-#if (EMDEVIF_LOGGER_SYNC_USE_LOCK || EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_ASYNC)
-        ::emdevif::user_declares::logger::lock();
+#if (EMDEVIF_LOGGER_USE_MUTEX)
+        mutex_.lock();
 #endif
     }
 
-    static void unlock() noexcept
+    void unlock() noexcept  // NOLINT
     {
-#if (EMDEVIF_LOGGER_SYNC_USE_LOCK || EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_ASYNC)
-        ::emdevif::user_declares::logger::unlock();
+#if (EMDEVIF_LOGGER_USE_MUTEX)
+        mutex_.unlock();
 #endif
     }
+
+public:
+    static void init() noexcept
+    {
+        getInstance().initImpl();
+    }
+
+private:
+    void initImpl() noexcept
+    {
+#if (EMDEVIF_LOGGER_USE_MUTEX)
+        mutex_ = Mutex::create({.name = "loggerMutex",
+                                .static_instance = &mutex_static_instance_,
+                                .instance_size = mutex_static_instance_.getInstanceSize()});
+        if (!mutex_.getHandle().has_value()) {
+            EMDEVIF_FATAL_HANDLER("Failed to create logger mutex");
+        }
+#endif
+
+#if (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_ASYNC)
+        logger_async_printer_thread_ =
+            Thread::create({.name = "loggerThread",
+                            .priority = Thread::Priority::Low,
+                            .static_instance = logger_async_printer_thread_instance_.getInstanceAddr(),
+                            .stack_size = logger_async_printer_thread_instance_.getStackDepth()},
+                           logPrinterThread,
+                           this);
+        if (!logger_async_printer_thread_.getHandle().has_value()) {
+            EMDEVIF_FATAL_HANDLER("Failed to create logger async printer thread");
+        }
+#endif
+    }
+
+#if (EMDEVIF_LOGGER_USE_MUTEX)
+private:
+    Mutex mutex_{};
+    Mutex::StaticInstance mutex_static_instance_{};
+#endif
 
 #if (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_SYNC)
 private:
@@ -238,18 +294,25 @@ private:
         buffer_.useNextSlot();
     }
 
-public:
-    static void logPrinterThread(void* arguments) noexcept
+    Thread logger_async_printer_thread_{};
+    Thread::StaticInstance<logger_async_thread_stack_size> logger_async_printer_thread_instance_{};
+
+    EMDEVIF_NO_RETURN static void logPrinterThread(void* arguments) noexcept
     {
         auto& logger = *static_cast<Logger*>(arguments);
 
         while (true) {
-            lock();
-            printLogMessage(&logger.buffer_.peekRef()[0]);
-            logger.buffer_.discard(1);
-            unlock();
+            logger.lock();
 
-            Thread::delay(1);  // todo 需要除去对 Thread 的依赖
+            if (!logger.buffer_.isEmpty()) {
+                if (printLogMessage(&logger.buffer_.peekRef()[0]) == ErrorCode::Success) {
+                    logger.buffer_.discard(1);
+                }
+            }
+
+            logger.unlock();
+
+            Thread::yield();
         }
     }
 
