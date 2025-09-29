@@ -106,7 +106,7 @@ inline auto EventGroup::clearBits(const bool in_isr, const EventBits_t bits) noe
     uint_fast32_t ret;
 
     if (in_isr) {
-        ret = xEventGroupClearBitsFromISR(handle_, bits);
+        ret = xEventGroupClearBitsFromISR(static_cast<EventGroupHandle_t>(handle_), bits);
 
         if (ret == pdTRUE) {
             portYIELD_FROM_ISR(pdTRUE);

@@ -8,9 +8,14 @@ target_sources(${PROJECT_NAME} PUBLIC FILE_SET header TYPE HEADERS
     FILES heap_usage_logger.hpp
 )
 
+if (EMDEVIF_FREERTOS_USE_STM32CUBEMX)
+    target_link_libraries(${PROJECT_NAME} PRIVATE emdevif_stm32cubemx_support)
+else ()
+    target_link_libraries(${PROJECT_NAME} PRIVATE freertos_kernel)
+endif ()
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    freertos_kernel emdevif_test_framework emdevif_compile_options
-    printf
+    emdevif_test_framework emdevif_compile_options printf
 )
 
 if ((DEFINED EMDEVIF_THREAD_SYSTEM) AND (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS"))
