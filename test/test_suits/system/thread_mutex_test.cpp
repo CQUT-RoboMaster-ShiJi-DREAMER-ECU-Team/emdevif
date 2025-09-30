@@ -16,6 +16,8 @@
 
 #include "printf.h"
 
+#include "heap_usage_checker.hpp"
+
 import emdevif.sys.thread;
 import emdevif.sys.mutex;
 
@@ -101,6 +103,8 @@ TEST_SUIT(MutexTest)
         ASSERT_TRUE(!mutex.getHandle().has_value(), "");
     }
     TEST_CASE_END();
+
+    CHECK_MEMORY_LEAK();
 }
 
 TEST_SUIT(ThreadBasicTest)
@@ -109,6 +113,7 @@ TEST_SUIT(ThreadBasicTest)
     {
         MutexGuard<int32_t> counter{0};
         MutexGuard<uint8_t> flag{0};
+
         ASSERT_TRUE(counter.mutex.getHandle().has_value(), "Mutex Create Failed!");
         ASSERT_TRUE(flag.mutex.getHandle().has_value(), "Mutex Create Failed!");
         UINT_ASSERT_EQ(0, flag.get(), "");
@@ -183,6 +188,9 @@ TEST_SUIT(ThreadBasicTest)
             b_thread.getHandle().value_or(nullptr));
     }
     TEST_CASE_END();
+
+    emdevif::Thread::delay(1);
+    CHECK_MEMORY_LEAK();
 }
 
 // 此处注意：这个测试样例必须单独拿出来作为一个测试套件（函数），不能和上一个放在一起（原因未知）
@@ -279,6 +287,8 @@ TEST_SUIT(ThreadAssignAndMoveTest)
                     b_thread.getHandle());
     }
     TEST_CASE_END();
+
+    CHECK_MEMORY_LEAK();
 }
 
 TEST_SUIT(MulParamFuncTest)
@@ -331,6 +341,8 @@ TEST_SUIT(MulParamFuncTest)
         EXPECT_TRUE(is_pass)->MESSAGE("%s", error_msg);
     }
     TEST_CASE_END();
+
+    CHECK_MEMORY_LEAK();
 }
 
 void threadAndMutexTest()

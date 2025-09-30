@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(emdevif_test_heap_logger C)
+project(emdevif_test_heap_checker C)
 
 add_library(${PROJECT_NAME} STATIC)
 
 target_sources(${PROJECT_NAME} PUBLIC FILE_SET header TYPE HEADERS
-    FILES heap_usage_logger.hpp
+    FILES heap_usage_checker.hpp
 )
 
 if (EMDEVIF_FREERTOS_USE_STM32CUBEMX)
@@ -19,5 +19,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 
 if ((DEFINED EMDEVIF_THREAD_SYSTEM) AND (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS"))
-    target_sources(${PROJECT_NAME} PRIVATE FreeRTOS/FreeRTOS_heap_logger.cpp)
+    target_sources(${PROJECT_NAME} PRIVATE FreeRTOS/FreeRTOS_heap_checker.cpp)
 endif ()

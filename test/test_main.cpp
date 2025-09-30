@@ -7,7 +7,7 @@
 
 #include "test_main.hpp"
 
-#include "heap_usage_logger.hpp"
+#include "heap_usage_checker.hpp"
 
 extern "C" void emdevif_testEntry(void)
 {

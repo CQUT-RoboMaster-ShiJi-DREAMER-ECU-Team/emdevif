@@ -13,6 +13,8 @@
 
 #include "emdevif_test_framework.h"
 
+#include "heap_usage_checker.hpp"
+
 import emdevif.sys.heap;
 
 using namespace emdevif;
@@ -221,6 +223,8 @@ TEST_SUIT(HeapTest)
         EXPECT_TRUE(v.size() == 6)->MESSAGE("v.size() = %zu", v.size());
     }
     TEST_CASE_END();
+
+    CHECK_MEMORY_LEAK();
 }
 
 void heapTest()

@@ -1,9 +1,11 @@
 /**
- * @file FreeRTOS_heap_logger.cpp
+ * @file FreeRTOS_heap_checker.cpp
  * @author DuYicheng
  * @date 2025-08-31
  * @brief FreeRTOS 堆内存使用记录
  */
+
+#include "heap_usage_checker.hpp"
 
 #include <cstring>
 
@@ -21,7 +23,7 @@ extern "C" int nva_putchar(char)
     return 1;
 }
 
-void logSystemHeapUsage()
+void logSystemHeapUsage() noexcept
 {
     HeapStats_t heap_stats;
     vPortGetHeapStats(&heap_stats);
@@ -45,4 +47,12 @@ void logSystemHeapUsage()
     xTaskResumeAll();
 
     TEST_LOG("%s", buffer);
+}
+
+std::tuple<std::size_t, std::size_t> getHeapAllocationInfo() noexcept
+{
+    HeapStats_t heap_stats;
+    vPortGetHeapStats(&heap_stats);
+
+    return std::make_tuple(heap_stats.xNumberOfSuccessfulAllocations, heap_stats.xNumberOfSuccessfulFrees);
 }
