@@ -308,11 +308,15 @@ private:
                 if (printLogMessage(&logger.buffer_.peekRef()[0]) == ErrorCode::Success) {
                     logger.buffer_.discard(1);
                 }
+
+                logger.unlock();
+                Thread::yield();
             }
-
-            logger.unlock();
-
-            Thread::yield();
+            else {
+                logger.unlock();
+                Thread::delay(1);  // 在没有需要发送的日志的情况下，每 1 ms 检测一次以减小 CPU 占用
+                // todo 可以考虑用信号量机制实现这个
+            }
         }
     }
 
