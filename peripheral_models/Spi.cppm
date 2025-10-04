@@ -1,5 +1,6 @@
 /**
  * @file Spi.cppm
+ * @module emdevif.peripheralModels.spi
  * @author DuYicheng
  * @date 2025-10-04
  * @brief SPI 通信
@@ -16,7 +17,7 @@ module;
 #include "emdevif/simplify_decl_macros.hpp"
 #include "emdevif/fatal_handler.hpp"
 
-export module emdevif.connectivity.spi;
+export module emdevif.peripheralModels.spi;
 
 export import emdevif.errorHandler;
 import emdevif.peripheralHandleMap;
@@ -57,7 +58,7 @@ public:
 
             using namespace std::literals;
 
-            constexpr auto begin_str = "Could not find the serial handle named \""sv;
+            constexpr auto begin_str = "Could not find the SPI handle named \""sv;
             constexpr auto end_str = "\"."sv;
 
             err_msg.clear();

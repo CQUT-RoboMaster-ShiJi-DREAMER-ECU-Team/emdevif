@@ -1,6 +1,6 @@
 /**
  * @file Serial.cppm
- * @module emdevif.connectivity.Serial
+ * @module emdevif.peripheralModels.Serial
  * @author 杜以成
  * @date 2025-05-09
  * @brief 串口通信
@@ -17,7 +17,7 @@ module;
 #include "emdevif/simplify_decl_macros.hpp"
 #include "emdevif/fatal_handler.hpp"
 
-export module emdevif.connectivity.serial;
+export module emdevif.peripheralModels.serial;
 
 export import emdevif.errorHandler;
 import emdevif.peripheralHandleMap;

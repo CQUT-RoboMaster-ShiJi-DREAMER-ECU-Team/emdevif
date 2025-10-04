@@ -21,7 +21,7 @@ add_subdirectory(logger)
 add_subdirectory(container)
 add_subdirectory(system)
 add_subdirectory(peripheral_handle_map)
-add_subdirectory(connectivity)
+add_subdirectory(peripheral_models)
 add_subdirectory(util)
 
 add_library(${PROJECT_NAME} STATIC)
@@ -32,7 +32,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     emdevif_container
     emdevif_system
     emdevif_peripheral_handle_map
-    emdevif_connectivity
+    emdevif_peripheral_models
     emdevif_util
 )
 

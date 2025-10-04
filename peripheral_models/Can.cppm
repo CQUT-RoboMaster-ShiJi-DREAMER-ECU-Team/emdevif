@@ -1,6 +1,6 @@
 /**
  * @file Can.cppm
- * @module emdevif.connectivity.can
+ * @module emdevif.peripheralModels.can
  * @author DuYicheng
  * @date 2025-09-12
  * @brief CAN 通信
@@ -15,7 +15,7 @@ module;
 
 #include "emdevif/fatal_handler.hpp"
 
-export module emdevif.connectivity.can;
+export module emdevif.peripheralModels.can;
 
 export import emdevif.errorHandler;
 import emdevif.peripheralHandleMap;
@@ -84,7 +84,7 @@ public:
 
             using namespace std::literals;
 
-            constexpr auto begin_str = "Could not find the serial handle named \""sv;
+            constexpr auto begin_str = "Could not find the CAN handle named \""sv;
             constexpr auto end_str = "\"."sv;
 
             err_msg.clear();
