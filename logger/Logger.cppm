@@ -16,6 +16,7 @@ module;
 
 #include "emdevif/attributes_and_useful_macros.h"
 #include "emdevif/fatal_handler.hpp"
+#include "emdevif/line_separator.h"
 
 #ifndef EMDEVIF_LOGGER_BUFFER_SIZE
 #define EMDEVIF_LOGGER_BUFFER_SIZE 256U
@@ -139,7 +140,7 @@ private:
         print_msg_target_buffer_head_ += len;
 
         len = sprintf_(getPrintMsgTargetBuffer() + print_msg_target_buffer_head_,
-                       " (at %s:%d in function `%s\')\r\n",
+                       " (at %s:%d in function `%s\')" EMDEVIF_LINE_SEPARATOR,
                        file,
                        line,
                        func_name);
