@@ -104,6 +104,7 @@ TEST_SUIT(MutexTest)
     }
     TEST_CASE_END();
 
+    emdevif::Thread::delay(1);
     CHECK_MEMORY_LEAK();
 }
 
@@ -288,6 +289,7 @@ TEST_SUIT(ThreadAssignAndMoveTest)
     }
     TEST_CASE_END();
 
+    emdevif::Thread::delay(1);
     CHECK_MEMORY_LEAK();
 }
 
@@ -342,6 +344,7 @@ TEST_SUIT(MulParamFuncTest)
     }
     TEST_CASE_END();
 
+    emdevif::Thread::delay(1);
     CHECK_MEMORY_LEAK();
 }
 
