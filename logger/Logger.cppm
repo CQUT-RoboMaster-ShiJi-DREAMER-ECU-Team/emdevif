@@ -54,6 +54,7 @@ import emdevif.util.ringBuffer;
      (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_SYNC && EMDEVIF_LOGGER_SYNC_USE_LOCK))
 import emdevif.sys.thread;
 import emdevif.sys.mutex;
+import emdevif.sys.semaphore;
 #define EMDEVIF_LOGGER_USE_MUTEX true
 #else
 #define EMDEVIF_LOGGER_USE_MUTEX false
@@ -178,6 +179,7 @@ public:
 
         if (printMsgToBuffer(file, line, func_name, level, format, args) == ErrorCode::Success) {
             switchToNextSlot();
+            logger_async_printer_semaphore_.release(false);
         }
 
 #endif  // (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_SYNC)
@@ -249,6 +251,14 @@ private:
 #endif
 
 #if (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_ASYNC)
+        logger_async_printer_semaphore_ = BinarySemaphore::create(
+            {.name = "loggerSemaphore",
+             .static_instance = &logger_async_printer_semaphore_static_instance_,
+             .instance_size = logger_async_printer_semaphore_static_instance_.getInstanceSize()});
+        if (!logger_async_printer_semaphore_.getHandle().has_value()) {
+            EMDEVIF_FATAL_HANDLER("Failed to create logger semaphore");
+        }
+
         logger_async_printer_thread_ =
             Thread::create({.name = "loggerThread",
                             .priority = Thread::Priority::Low,
@@ -298,11 +308,16 @@ private:
     Thread logger_async_printer_thread_{};
     Thread::StaticInstance<logger_async_thread_stack_size> logger_async_printer_thread_instance_{};
 
+    BinarySemaphore logger_async_printer_semaphore_{};
+    BinarySemaphore::StaticInstance logger_async_printer_semaphore_static_instance_{};
+
     EMDEVIF_NO_RETURN static void logPrinterThread(void* arguments) noexcept
     {
         auto& logger = *static_cast<Logger*>(arguments);
 
         while (true) {
+            logger.logger_async_printer_semaphore_.acquire(false);
+
             logger.lock();
 
             if (!logger.buffer_.isEmpty()) {
@@ -311,12 +326,12 @@ private:
                 }
 
                 logger.unlock();
+                logger.logger_async_printer_semaphore_.release(false);
+
                 Thread::yield();
             }
             else {
                 logger.unlock();
-                Thread::delay(1);  // 在没有需要发送的日志的情况下，每 1 ms 检测一次以减小 CPU 占用
-                // todo 可以考虑用信号量机制实现这个
             }
         }
     }
