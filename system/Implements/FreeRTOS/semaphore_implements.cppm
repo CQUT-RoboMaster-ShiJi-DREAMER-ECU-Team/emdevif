@@ -32,6 +32,14 @@ class CountingSemaphore<least_max_value>::StaticInstance
 public:
     StaticInstance() noexcept : instance() {}
 
+    friend class CountingSemaphore<least_max_value>;
+
+    [[nodiscard]] constexpr std::size_t getInstanceSize() const noexcept
+    {
+        return sizeof instance;
+    }
+
+private:
     explicit operator StaticSemaphore_t&() noexcept
     {
         return instance;
@@ -216,6 +224,14 @@ class CountingSemaphore<1>::StaticInstance
 public:
     StaticInstance() noexcept : instance() {}
 
+    friend class CountingSemaphore<1>;
+
+    [[nodiscard]] constexpr std::size_t getInstanceSize() const noexcept
+    {
+        return sizeof instance;
+    }
+
+private:
     explicit operator StaticSemaphore_t&() noexcept
     {
         return instance;
