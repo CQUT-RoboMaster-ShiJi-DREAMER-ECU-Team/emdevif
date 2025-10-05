@@ -13,6 +13,7 @@ module;
 #include <type_traits>
 
 #include "emdevif/simplify_decl_macros.hpp"
+#include "emdevif/type_traits.hpp"
 
 export module emdevif.peripheralHandleMap;
 
@@ -21,10 +22,12 @@ import emdevif.container.map;
 
 namespace emdevif {
 
+static_assert(emdevif::is_consteval([] { return user_declares::peripheral_handle_map; }),
+              "Variable `peripheral_handle_map\' should be a constant expression.");
 static_assert(
     std::is_same_v<decltype(user_declares::peripheral_handle_map)::MapStoreType, std::pair<std::string_view, void*>>,
     "Variable `peripheral_handle_map\' should be declared as `constexpr auto peripheral_handle_map = "
-    "makeStaticMap<std::string_view, void*>\'");
+    "makeStaticMap<std::string_view, void*>\'.");
 
 export class PeripheralHandleMap
 {
