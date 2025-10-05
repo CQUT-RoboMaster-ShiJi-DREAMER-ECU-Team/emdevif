@@ -9,10 +9,13 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE emdevif_compile_options
 )
 
-target_sources(${PROJECT_NAME} PUBLIC
-    FILE_SET emdevif_peripheral_models_modules TYPE CXX_MODULES FILES
+target_sources(${PROJECT_NAME}
+    PUBLIC FILE_SET emdevif_peripheral_models_modules TYPE CXX_MODULES FILES
         Gpio.cppm
         Serial.cppm
         Can.cppm
         Spi.cppm
+
+    PUBLIC FILE_SET emdevif_peripheral_models_prv_modules TYPE CXX_MODULES FILES
+        peripheral_models_error_handler.cppm
 )

@@ -21,6 +21,7 @@ export module emdevif.peripheralModels.spi;
 
 export import emdevif.errorHandler;
 import emdevif.peripheralHandleMap;
+import emdevif.peripheralModels.errorHandler;
 
 export namespace emdevif {
 
@@ -41,32 +42,12 @@ private:
 
     const ReceiveTransmitFunction receive_transmit_function_;
 
-private:
-    // 用于在编译期求值时提供报错信息
-    static void ThisIsACompileTimeMessage_CouldNotFoundHandle() {}
-
 public:
     constexpr Spi(const std::string_view name, ReceiveTransmitFunction receive_transmit_function) noexcept
         : handle_(PeripheralHandleMap::findHandle(name).value_or(nullptr)),
           receive_transmit_function_(receive_transmit_function)
     {
-        if (handle_ == nullptr) {
-            if (std::is_constant_evaluated()) {
-                ThisIsACompileTimeMessage_CouldNotFoundHandle();
-                return;
-            }
-
-            using namespace std::literals;
-
-            constexpr auto begin_str = "Could not find the SPI handle named \""sv;
-            constexpr auto end_str = "\"."sv;
-
-            err_msg.clear();
-            err_msg << begin_str << name << end_str;
-
-            EMDEVIF_FATAL_HANDLER(err_msg.c_str());
-            err_msg.clear();
-        }
+        internal::checkHandleIsExist(handle_, "SPI");
     }
 
     ErrorCode receiveTransmit(const bool in_isr,

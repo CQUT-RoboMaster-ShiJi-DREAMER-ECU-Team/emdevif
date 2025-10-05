@@ -19,6 +19,7 @@ export module emdevif.peripheralModels.can;
 
 export import emdevif.errorHandler;
 import emdevif.peripheralHandleMap;
+import emdevif.peripheralModels.errorHandler;
 
 export namespace emdevif {
 
@@ -62,37 +63,17 @@ private:
     ReceiveCallback receive_callback_;
     TransmitFunction transmit_function_;
 
-private:
-    // 用于在编译期求值时提供报错信息
-    static void ThisIsACompileTimeMessage_CouldNotFoundHandle() {}
-
 public:
     Can() = delete;
 
     constexpr Can(const std::string_view name,
-                  const ReceiveCallback receive_callback,
-                  const TransmitFunction transmit_function) noexcept
+                  const ReceiveCallback receive_callback = noReceive,
+                  const TransmitFunction transmit_function = noTransmit) noexcept
         : handle_(PeripheralHandleMap::findHandle(name).value_or(nullptr)),
           receive_callback_(receive_callback),
           transmit_function_(transmit_function)
     {
-        if (handle_ == nullptr) {
-            if (std::is_constant_evaluated()) {
-                ThisIsACompileTimeMessage_CouldNotFoundHandle();
-                return;
-            }
-
-            using namespace std::literals;
-
-            constexpr auto begin_str = "Could not find the CAN handle named \""sv;
-            constexpr auto end_str = "\"."sv;
-
-            err_msg.clear();
-            err_msg << begin_str << name << end_str;
-
-            EMDEVIF_FATAL_HANDLER(err_msg.c_str());
-            err_msg.clear();
-        }
+        internal::checkHandleIsExist(handle_, "CAN");
     }
 
     ErrorCode receiveCallbackEntry(const bool in_isr,
@@ -111,7 +92,8 @@ public:
         return transmit_function_(in_isr, handle, header, data);
     }
 
-    static ErrorCode noTransmit(bool, void*, DataHeader&, std::span<uint8_t>) noexcept;
+private:
+    static ErrorCode noTransmit(bool, void*, const DataHeader&, std::span<const uint8_t>) noexcept;
 
     static ErrorCode noReceive(bool, void*, DataHeader&, std::span<uint8_t>) noexcept;
 };
@@ -123,7 +105,7 @@ public:
 
 namespace emdevif {
 
-ErrorCode Can::noTransmit(bool, void*, DataHeader&, std::span<uint8_t>) noexcept
+ErrorCode Can::noTransmit(bool, void*, const DataHeader&, std::span<const uint8_t>) noexcept
 {
     return ErrorCode::NotImplemented;
 }

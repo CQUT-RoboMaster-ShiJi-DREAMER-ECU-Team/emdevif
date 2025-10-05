@@ -21,6 +21,7 @@ export module emdevif.peripheralModels.serial;
 
 export import emdevif.errorHandler;
 import emdevif.peripheralHandleMap;
+import emdevif.peripheralModels.errorHandler;
 
 export namespace emdevif {
 
@@ -43,9 +44,9 @@ public:
                                            uint32_t timeout_ms);
 
     struct BehaviourFunction {
-        const ReceiveFunction receive_function;
+        const ReceiveFunction receive_function{noReceive};
         ReceiveCallback receive_callback{nullptr};
-        const TransmitFunction transmit_function;
+        const TransmitFunction transmit_function{noTransmit};
     };
 
 private:
@@ -56,10 +57,6 @@ private:
 
     const TransmitFunction transmit_function_;
 
-private:
-    // 用于在编译期求值时提供报错信息
-    static void ThisIsACompileTimeMessage_CouldNotFoundHandle() {}
-
 public:
     constexpr Serial(const std::string_view name, const BehaviourFunction& behaviour_function) noexcept
         : handle_(PeripheralHandleMap::findHandle(name).value_or(nullptr)),
@@ -67,23 +64,7 @@ public:
           receive_callback_(behaviour_function.receive_callback),
           transmit_function_(behaviour_function.transmit_function)
     {
-        if (handle_ == nullptr) {
-            if (std::is_constant_evaluated()) {
-                ThisIsACompileTimeMessage_CouldNotFoundHandle();
-                return;
-            }
-
-            using namespace std::literals;
-
-            constexpr auto begin_str = "Could not find the serial handle named \""sv;
-            constexpr auto end_str = "\"."sv;
-
-            err_msg.clear();
-            err_msg << begin_str << name << end_str;
-
-            EMDEVIF_FATAL_HANDLER(err_msg.c_str());
-            err_msg.clear();
-        }
+        internal::checkHandleIsExist(handle_, "Serial");
     }
 
     ErrorCode receive(const bool in_isr,  // NOLINT(*-use-nodiscard)
@@ -110,6 +91,7 @@ public:
         return status;
     }
 
+private:
     static ErrorCode noTransmit(bool, void*, std::span<const uint8_t>, uint32_t) noexcept;
 
     static ErrorCode noReceive(bool, void*, std::span<uint8_t>, uint32_t) noexcept;
