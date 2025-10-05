@@ -388,7 +388,7 @@ public:
 
     Thread() : handle_(nullptr) {}
 
-    explicit Thread(const StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}
+    Thread(const StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}  // NOLINT
 
     Thread& operator=(const StronglyTypedHandle strongly_handle)
     {
@@ -407,7 +407,7 @@ public:
     {
     }
 
-    explicit Thread(const MulParamThreadFuncHandle mul_param_thread_func_handle)
+    Thread(const MulParamThreadFuncHandle mul_param_thread_func_handle)  // NOLINT
         : handle_(mul_param_thread_func_handle.handle),
           func_wrapper_memory_block_(mul_param_thread_func_handle.func_wrapper_memory_block)
     {
