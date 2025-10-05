@@ -15,7 +15,7 @@ export module emdevif.sys.eventGroup:definitions;
 
 import emdevif.util.bitInt;
 
-namespace emdevif::EventGroup_internal {
+namespace emdevif::internal {
 
 consteval BitsType_t maxEventBits() noexcept
 {
@@ -26,4 +26,4 @@ consteval BitsType_t maxEventBits() noexcept
 #endif
 }
 
-}  // namespace emdevif::EventGroup_internal
+}  // namespace emdevif::internal

@@ -55,11 +55,11 @@ protected:  // for testing
     /* clang-format on */
 
     static_assert(sizeof(SignedType) == sizeof(RealType));
-    static_assert(BitInt_internal::bitsOf<RealType>() != 0);
+    static_assert(internal::bitsOf<RealType>() != 0);
 
     static constexpr RealType truncateToReal(const SignedType v) noexcept
     {
-        if constexpr (bits == BitInt_internal::bitsOf<RealType>()) {
+        if constexpr (bits == internal::bitsOf<RealType>()) {
             return std::bit_cast<RealType>(v);
         }
         else {
@@ -69,11 +69,11 @@ protected:  // for testing
 
     static constexpr SignedType transToSigned(const RealType v) noexcept
     {
-        if constexpr (bits == BitInt_internal::bitsOf<RealType>()) {
+        if constexpr (bits == internal::bitsOf<RealType>()) {
             return std::bit_cast<SignedType>(v);
         }
         else {
-            constexpr auto shift = BitInt_internal::bitsOf<RealType>() - bits;
+            constexpr auto shift = internal::bitsOf<RealType>() - bits;
             return (static_cast<SignedType>(v << shift)) >> shift;
         }
     }

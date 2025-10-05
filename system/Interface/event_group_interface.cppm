@@ -53,7 +53,7 @@ public:
         handle_ = nullptr;
     }
 
-    static constexpr BitsType_t maxEventBits = EventGroup_internal::maxEventBits();
+    static constexpr BitsType_t maxEventBits = internal::maxEventBits();
 
     using EventBits_t = UBitInt<maxEventBits>;
 

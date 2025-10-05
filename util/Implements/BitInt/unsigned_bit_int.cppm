@@ -43,11 +43,11 @@ protected:  // for testing
 
     /* clang-format on */
 
-    static_assert(BitInt_internal::bitsOf<RealType>() != 0);
+    static_assert(internal::bitsOf<RealType>() != 0);
 
     static constexpr RealType overflowCast(const RealType value) noexcept
     {
-        if constexpr (bits == BitInt_internal::bitsOf<RealType>()) {
+        if constexpr (bits == internal::bitsOf<RealType>()) {
             return value;
         }
         else {
@@ -58,7 +58,7 @@ protected:  // for testing
 public:
     static constexpr RealType max() noexcept
     {
-        if constexpr (bits == BitInt_internal::bitsOf<RealType>()) {
+        if constexpr (bits == internal::bitsOf<RealType>()) {
             return std::numeric_limits<RealType>::max();
         }
         else {

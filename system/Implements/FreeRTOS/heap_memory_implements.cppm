@@ -18,7 +18,7 @@ module;
 
 export module emdevif.sys.heap:implements;
 
-namespace emdevif::heap::heap_internal {
+namespace emdevif::heap::internal {
 
 void* mallocByte(const std::size_t size_in_bytes) noexcept
 {
@@ -30,14 +30,14 @@ void free(void* block) noexcept
     vPortFree(block);
 }
 
-}  // namespace emdevif::heap::heap_internal
+}  // namespace emdevif::heap::internal
 
 export namespace emdevif::heap {
 
 template<typename T, typename... Args>
 T* construct(Args&&... args)
 {
-    auto ret = static_cast<T*>(heap_internal::mallocByte(sizeof(T)));
+    auto ret = static_cast<T*>(internal::mallocByte(sizeof(T)));
     if (ret == nullptr) {
         throw std::bad_alloc();
     }
@@ -46,7 +46,7 @@ T* construct(Args&&... args)
         std::construct_at(ret, std::forward<Args>(args)...);
     }
     catch (...) {
-        heap_internal::free(ret);
+        internal::free(ret);
         throw;
     }
 
@@ -56,7 +56,7 @@ T* construct(Args&&... args)
 template<typename T, typename... Args>
 T* construct(std::nothrow_t, Args&&... args) noexcept
 {
-    auto ret = static_cast<T*>(heap_internal::mallocByte(sizeof(T)));
+    auto ret = static_cast<T*>(internal::mallocByte(sizeof(T)));
     if (ret == nullptr) {
         return nullptr;
     }
@@ -73,11 +73,11 @@ void destruct(T& p) noexcept
         return;
     }
 
-    if constexpr (!std::is_same_v<std::remove_pointer_t<T> , void>) {
+    if constexpr (!std::is_same_v<std::remove_pointer_t<T>, void>) {
         std::destroy_at(p);
     }
 
-    heap_internal::free(p);
+    internal::free(p);
 
     p = nullptr;
 }
@@ -87,7 +87,7 @@ class Deleter
 public:
     void operator()(void* p) const
     {
-        heap_internal::free(p);
+        internal::free(p);
     }
 };
 
@@ -97,7 +97,7 @@ using unique_ptr = std::unique_ptr<T, Deleter>;
 template<typename T, typename... Args>
 unique_ptr<T> make_unique(Args&&... args)
 {
-    auto p = static_cast<T*>(heap_internal::mallocByte(sizeof(T)));
+    auto p = static_cast<T*>(internal::mallocByte(sizeof(T)));
     if (p == nullptr) {
         throw std::bad_alloc();
     }
@@ -107,7 +107,7 @@ unique_ptr<T> make_unique(Args&&... args)
         return unique_ptr<T>(p);
     }
     catch (...) {
-        heap_internal::free(p);
+        internal::free(p);
         throw;
     }
 }
@@ -115,7 +115,7 @@ unique_ptr<T> make_unique(Args&&... args)
 template<typename T, typename... Args>
 unique_ptr<T> make_unique(std::nothrow_t, Args&&... args) noexcept
 {
-    auto p = static_cast<T*>(heap_internal::mallocByte(sizeof(T)));
+    auto p = static_cast<T*>(internal::mallocByte(sizeof(T)));
     if (p == nullptr) {
         return nullptr;
     }
@@ -152,14 +152,14 @@ public:
     // ReSharper disable once CppMemberFunctionMayBeStatic
     pointer allocate(const size_type n)
     {
-        return static_cast<pointer>(heap_internal::mallocByte(n * sizeof(value_type)));
+        return static_cast<pointer>(internal::mallocByte(n * sizeof(value_type)));
     }
 
     // ReSharper disable once CppMemberFunctionMayBeStatic
     // ReSharper disable once CppParameterMayBeConst
     void deallocate(pointer p, const size_type)
     {
-        heap_internal::free(p);
+        internal::free(p);
     }
 };
 
