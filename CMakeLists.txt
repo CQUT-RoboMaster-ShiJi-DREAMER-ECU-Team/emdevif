@@ -24,9 +24,9 @@ add_subdirectory(peripheral_handle_map)
 add_subdirectory(peripheral_models)
 add_subdirectory(util)
 
-add_library(${PROJECT_NAME} STATIC)
+add_library(${PROJECT_NAME} INTERFACE)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC
+target_link_libraries(${PROJECT_NAME} INTERFACE
     emdevif_core
     emdevif_logger
     emdevif_container
