@@ -13,7 +13,7 @@ module;
 #include <string_view>
 
 #ifndef EMDEVIF_ERROR_HANDLER_ERROR_MESSAGE_BUFFER_MAX_LENGTH
-#define EMDEVIF_ERROR_HANDLER_ERROR_MESSAGE_BUFFER_MAX_LENGTH 128
+#define EMDEVIF_ERROR_HANDLER_ERROR_MESSAGE_BUFFER_MAX_LENGTH 256
 #endif
 
 export module emdevif.errorHandler:errorMessage;
