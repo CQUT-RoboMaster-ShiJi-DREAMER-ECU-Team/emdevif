@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.28)
 
 project(emdevif_system C CXX)
 
+set(EMDEVIF_THREAD_SYSTEM "FreeRTOS" CACHE STRING "Select witch system to use. \
+Default value is \"FreeRTOS\"")
+
 add_library(${PROJECT_NAME} STATIC)
 
 target_link_libraries(${PROJECT_NAME}
@@ -53,3 +56,12 @@ if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
             Implements/FreeRTOS/heap_memory_implements.cppm
     )
 endif ()
+
+block()
+    set(additionalMessage "")
+    if ((EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS") AND (EMDEVIF_FREERTOS_USE_STM32CUBEMX))
+        set(additionalMessage " Use STM32CubeMX generated FreeRTOS lib.")
+    endif ()
+
+    message("[${PROJECT_NAME}]: Use \"${EMDEVIF_THREAD_SYSTEM}\".${additionalMessage}")
+endblock()

@@ -41,4 +41,5 @@ target_link_libraries(${PROJECT_NAME} INTERFACE
 if (EMDEVIF_ENABLE_TESTS)
     enable_testing()
     add_subdirectory(test)
+    message("[${PROJECT_NAME}]: Enabled tests.")
 endif ()
