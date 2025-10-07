@@ -37,8 +37,8 @@ private:
 public:
     constexpr Gpio(void* port,
                    const uint32_t pin,
-                   WriteFunction write_function,
-                   ReadFunction read_function,
+                   WriteFunction write_function = noWrite,
+                   ReadFunction read_function = noRead,
                    const ToggleFunction toggle_function = nullptr) noexcept
         : port_(port),
           pin_(pin),
@@ -64,6 +64,23 @@ public:
             toggle_function_(port_, pin_);
         }
     }
+
+private:
+    static void noWrite(void*, uint32_t, uint_fast8_t) noexcept;
+    static uint_fast8_t noRead(void*, uint32_t) noexcept;
 };
+
+}  // namespace emdevif
+
+// module :private;
+
+namespace emdevif {
+
+void Gpio::noWrite(void*, uint32_t, uint_fast8_t) noexcept {}
+
+uint_fast8_t Gpio::noRead(void*, uint32_t) noexcept
+{
+    return 0;
+}
 
 }  // namespace emdevif
