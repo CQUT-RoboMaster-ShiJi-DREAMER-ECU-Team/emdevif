@@ -31,7 +31,7 @@ public:
     Spi() = delete;
     EMDEVIF_DELETE_COPY_CONSTRUCTOR(Spi);
 
-    using ReceiveTransmitFunction = ErrorCode (&)(bool in_isr,
+    using TransmitReceiveFunction = ErrorCode (&)(bool in_isr,
                                                   void* handle,
                                                   std::span<const uint8_t> tx_data,
                                                   std::span<uint8_t> rx_data,
@@ -40,17 +40,17 @@ public:
 private:
     void* handle_;
 
-    const ReceiveTransmitFunction receive_transmit_function_;
+    const TransmitReceiveFunction transmit_receive_function_;
 
 public:
-    constexpr Spi(const std::string_view name, ReceiveTransmitFunction receive_transmit_function) noexcept
+    constexpr Spi(const std::string_view name, TransmitReceiveFunction receive_transmit_function) noexcept
         : handle_(PeripheralHandleMap::findHandle(name).value_or(nullptr)),
-          receive_transmit_function_(receive_transmit_function)
+          transmit_receive_function_(receive_transmit_function)
     {
         internal::checkHandleIsExist(handle_, "SPI");
     }
 
-    ErrorCode receiveTransmit(const bool in_isr,
+    ErrorCode transmitReceive(const bool in_isr,
                               const std::span<const uint8_t> tx_data,
                               const std::span<uint8_t> rx_data,
                               const uint32_t timeout_ms) const noexcept
@@ -59,7 +59,7 @@ public:
             return ErrorCode::InvalidArgument;
         }
 
-        return receive_transmit_function_(in_isr, handle_, tx_data, rx_data, timeout_ms);
+        return transmit_receive_function_(in_isr, handle_, tx_data, rx_data, timeout_ms);
     }
 };
 
