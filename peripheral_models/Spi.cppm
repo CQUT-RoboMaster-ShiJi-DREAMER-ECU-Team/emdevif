@@ -29,7 +29,6 @@ class Spi
 {
 public:
     Spi() = delete;
-    EMDEVIF_DELETE_COPY_CONSTRUCTOR(Spi);
 
     using TransmitReceiveFunction = ErrorCode (&)(bool in_isr,
                                                   void* handle,

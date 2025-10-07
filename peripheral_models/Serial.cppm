@@ -29,7 +29,6 @@ class Serial
 {
 public:
     Serial() = delete;
-    EMDEVIF_DELETE_COPY_CONSTRUCTOR(Serial);
 
     using ReceiveFunction = ErrorCode (&)(bool in_isr,
                                           void* handle,
