@@ -13,10 +13,10 @@ module;
 #include <type_traits>
 
 #include "emdevif/simplify_decl_macros.hpp"
-#include "emdevif/type_traits.hpp"
 
 export module emdevif.peripheralHandleMap;
 
+import emdevif.typeTraits;
 import emdevif.userDeclares;
 import emdevif.container.map;
 

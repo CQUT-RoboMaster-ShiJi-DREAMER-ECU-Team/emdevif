@@ -6,6 +6,11 @@ project(emdevif_core C CXX)
 
 add_library(${PROJECT_NAME} STATIC)
 
+set(BOOST_USE_MODULES ON CACHE BOOL "" FORCE)
+add_subdirectory(depends/boost_pfr)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC boost_pfr)
+
 target_include_directories(${PROJECT_NAME}
     PUBLIC inc/
     PRIVATE emdevif_compile_options
@@ -19,4 +24,9 @@ target_sources(${PROJECT_NAME}
         error_handler/ErrorMessage.cppm
 
     PRIVATE error_handler/error_handler.cpp
+
+    PUBLIC FILE_SET ${PROJECT_NAME}_type_traits TYPE CXX_MODULES FILES
+        type_traits/type_traits.cppm
+        type_traits/impl/misc.cppm
+        type_traits/impl/tuple_style.cppm
 )

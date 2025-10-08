@@ -5,7 +5,7 @@
  * @brief 类型特征测试
  */
 
-#include "emdevif/type_traits.hpp"
+import emdevif.typeTraits;
 
 static constexpr auto a = 0;
 static auto b = 0;

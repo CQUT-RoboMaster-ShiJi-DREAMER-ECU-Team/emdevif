@@ -1,17 +1,18 @@
 /**
- * @file type_traits.hpp
+ * @file misc.cppm
+ * @module emdevif.typeTraits:misc
  * @author DuYicheng
- * @date 2025-10-05
- * @brief 类型特征（STL type_traits 头文件的扩展）
+ * @date 2025-10-08
+ * @brief 类型特征 - 杂项
  */
 
-#pragma once
-#ifndef EMDEVIF_TYPE_TRAITS_HPP
-#define EMDEVIF_TYPE_TRAITS_HPP
+module;
 
 #include <type_traits>
 
-namespace emdevif {
+export module emdevif.typeTraits:misc;
+
+export namespace emdevif {
 
 // 参考 https://github.com/microsoft/proxy/issues/105
 template<typename Expr>
@@ -21,5 +22,3 @@ consteval bool is_consteval(Expr)
 }
 
 }  // namespace emdevif
-
-#endif  // !EMDEVIF_TYPE_TRAITS_HPP
