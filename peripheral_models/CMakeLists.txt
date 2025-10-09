@@ -21,7 +21,3 @@ target_sources(${PROJECT_NAME}
     PUBLIC FILE_SET emdevif_peripheral_models_prv_modules TYPE CXX_MODULES FILES
         peripheral_models_error_handler.cppm
 )
-
-add_subdirectory(emdevif_peripheral_model_traits)
-
-target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_peripheral_model_traits)
