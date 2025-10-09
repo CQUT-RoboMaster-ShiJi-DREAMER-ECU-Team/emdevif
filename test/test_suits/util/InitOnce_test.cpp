@@ -99,7 +99,7 @@ void allocateFailed()
 {
     test_allocate_failed = true;
 }
-
+// todo Release 模式下会有很多警告
 static TEST_SUIT(InitOnceMoveTest)
 {
     class Test final
