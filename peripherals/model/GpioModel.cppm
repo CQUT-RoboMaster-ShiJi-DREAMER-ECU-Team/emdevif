@@ -1,6 +1,6 @@
 /**
  * @file GpioModel.cppm
- * @module emdevif.peripherals.models.gpio
+ * @module emdevif.peripheral.model.gpio
  * @author DuYicheng
  * @date 2025-10-13
  * @brief GPIO 模型
@@ -12,7 +12,7 @@ module;
 
 #include <type_traits>
 
-export module emdevif.peripherals.models.gpio;
+export module emdevif.peripheral.model.gpio;
 
 export namespace emdevif {
 

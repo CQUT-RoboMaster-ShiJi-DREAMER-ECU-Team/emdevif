@@ -34,7 +34,7 @@ target_link_libraries(${PROJECT_NAME} INTERFACE
     emdevif_timeline
     emdevif_system
     emdevif_peripheral_handle_map
-    emdevif_peripherals
+    emdevif_peripheral
     emdevif_util
 )
 

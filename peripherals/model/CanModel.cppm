@@ -1,6 +1,6 @@
 /**
  * @file CanModel.cppm
- * @module emdevif.peripherals.models.can
+ * @module emdevif.peripheral.model.can
  * @author DuYicheng
  * @date 2025-10-13
  * @brief CAN 通信模型
@@ -13,7 +13,7 @@ module;
 #include <span>
 #include <type_traits>
 
-export module emdevif.peripherals.models.can;
+export module emdevif.peripheral.model.can;
 
 export import emdevif.errorHandler;
 

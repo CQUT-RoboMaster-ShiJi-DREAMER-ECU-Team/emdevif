@@ -19,8 +19,8 @@ export module emdevif.peripheral.can;
 
 export import emdevif.errorHandler;
 import emdevif.peripheralHandleMap;
-import emdevif.peripheralModels.errorHandler;
-import emdevif.peripherals.models.can;
+import emdevif.peripheral.base;
+import emdevif.peripheral.model.can;
 
 export namespace emdevif {
 
@@ -35,7 +35,7 @@ public:
     explicit constexpr Can(const std::string_view name) noexcept
         : instance_(static_cast<CanModel::Instance*>(PeripheralHandleMap::findHandle(name).value_or(nullptr)))
     {
-        internal::checkHandleIsExist(instance_, "CAN");
+        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "CAN");
     }
 
     ErrorCode receiveCallbackEntry(const bool in_isr,

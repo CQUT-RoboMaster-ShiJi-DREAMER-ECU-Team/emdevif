@@ -17,8 +17,8 @@ export module emdevif.peripheral.gpio;
 
 import emdevif.errorHandler;
 import emdevif.peripheralHandleMap;
-import emdevif.peripheralModels.errorHandler;
-import emdevif.peripherals.models.gpio;
+import emdevif.peripheral.base;
+import emdevif.peripheral.model.gpio;
 
 export namespace emdevif {
 
@@ -31,7 +31,7 @@ public:
     explicit constexpr Gpio(const std::string_view name) noexcept
         : instance_(static_cast<GpioModel::Instance*>(PeripheralHandleMap::findHandle(name).value_or(nullptr)))
     {
-        internal::checkHandleIsExist(instance_, "GPIO");
+        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "GPIO");
     }
 
     void write(const PinState pin_state) const noexcept
