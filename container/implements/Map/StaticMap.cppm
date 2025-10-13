@@ -74,7 +74,7 @@ public:
 };
 
 template<typename KeyType, typename ValueType, std::size_t size>
-consteval auto makeStaticMap(const std::pair<KeyType, ValueType> (&init_arr)[size])
+consteval auto makeStaticMap(const std::pair<KeyType, ValueType> (&init_arr)[size]) noexcept
 {
     std::array<std::pair<KeyType, ValueType>, size> arr;
 
