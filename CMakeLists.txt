@@ -22,7 +22,7 @@ add_subdirectory(container)
 add_subdirectory(timeline)
 add_subdirectory(system)
 add_subdirectory(peripheral_handle_map)
-add_subdirectory(peripheral_models)
+add_subdirectory(peripherals)
 add_subdirectory(util)
 
 add_library(${PROJECT_NAME} INTERFACE)
@@ -34,7 +34,7 @@ target_link_libraries(${PROJECT_NAME} INTERFACE
     emdevif_timeline
     emdevif_system
     emdevif_peripheral_handle_map
-    emdevif_peripheral_models
+    emdevif_peripherals
     emdevif_util
 )
 

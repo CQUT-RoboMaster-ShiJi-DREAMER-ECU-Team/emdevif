@@ -11,13 +11,6 @@ target_link_libraries(${PROJECT_NAME}
 
 target_sources(${PROJECT_NAME}
     PUBLIC FILE_SET emdevif_peripheral_models_modules TYPE CXX_MODULES FILES
-        Gpio.cppm
-        Timer.cppm
-        Pwm.cppm
-        Serial.cppm
-        Can.cppm
-        Spi.cppm
-
-    PUBLIC FILE_SET emdevif_peripheral_models_prv_modules TYPE CXX_MODULES FILES
-        peripheral_models_error_handler.cppm
+        GpioModel.cppm
+        CanModel.cppm
 )
