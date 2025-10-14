@@ -15,7 +15,8 @@ else ()
 endif ()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    emdevif_test_framework emdevif_compile_options printf
+    emdevif_test_framework emdevif_compile_options
+    PUBLIC printf
 )
 
 if ((DEFINED EMDEVIF_THREAD_SYSTEM) AND (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS"))
