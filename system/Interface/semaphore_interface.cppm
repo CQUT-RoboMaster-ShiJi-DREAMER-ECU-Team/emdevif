@@ -11,7 +11,7 @@ module;
 #include <cstddef>
 #include <optional>
 
-#include "emdevif/fatal_handler.hpp"
+#include "emdevif/fatal_handler.h"
 
 export module emdevif.sys.semaphore:interface;
 

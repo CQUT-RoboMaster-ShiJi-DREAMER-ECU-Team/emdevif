@@ -11,7 +11,7 @@ module;
 #include <cstdint>
 #include <string_view>
 
-#include "emdevif/fatal_handler.hpp"
+#include "emdevif/fatal_handler.h"
 
 export module emdevif.peripheral.gpio;
 

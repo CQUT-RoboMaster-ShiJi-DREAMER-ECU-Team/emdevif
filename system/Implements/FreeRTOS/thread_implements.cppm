@@ -14,7 +14,7 @@ module;
 #include <utility>
 #include <type_traits>
 
-#include "emdevif/fatal_handler.hpp"
+#include "emdevif/fatal_handler.h"
 
 #if (configMAX_PRIORITIES < 6)
 #error \

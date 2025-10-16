@@ -13,7 +13,7 @@ module;
 
 #include "emdevif/simplify_decl_macros.hpp"
 
-#include "emdevif/fatal_handler.hpp"
+#include "emdevif/fatal_handler.h"
 
 export module emdevif.peripheral.base;
 

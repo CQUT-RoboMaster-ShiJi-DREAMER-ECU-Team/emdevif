@@ -23,7 +23,7 @@ target_sources(${PROJECT_NAME}
         error_handler/fatal_handler.cppm
         error_handler/ErrorMessage.cppm
 
-    PRIVATE error_handler/error_handler.cpp
+    PRIVATE error_handler/error_handler.cpp error_handler/fatal_handler_extern_c.cpp
 
     PUBLIC FILE_SET ${PROJECT_NAME}_type_traits TYPE CXX_MODULES FILES
         type_traits/type_traits.cppm
