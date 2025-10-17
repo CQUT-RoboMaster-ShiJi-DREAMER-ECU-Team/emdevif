@@ -8,7 +8,7 @@ add_subdirectory(heap_usage_checker)
 add_library(${PROJECT_NAME} STATIC)
 
 block()
-    file(GLOB_RECURSE emdevifTestSuitsSrc "test_suits/*.cpp")
+    file(GLOB_RECURSE emdevifTestSuitsSrc "test_suits/*.cpp" "test_suits/*.c")
     target_sources(${PROJECT_NAME} PRIVATE
         test_main.cpp
 

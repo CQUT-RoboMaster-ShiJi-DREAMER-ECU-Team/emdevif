@@ -9,6 +9,10 @@
 #ifndef EMDEVIF_TEST_MAIN_HPP
 #define EMDEVIF_TEST_MAIN_HPP
 
+extern "C" void cFeatureTest(void);
+
+void endianTest();
+
 void initOnceTest();
 void bitIntTest();
 void ringBufferTest();
@@ -18,4 +22,4 @@ void loggerTest();
 void heapTest();
 void threadAndMutexTest();
 
-#endif // !EMDEVIF_TEST_MAIN_HPP
+#endif  // !EMDEVIF_TEST_MAIN_HPP

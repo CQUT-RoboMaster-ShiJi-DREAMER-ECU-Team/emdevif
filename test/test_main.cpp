@@ -11,6 +11,10 @@
 
 extern "C" void emdevif_testEntry(void)
 {
+    cFeatureTest();
+
+    endianTest();
+
     logSystemHeapUsage();
 
     initOnceTest();
