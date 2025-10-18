@@ -42,8 +42,8 @@ public:
      */
     static void pauseDelayUs(const BaseTimePoint delay_time_us) noexcept
     {
-        const auto target = getMicroseconds() + delay_time_us;
-        while (target - getMicroseconds() < delay_time_us) {
+        const volatile auto begin = getMicroseconds();
+        while (getMicroseconds() - begin < delay_time_us) {
         }
     }
 
