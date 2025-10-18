@@ -48,6 +48,8 @@
     #define EMDEVIF_FALL_THROUGH __attribute__((fallthrough))
 #endif
 
+#define EMDEVIF_SECTION(section_name) __attribute__((section(#section_name)))
+
 /* clang-format on */
 
 #endif  // (defined(__GNUC__) || defined(__CC_ARM))
