@@ -22,6 +22,13 @@ export namespace emdevif {
 class SerialModel
 {
 public:
+    enum State : uint_fast8_t {
+        Ready = 0,
+        Busy
+    };
+
+    using GetStateFunction = State (*)(bool in_isr, void* handle);
+
     using ReceiveFunction = ErrorCode (*)(bool in_isr,
                                           void* handle,
                                           std::span<uint8_t> received_data,
@@ -36,6 +43,8 @@ public:
 
     struct Instance {
         void* const handle_{nullptr};
+
+        const GetStateFunction get_state_function_{nullptr};
 
         const ReceiveFunction receive_function_{noReceive};
         const ReceiveCallback receive_callback_{nullptr};

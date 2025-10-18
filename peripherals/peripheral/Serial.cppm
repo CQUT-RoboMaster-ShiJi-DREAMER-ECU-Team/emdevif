@@ -40,6 +40,12 @@ public:
         internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "Serial");
     }
 
+    SerialModel::State getStatus(const bool in_isr) const noexcept  // NOLINT(*-use-nodiscard)
+    {
+        EMDEVIF_ASSERT(instance_->get_state_function_ != nullptr);
+        return instance_->get_state_function_(in_isr, instance_->handle_);
+    }
+
     ErrorCode receive(const bool in_isr,  // NOLINT(*-use-nodiscard)
                       const std::span<uint8_t> received_data,
                       const uint32_t timeout_ms) const noexcept
