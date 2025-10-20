@@ -12,6 +12,7 @@
 extern "C" void cFeatureTest(void);
 
 void endianTest();
+void typeTraitsTest();
 
 void initOnceTest();
 void bitIntTest();

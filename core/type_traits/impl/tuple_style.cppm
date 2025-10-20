@@ -9,6 +9,7 @@ module;
 
 #include <type_traits>
 #include <tuple>
+#include <array>
 
 export module emdevif.typeTraits:tupleStyle;
 
@@ -18,13 +19,26 @@ namespace emdevif {
 
 namespace internal {
 
+template<typename T>
+struct is_std_array : std::false_type {
+};
+
+template<typename U, std::size_t N>
+struct is_std_array<std::array<U, N>> : std::true_type {
+};
+
+template<typename T>
+inline constexpr bool is_std_array_v = is_std_array<T>::value;
+
 template<typename T, typename = void>
 struct is_tuple_like : std::false_type {
 };
 
 template<typename T>
-struct is_tuple_like<T, std::void_t<decltype(std::tuple_size_v<T>), decltype(std::get<0>(std::declval<T>()))>>
-    : std::true_type {
+struct is_tuple_like<T,
+                     std::void_t<std::enable_if_t<!std::is_array_v<T> && !is_std_array_v<T>>,
+                                 decltype(std::tuple_size_v<T>),
+                                 decltype(std::get<0>(std::declval<T>()))>> : std::true_type {
 };
 
 template<typename T>
