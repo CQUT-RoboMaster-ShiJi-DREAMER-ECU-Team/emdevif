@@ -162,19 +162,21 @@ constexpr Agg tuple_to_agg_impl(Tuple&& t, std::index_sequence<I...>)
 
 export
 {
+    /* clang-format off */
     template<typename Agg, typename Tuple>
         requires(std::is_aggregate_v<Agg> && internal::is_tuple_like_v<Tuple>)
-    constexpr auto tuple_to_aggregate(Tuple && t)
+    constexpr auto tuple_to_aggregate(Tuple&& t)
     {
         constexpr std::size_t N = std::tuple_size_v<std::decay_t<Tuple>>;
         return internal::tuple_to_agg_impl<Agg>(std::forward<Tuple>(t), std::make_index_sequence<N>{});
     }
 
     template<typename Agg>
-    constexpr auto aggregate_to_tuple(Agg && a)
+    constexpr auto aggregate_to_tuple(Agg&& a)
     {
         return boost::pfr::structure_tie(std::forward<Agg>(a));
     }
+    /* clang-format on */
 }
 
 }  // namespace emdevif
