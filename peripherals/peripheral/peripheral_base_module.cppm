@@ -1,6 +1,5 @@
 /**
  * @file peripheral_base_module.cppm
- * @module emdevif.peripheral.errorHandler
  * @author DuYicheng
  * @date 2025-10-05
  * @brief 外设模型类的错误处理

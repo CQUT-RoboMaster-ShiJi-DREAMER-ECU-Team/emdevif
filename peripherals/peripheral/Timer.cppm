@@ -1,6 +1,5 @@
 /**
  * @file Timer.cppm
- * @module emdevif.peripheral.timer
  * @author DuYicheng
  * @date 2025-10-04
  * @brief 定时器

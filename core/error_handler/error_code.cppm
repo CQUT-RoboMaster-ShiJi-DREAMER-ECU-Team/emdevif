@@ -1,6 +1,5 @@
 /**
  * @file error_code.cppm
- * @module emdevif.error_handler:error_code
  * @author DuYicheng
  * @date 2025-09-05
  * @brief 错误码

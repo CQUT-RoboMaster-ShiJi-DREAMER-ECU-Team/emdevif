@@ -1,6 +1,5 @@
 /**
  * @file endian.cppm
- * @module emdevif.endian
  * @author DuYicheng
  * @date 2025-10-16
  * @brief 端序

@@ -1,6 +1,5 @@
 /**
  * @file bit_int_base.cppm
- * @module emdevif.util.BitInt:base
  * @author DuYicheng
  * @date 2025-08-29
  * @brief 指定宽度整型公共函数

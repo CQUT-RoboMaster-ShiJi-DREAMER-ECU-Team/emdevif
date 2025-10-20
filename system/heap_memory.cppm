@@ -1,6 +1,5 @@
 /**
  * @file heap_memory.cppm
- * @module emdevif.sys.heap
  * @author DuYicheng
  * @date 2025-08-30
  * @brief 堆内存

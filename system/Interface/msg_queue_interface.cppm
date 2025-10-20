@@ -1,6 +1,5 @@
 /**
  * @file msg_queue_interface.cppm
- * @module emdevif.sys.message_queue:interface
  * @author 杜以成
  * @date 2025-06-18
  * @brief 消息队列接口

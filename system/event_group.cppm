@@ -1,6 +1,5 @@
 /**
  * @file event_group.cppm
- * @module emdevif.sys.event_group
  * @author DuYicheng
  * @date 2025-08-16
  * @brief 事件组

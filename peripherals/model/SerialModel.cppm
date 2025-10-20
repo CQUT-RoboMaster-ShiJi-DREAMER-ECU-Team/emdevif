@@ -1,6 +1,5 @@
 /**
  * @file SerialModel.cppm
- * @module emdevif.peripheral.model.serial
  * @author DuYicheng
  * @date 2025-10-13
  * @brief 串口模型

@@ -1,6 +1,5 @@
 /**
  * @file Serial.cppm
- * @module emdevif.peripheral.serial
  * @author 杜以成
  * @date 2025-05-09
  * @brief 串口通信

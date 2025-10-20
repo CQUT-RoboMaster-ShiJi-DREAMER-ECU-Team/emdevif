@@ -1,6 +1,5 @@
 /**
  * @file mutex_interface.cppm
- * @module emdevif.sys.mutex:interface
  * @author DuYicheng
  * @date 2025-08-01
  * @brief 互斥锁接口

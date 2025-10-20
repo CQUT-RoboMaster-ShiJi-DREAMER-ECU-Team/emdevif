@@ -1,6 +1,5 @@
 /**
  * @file semaphore.cppm
- * @module emdevif.sys.semaphore
  * @author DuYicheng
  * @date 2025-08-16
  * @brief 信号量

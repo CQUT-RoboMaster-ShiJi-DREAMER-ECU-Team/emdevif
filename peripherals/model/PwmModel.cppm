@@ -1,6 +1,5 @@
 /**
  * @file PwmModel.cppm
- * @module emdevif.peripheral.model.pwm
  * @author DuYicheng
  * @date 2025-10-13
  * @brief PWM 模型

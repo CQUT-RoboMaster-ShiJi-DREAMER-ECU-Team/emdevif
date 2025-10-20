@@ -1,6 +1,5 @@
 /**
  * @file Timeline.cppm
- * @module emdevif.chrono
  * @author DuYicheng
  * @date 2025-10-06
  * @brief 时间戳

@@ -1,6 +1,5 @@
 /**
  * @file message_queue.cppm
- * @module emdevif.sys.message_queue
  * @author 杜以成
  * @date 2025-06-18
  * @brief 消息队列

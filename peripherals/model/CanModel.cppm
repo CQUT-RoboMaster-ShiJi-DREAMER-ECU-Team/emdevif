@@ -1,6 +1,5 @@
 /**
  * @file CanModel.cppm
- * @module emdevif.peripheral.model.can
  * @author DuYicheng
  * @date 2025-10-13
  * @brief CAN 通信模型

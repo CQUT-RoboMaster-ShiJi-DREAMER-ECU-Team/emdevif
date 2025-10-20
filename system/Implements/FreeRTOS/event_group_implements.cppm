@@ -1,6 +1,5 @@
 /**
  * @file event_group_implements.cppm
- * @module emdevif.sys.event_group:implements
  * @author DuYicheng
  * @date 2025-08-16
  * @brief 事件组 FreeRTOS 实现

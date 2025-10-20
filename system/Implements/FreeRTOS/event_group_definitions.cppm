@@ -1,6 +1,5 @@
 /**
  * @file event_group_definitions.cppm
- * @module emdevif.sys.event_group:definitions
  * @author DuYicheng
  * @date 2025-08-29
  * @brief 事件组相关常量定义 - FreeRTOS 实现

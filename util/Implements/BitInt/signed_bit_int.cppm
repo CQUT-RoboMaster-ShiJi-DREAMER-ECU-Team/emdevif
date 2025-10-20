@@ -1,6 +1,5 @@
 /**
  * @file signed_bit_int.cppm
- * @module emdevif.util.BitInt:signed_partial
  * @author DuYicheng
  * @date 2025-08-16
  * @brief 有符号指定宽度整型

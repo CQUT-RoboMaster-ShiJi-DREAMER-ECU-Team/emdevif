@@ -1,6 +1,5 @@
 /**
  * @file StaticMap.cppm
- * @module emdevif.container.Map:StaticMap
  * @author DuYicheng
  * @date 2025-09-04
  * @brief 静态键值对

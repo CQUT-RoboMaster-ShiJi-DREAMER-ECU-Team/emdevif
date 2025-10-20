@@ -1,6 +1,5 @@
 /**
  * @file mutex.cppm
- * @module emdevif.sys.mutex
  * @author DuYicheng
  * @date 2025-08-01
  * @brief 互斥锁

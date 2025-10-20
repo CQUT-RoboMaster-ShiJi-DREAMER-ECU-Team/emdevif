@@ -1,6 +1,5 @@
 /**
  * @file Gpio.cppm
- * @module emdevif.peripheral.gpio
  * @author DuYicheng
  * @date 2025-10-04
  * @brief GPIO

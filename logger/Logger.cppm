@@ -1,6 +1,5 @@
 /**
  * @file Logger.cppm
- * @module emdevif.logger
  * @author DuYicheng
  * @date 2025-09-17
  * @brief 日志

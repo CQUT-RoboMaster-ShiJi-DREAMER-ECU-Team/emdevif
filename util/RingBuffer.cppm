@@ -1,6 +1,5 @@
 /**
  * @file RingBuffer.cppm
- * @module emdevif.util.ringBuffer
  * @author DuYicheng
  * @date 2025-09-18
  * @brief 环形缓冲区

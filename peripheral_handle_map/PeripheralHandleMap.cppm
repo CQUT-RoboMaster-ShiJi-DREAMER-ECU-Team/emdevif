@@ -1,6 +1,5 @@
 /**
  * @file PeripheralHandleMap.cppm
- * @module emdevif.PeripheralHandleMap
  * @author DuYicheng
  * @date 2025-09-04
  * @brief

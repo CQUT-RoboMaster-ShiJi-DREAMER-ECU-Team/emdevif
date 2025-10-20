@@ -1,6 +1,5 @@
 /**
  * @file semaphore_implements.cppm
- * @module emdevif.sys.semaphore:implements
  * @author DuYicheng
  * @date 2025-08-16
  * @brief 信号量 FreeRTOS 实现

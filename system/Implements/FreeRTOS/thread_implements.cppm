@@ -1,6 +1,5 @@
 /**
  * @file thread_implements.cppm
- * @module emdevif.sys.thread:implements
  * @author 杜以成
  * @date 2025-06-18
  * @brief FreeRTOS 线程相关常数实现

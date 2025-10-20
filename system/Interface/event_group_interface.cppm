@@ -1,6 +1,5 @@
 /**
  * @file event_group_interface.cppm
- * @module emdevif.sys.event_group:interface
  * @author DuYicheng
  * @date 2025-08-16
  * @brief 事件组接口

@@ -1,6 +1,5 @@
 /**
  * @file mutex_implements.cppm
- * @module emdevif.sys.mutex:implements
  * @author DuYicheng
  * @date 2025-08-01
  * @brief 互斥锁 FreeRTOS 实现

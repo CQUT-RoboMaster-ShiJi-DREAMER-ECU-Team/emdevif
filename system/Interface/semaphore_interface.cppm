@@ -1,6 +1,5 @@
 /**
  * @file semaphore_interface.cppm
- * @module emdevif.sys.semaphore:interface
  * @author DuYicheng
  * @date 2025-08-16
  * @brief 信号量接口

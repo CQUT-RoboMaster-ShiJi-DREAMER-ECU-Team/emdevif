@@ -1,6 +1,5 @@
 /**
  * @file TimerModel.cppm
- * @module emdevif.peripheral.model.timer
  * @author DuYicheng
  * @date 2025-10-13
  * @brief 定时器模型
