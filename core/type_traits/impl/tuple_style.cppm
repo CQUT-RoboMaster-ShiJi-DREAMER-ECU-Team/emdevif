@@ -8,6 +8,7 @@
 module;
 
 #include <type_traits>
+#include <utility>
 #include <tuple>
 #include <array>
 
@@ -167,7 +168,7 @@ export
 namespace internal {
 
 template<typename Agg, typename Tuple, std::size_t... I>
-constexpr Agg tuple_to_agg_impl(Tuple&& t, std::index_sequence<I...>)
+constexpr Agg tuple_to_agg_impl(Tuple&& t, std::index_sequence<I...>) noexcept
 {
     return Agg{std::get<I>(std::forward<Tuple>(t))...};
 }
@@ -179,16 +180,23 @@ export
     /* clang-format off */
     template<typename Agg, typename Tuple>
         requires(std::is_aggregate_v<Agg> && internal::is_tuple_like_v<Tuple>)
-    constexpr auto tuple_to_aggregate(Tuple&& t)
+    constexpr auto tuple_to_aggregate(Tuple&& t) noexcept
     {
         constexpr std::size_t N = std::tuple_size_v<std::decay_t<Tuple>>;
         return internal::tuple_to_agg_impl<Agg>(std::forward<Tuple>(t), std::make_index_sequence<N>{});
     }
 
     template<typename Agg>
-    constexpr auto aggregate_to_tuple(Agg&& a)
+    constexpr auto aggregate_to_tuple(const Agg& a) noexcept
     {
-        return boost::pfr::structure_tie(std::forward<Agg>(a));
+        return boost::pfr::structure_to_tuple(a);
+    }
+
+    template<typename Agg>
+        requires (boost::pfr::tuple_size_v<std::decay_t<Agg>> == 2)
+    constexpr auto aggregate_to_pair(const Agg& a) noexcept
+    {
+        return std::make_pair(boost::pfr::get<0>(a), boost::pfr::get<1>(a));
     }
     /* clang-format on */
 }

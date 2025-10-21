@@ -5,7 +5,9 @@
  * @brief 类型特征测试
  */
 
+#include <utility>
 #include <tuple>
+#include <array>
 
 #include "emdevif_test_framework.h"
 
@@ -160,6 +162,45 @@ TEST_SUIT(TupleCastTest)
     }
     TEST_CASE_END();
 
+    TEST_CASE_BEGIN(aggregate_to_tuple_StructStyleTest)
+    {
+        using namespace emdevif::static_assert_test::tuple_style_test::struct_style;
+        do {
+            const S2 s2{1234, 114.514f};
+            const auto t2 = emdevif::aggregate_to_tuple(s2);
+            INT_EXPECT_EQ(std::get<0>(t2), s2.a);
+            FP_EXPECT_EQ(std::get<1>(t2), s2.b);
+        } while (false);
+        do {
+            const S2 s2{-531154, 1919.810f};
+            const P2 t2 = emdevif::aggregate_to_pair(s2);
+            INT_EXPECT_EQ(t2.first, s2.a);
+            FP_EXPECT_EQ(t2.second, s2.b);
+        } while (false);
+        do {
+            constexpr S2 s2{51425, 1535.515f};
+            constexpr auto t2 = emdevif::aggregate_to_tuple(s2);
+            INT_EXPECT_EQ(std::get<0>(t2), s2.a);
+            FP_EXPECT_EQ(std::get<1>(t2), s2.b);
+        } while (false);
+
+        do {
+            S3 s3{42, 114.514f, 'c'};
+            auto t3 = emdevif::aggregate_to_tuple(s3);
+            INT_EXPECT_EQ(std::get<0>(t3), s3.a);
+            FP_EXPECT_EQ(std::get<1>(t3), s3.b);
+            INT_EXPECT_EQ(std::get<2>(t3), s3.c);
+        } while (false);
+        do {
+            constexpr S3 s3{42, 114.514f, 'c'};
+            constexpr auto t3 = emdevif::aggregate_to_tuple(s3);
+            INT_EXPECT_EQ(std::get<0>(t3), s3.a);
+            FP_EXPECT_EQ(std::get<1>(t3), s3.b);
+            INT_EXPECT_EQ(std::get<2>(t3), s3.c);
+        } while (false);
+    }
+    TEST_CASE_END();
+
     TEST_CASE_BEGIN(tuple_to_aggregate_ArrayStyleTest)
     {
         using namespace emdevif::static_assert_test::tuple_style_test::array_style;
@@ -167,34 +208,73 @@ TEST_SUIT(TupleCastTest)
             const T2 t2{42, -114514};
             const auto s2 = emdevif::tuple_to_aggregate<A2>(t2);
             INT_EXPECT_EQ(std::get<0>(t2), s2[0]);
-            FP_EXPECT_EQ(std::get<1>(t2), s2[1]);
+            INT_EXPECT_EQ(std::get<1>(t2), s2[1]);
         } while (false);
         do {
             P2 t2{42, 325425};
             auto s2 = emdevif::tuple_to_aggregate<A2>(t2);
             INT_EXPECT_EQ(t2.first, s2[0]);
-            FP_EXPECT_EQ(t2.second, s2[1]);
+            INT_EXPECT_EQ(t2.second, s2[1]);
         } while (false);
         do {
             constexpr T2 t2{42, 5432342};
             constexpr auto s2 = emdevif::tuple_to_aggregate<A2>(t2);
             INT_EXPECT_EQ(std::get<0>(t2), s2[0]);
-            FP_EXPECT_EQ(std::get<1>(t2), s2[1]);
+            INT_EXPECT_EQ(std::get<1>(t2), s2[1]);
         } while (false);
 
         do {
             T3 t3{42, ' ', 'c'};
             auto s3 = emdevif::tuple_to_aggregate<A3>(t3);
             INT_EXPECT_EQ(std::get<0>(t3), s3[0]);
-            FP_EXPECT_EQ(std::get<1>(t3), s3[1]);
+            INT_EXPECT_EQ(std::get<1>(t3), s3[1]);
             INT_EXPECT_EQ(std::get<2>(t3), s3[2]);
         } while (false);
         do {
             constexpr T3 t3{42, 'k', '\n'};
             constexpr auto s3 = emdevif::tuple_to_aggregate<A3>(t3);
             INT_EXPECT_EQ(std::get<0>(t3), s3[0]);
-            FP_EXPECT_EQ(std::get<1>(t3), s3[1]);
+            INT_EXPECT_EQ(std::get<1>(t3), s3[1]);
             INT_EXPECT_EQ(std::get<2>(t3), s3[2]);
+        } while (false);
+    }
+    TEST_CASE_END();
+
+    TEST_CASE_BEGIN(aggregate_to_tuple_ArrayStyleTest)
+    {
+        using namespace emdevif::static_assert_test::tuple_style_test::array_style;
+        do {
+            const A2 a2{1234, -114514};
+            const auto t2 = emdevif::aggregate_to_tuple(a2);
+            INT_EXPECT_EQ(std::get<0>(t2), a2[0]);
+            INT_EXPECT_EQ(std::get<1>(t2), a2[1]);
+        } while (false);
+        do {
+            A2 a2{1234, -114514};
+            auto t2 = emdevif::aggregate_to_pair(a2);
+            INT_EXPECT_EQ(t2.first, a2[0]);
+            INT_EXPECT_EQ(t2.second, a2[1]);
+        } while (false);
+        do {
+            constexpr A2 a2{1234, -114514};
+            constexpr auto t2 = emdevif::aggregate_to_tuple(a2);
+            INT_EXPECT_EQ(std::get<0>(t2), a2[0]);
+            INT_EXPECT_EQ(std::get<1>(t2), a2[1]);
+        } while (false);
+
+        do {
+            A3 a3{'d', ' ', 'c'};
+            auto t3 = emdevif::aggregate_to_tuple(a3);
+            INT_EXPECT_EQ(std::get<0>(t3), a3[0]);
+            INT_EXPECT_EQ(std::get<1>(t3), a3[1]);
+            INT_EXPECT_EQ(std::get<2>(t3), a3[2]);
+        } while (false);
+        do {
+            constexpr A3 a3{'\n', 'a', '\\'};
+            constexpr auto t3 = emdevif::aggregate_to_tuple(a3);
+            INT_EXPECT_EQ(std::get<0>(t3), a3[0]);
+            INT_EXPECT_EQ(std::get<1>(t3), a3[1]);
+            INT_EXPECT_EQ(std::get<2>(t3), a3[2]);
         } while (false);
     }
     TEST_CASE_END();
