@@ -18,7 +18,6 @@ endif ()
 
 add_subdirectory(core)
 add_subdirectory(logger)
-add_subdirectory(container)
 add_subdirectory(timeline)
 add_subdirectory(system)
 add_subdirectory(peripheral_handle_map)
@@ -30,7 +29,6 @@ add_library(${PROJECT_NAME} INTERFACE)
 target_link_libraries(${PROJECT_NAME} INTERFACE
     emdevif_core
     emdevif_logger
-    emdevif_container
     emdevif_timeline
     emdevif_system
     emdevif_peripheral_handle_map

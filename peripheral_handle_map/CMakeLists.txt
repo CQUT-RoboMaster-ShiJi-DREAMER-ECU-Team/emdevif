@@ -5,7 +5,7 @@ project(emdevif_peripheral_handle_map CXX)
 add_library(${PROJECT_NAME} STATIC)
 
 target_link_libraries(${PROJECT_NAME}
-    PUBLIC emdevif_core emdevif_container emdevif_user_declares
+    PUBLIC emdevif_core emdevif_user_declares
     PRIVATE emdevif_compile_options
 )
 

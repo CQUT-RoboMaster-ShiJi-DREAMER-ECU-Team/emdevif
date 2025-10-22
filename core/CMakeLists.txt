@@ -17,7 +17,7 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_sources(${PROJECT_NAME}
-    PUBLIC FILE_SET emdevif_core_module TYPE CXX_MODULES FILES
+    PUBLIC FILE_SET ${PROJECT_NAME}_error_handler TYPE CXX_MODULES FILES
         error_handler/error_handler.cppm
         error_handler/error_code.cppm
         error_handler/fatal_handler.cppm
@@ -31,4 +31,8 @@ target_sources(${PROJECT_NAME}
         type_traits/type_traits.cppm
         type_traits/impl/misc.cppm
         type_traits/impl/tuple_style.cppm
+
+    PUBLIC FILE_SET ${PROJECT_NAME}_container TYPE CXX_MODULES FILES
+        data_container/Map.cppm
+        data_container/implements/Map/ArrayMap.cppm
 )

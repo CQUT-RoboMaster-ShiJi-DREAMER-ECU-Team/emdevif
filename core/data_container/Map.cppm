@@ -8,4 +8,4 @@
 module;
 
 export module emdevif.container.map;
-export import :staticMap;
+export import :arrayMap;

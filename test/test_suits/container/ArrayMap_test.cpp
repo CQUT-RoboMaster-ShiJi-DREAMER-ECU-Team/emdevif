@@ -1,15 +1,13 @@
 /**
- * @file StaticMap_test.cpp
+ * @file ArrayMap_test.cpp
  * @author DuYicheng
  * @date 2025-09-04
- * @brief 静态键值对测试
+ * @brief 数组键值对测试
  */
 
 #include <string_view>
 
 import emdevif.container.map;
-
-using emdevif::StaticMap;
 
 static constexpr auto map1 = emdevif::makeStaticMap<int, char>({{1, 'a'}, {2, 'b'}, {114514, 'k'}});
 
