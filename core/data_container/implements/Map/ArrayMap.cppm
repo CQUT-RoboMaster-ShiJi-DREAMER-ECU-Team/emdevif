@@ -35,8 +35,12 @@ public:
 
     explicit constexpr ArrayMap(const std::array<MapStoreType, max_size>& init_arr) noexcept : store_array_(init_arr) {}
     explicit constexpr ArrayMap(const MapStoreType (&init_arr)[max_size]) noexcept
+        : store_array_(std::to_array(init_arr))
     {
-        std::copy(std::begin(init_arr), std::end(init_arr), std::begin(store_array_));
+    }
+    explicit constexpr ArrayMap(const MapStoreType (&&init_arr)[max_size]) noexcept
+        : store_array_(std::to_array(std::move(init_arr)))
+    {
     }
 
     constexpr auto begin() noexcept
@@ -146,11 +150,11 @@ public:
     ~StaticMap() noexcept = default;
 
     explicit consteval StaticMap(const std::array<MapStoreType, max_size>& init_arr) noexcept
-        : StaticMap<KeyType, ValueType, max_size>(init_arr)
+        : ArrayMap<KeyType, ValueType, max_size>(init_arr)
     {
     }
     explicit consteval StaticMap(const MapStoreType (&init_arr)[max_size]) noexcept
-        : StaticMap<KeyType, ValueType, max_size>(init_arr)
+        : ArrayMap<KeyType, ValueType, max_size>(init_arr)
     {
     }
 };
