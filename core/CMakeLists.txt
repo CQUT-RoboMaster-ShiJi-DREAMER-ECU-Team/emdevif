@@ -16,22 +16,18 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE emdevif_compile_options
 )
 
+file(GLOB_RECURSE emdevifCoreModules
+    "error_handler/*.cppm"
+    "data_container/*.cppm"
+    "type_traits/*.cppm"
+)
 target_sources(${PROJECT_NAME}
-    PUBLIC FILE_SET ${PROJECT_NAME}_error_handler TYPE CXX_MODULES FILES
-        error_handler/error_handler.cppm
-        error_handler/error_code.cppm
-        error_handler/fatal_handler.cppm
-
+    PUBLIC FILE_SET ${PROJECT_NAME}_modules TYPE CXX_MODULES FILES
+        ${emdevifCoreModules}
         endian.cppm
+        concepts.cppm
 
-    PRIVATE error_handler/error_handler.cpp error_handler/fatal_handler_extern_c.cpp
-
-    PUBLIC FILE_SET ${PROJECT_NAME}_type_traits TYPE CXX_MODULES FILES
-        type_traits/type_traits.cppm
-        type_traits/impl/misc.cppm
-        type_traits/impl/tuple_style.cppm
-
-    PUBLIC FILE_SET ${PROJECT_NAME}_container TYPE CXX_MODULES FILES
-        data_container/Map.cppm
-        data_container/implements/Map/ArrayMap.cppm
+    PRIVATE
+        error_handler/error_handler.cpp
+        error_handler/fatal_handler_extern_c.cpp
 )

@@ -11,11 +11,11 @@ module;
 #include <utility>
 #include <type_traits>
 
-#include "emdevif/concepts.hpp"
-
 #include "FreeRTOS.h"
 
 export module emdevif.sys.heap:implements;
+
+import emdevif.concepts;
 
 namespace emdevif::heap::internal {
 

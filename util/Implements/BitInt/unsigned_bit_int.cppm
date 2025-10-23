@@ -15,12 +15,12 @@ module;
 #include <concepts>
 #include <iostream>
 
-#include "emdevif/concepts.hpp"
-
 #include "BitInt_exception_config.hpp"
 
 export module emdevif.util.bitInt:unsigned_partial;
 import :base;
+
+import emdevif.concepts;
 
 export namespace emdevif {
 
