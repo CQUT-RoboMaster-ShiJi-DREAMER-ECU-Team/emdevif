@@ -24,7 +24,7 @@ namespace emdevif {
 static_assert(emdevif::is_consteval([] { return user_declares::peripheral_handle_map; }),
               "Variable `peripheral_handle_map\' should be a constant expression.");
 static_assert(
-    std::is_same_v<decltype(user_declares::peripheral_handle_map)::MapStoreType, std::pair<std::string_view, void*>>,
+    std::is_same_v<decltype(user_declares::peripheral_handle_map)::value_type, std::pair<std::string_view, void*>>,
     "Variable `peripheral_handle_map\' should be declared as `constexpr auto peripheral_handle_map = "
     "makeStaticMap<std::string_view, void*>\'.");
 
