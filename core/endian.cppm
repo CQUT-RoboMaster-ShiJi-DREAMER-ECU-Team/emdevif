@@ -23,6 +23,12 @@ namespace emdevif {
 
 namespace internal {
 
+/**
+ * 反转任意类型的端序
+ * @tparam T 待反转端序的类型
+ * @param value 待反转端序的变量值
+ * @return 反转后的值
+ */
 template<typename T>
 constexpr T byteSwapGeneric(T value) noexcept
 {
@@ -33,6 +39,12 @@ constexpr T byteSwapGeneric(T value) noexcept
     return std::bit_cast<T>(value_representation);
 }
 
+/**
+ * 反转整型类型的端序
+ * @tparam T 待反转端序的整型
+ * @param v 待反转端序的整型变量值
+ * @return 反转后的值
+ */
 template<std::integral T>
 constexpr T byteSwapIntegral(const T v) noexcept
 {
@@ -64,6 +76,13 @@ constexpr T byteSwapIntegral(const T v) noexcept
 
 }  // namespace internal
 
+/**
+ * 反转端序
+ * @note 会根据变量的类型与大小自动选择不同的方式反转
+ * @tparam T 待反转端序的类型
+ * @param v 待反转端序的变量值
+ * @return 反转后的值
+ */
 export template<typename T>
 constexpr T byteSwap(const T v) noexcept
 {

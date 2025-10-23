@@ -41,7 +41,7 @@ public:
     using const_reverse_iterator = typename std::array<value_type, max_size>::const_reverse_iterator;
 
 private:
-    std::array<value_type, max_size> store_array_;
+    std::array<value_type, max_size> store_array_;  ///< 内部存储所用的数组
 
 public:
     constexpr ArrayMap() noexcept = default;
