@@ -18,7 +18,7 @@ namespace emdevif {
 /**
  * 默认的程序终止函数
  */
-EMDEVIF_NO_RETURN void defaultTerminateFunction();
+EMDEVIF_NO_RETURN void defaultTerminateFunction() noexcept;
 
 /**
  * 终止程序的函数指针类型
@@ -48,7 +48,16 @@ export EMDEVIF_NO_RETURN void terminate()
  * 如果不调用这个函数，那么将调用默认的终止函数。
  * @param func 终止函数。注意该函数不能返回，否则是未定义行为。
  */
-export void registerTerminateFunction(TerminateFunction func);
+export void registerTerminateFunction(TerminateFunction func) noexcept;
+
+/**
+ * 默认的致命错误处理函数
+ * @param file 所在文件名
+ * @param line 所在行号
+ * @param format 错误信息的格式化字符串
+ * @param args 填充占位符的可变参列表
+ */
+EMDEVIF_NO_RETURN void defaultFatalHandler(const char* file, int line, const char* format, std::va_list args) noexcept;
 
 /**
  * 致命错误回调函数指针
@@ -62,7 +71,7 @@ export using FatalHandlerCallBack = void(*)(const char* file, int line, const ch
 /**
  * 致命错误回调函数（编译期初始化为默认的回调函数）
  */
-constinit FatalHandlerCallBack fatalHandlerCallback = nullptr;
+constinit FatalHandlerCallBack fatalHandlerCallback = defaultFatalHandler;
 
 /**
  * 致命错误处理函数
@@ -73,7 +82,10 @@ constinit FatalHandlerCallBack fatalHandlerCallback = nullptr;
  * @param format 错误信息的格式化字符串
  * @param args 填充占位符的可变参列表
  */
-export EMDEVIF_NO_RETURN void fatalHandler(const char* file, const int line, const char* format, std::va_list args)
+export EMDEVIF_NO_RETURN void fatalHandler(const char* file,
+                                           const int line,
+                                           const char* format,
+                                           std::va_list args) noexcept
 {
     if (fatalHandlerCallback != nullptr) {
         fatalHandlerCallback(file, line, format, args);
@@ -85,7 +97,7 @@ export EMDEVIF_NO_RETURN void fatalHandler(const char* file, const int line, con
  * @overload
  * @param ... 填充占位符的值
  */
-export EMDEVIF_NO_RETURN void fatalHandler(const char* file, const int line, const char* format, ...)
+export EMDEVIF_NO_RETURN void fatalHandler(const char* file, const int line, const char* format, ...) noexcept
 {
     std::va_list args;
     va_start(args, format);
@@ -98,7 +110,7 @@ export EMDEVIF_NO_RETURN void fatalHandler(const char* file, const int line, con
  * 如果不调用这个函数，那么将不会有额外的处理，直接调用 terminate。
  * @param callback 回调函数
  */
-export void registerFatalHandler(FatalHandlerCallBack callback);
+export void registerFatalHandler(FatalHandlerCallBack callback) noexcept;
 
 /**
  * 默认的断言失败处理函数
@@ -112,7 +124,7 @@ void defaultAssertFailedHandler(const char* file,
                                 int line,
                                 const char* func_name,
                                 const char* condition_name,
-                                const char* message);
+                                const char* message) noexcept;
 
 /**
  * 断言失败处理函数指针类型
@@ -143,7 +155,7 @@ export inline void emdevif_assert(const bool condition,
                                   const int line,
                                   const char* func_name,
                                   const char* condition_name,
-                                  const char* message = "")
+                                  const char* message = "") noexcept
 {
     if (!condition) {
         assertFailedHandler(file, line, func_name, condition_name, message);
@@ -155,6 +167,6 @@ export inline void emdevif_assert(const bool condition,
  * 如果不调用这个函数，那么将调用默认的断言失败处理函数。
  * @param handler 回调函数
  */
-export void registerAssertFailedHandler(AssertFailedHandler handler);
+export void registerAssertFailedHandler(AssertFailedHandler handler) noexcept;
 
 }  // namespace emdevif
