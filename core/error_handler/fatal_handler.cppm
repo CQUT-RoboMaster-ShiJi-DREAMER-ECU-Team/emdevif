@@ -7,6 +7,8 @@
 
 module;
 
+#include <cstdarg>
+
 #include "emdevif/attributes_and_useful_macros.h"
 
 export module emdevif.errorHandler:fatalHandlerAndAssert;
@@ -50,8 +52,12 @@ export void registerTerminateFunction(TerminateFunction func);
 
 /**
  * 致命错误回调函数指针
+ * @param file 将会传入致命错误产生的文件名称
+ * @param line 将会传入致命错误产生的行号
+ * @param format 将会传入消息的格式化字符串
+ * @param args 将会传入填充占位符的可变参列表
  */
-export using FatalHandlerCallBack = void(*)(const char* file, int line, const char* message);
+export using FatalHandlerCallBack = void(*)(const char* file, int line, const char* format, std::va_list args);
 
 /**
  * 致命错误回调函数（编译期初始化为默认的回调函数）
@@ -60,19 +66,31 @@ constinit FatalHandlerCallBack fatalHandlerCallback = nullptr;
 
 /**
  * 致命错误处理函数
- * @note 建议使用宏 EMDEVIF_FATAL_HANDLER，可以自动填充文件名与行号，但需要
- * 引入头文件 emdevif/fatal_handler.hpp
+ * @attention 不应当直接使用这个函数，应该使用宏 EMDEVIF_FATAL_HANDLER，
+ * 可以自动填充文件名与行号，但需要引入头文件 @ref emdevif/fatal_handler.hpp
  * @param file 所在文件名
  * @param line 所在行号
- * @param message 错误信息
+ * @param format 错误信息的格式化字符串
+ * @param args 填充占位符的可变参列表
  */
-export EMDEVIF_NO_RETURN void fatalHandler(const char* file, const int line, const char* message = "")
+export EMDEVIF_NO_RETURN void fatalHandler(const char* file, const int line, const char* format, std::va_list args)
 {
     if (fatalHandlerCallback != nullptr) {
-        fatalHandlerCallback(file, line, message);
+        fatalHandlerCallback(file, line, format, args);
     }
 
     terminate();
+}
+/**
+ * @overload
+ * @param ... 填充占位符的值
+ */
+export EMDEVIF_NO_RETURN void fatalHandler(const char* file, const int line, const char* format, ...)
+{
+    std::va_list args;
+    va_start(args, format);
+    fatalHandler(file, line, format, args);
+    va_end(args);
 }
 
 /**
@@ -109,9 +127,9 @@ constinit AssertFailedHandler assertFailedHandler = defaultAssertFailedHandler;
 
 /**
  * 断言入口
- * @note @arg 不应直接调用这个函数，应当使用宏 EMDEVIF_ASSERT，可以自动填充文件名、行号、函数名与表达式名称，
- * 但需要引入头文件 emdevif/fatal_handler.hpp
- *       @arg 为了避免与 <cassert> 中的 assert 冲突，故将此函数命名为 emdevif_assert
+ * @attention 不应直接调用这个函数，应当使用宏 @ref EMDEVIF_ASSERT，可以自动填充文件名、行号、函数名与表达式名称，
+ * 但需要引入头文件 @ref emdevif/fatal_handler.hpp
+ * @note 为了避免与 <cassert> 中的 assert 冲突，故将此函数命名为 emdevif_assert
  *
  * @param condition 待断言的表达式
  * @param file 调用函数所在文件

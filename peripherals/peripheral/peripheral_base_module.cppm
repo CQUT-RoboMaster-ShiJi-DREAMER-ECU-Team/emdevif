@@ -33,16 +33,7 @@ public:
                 return;
             }
 
-            using namespace std::literals;
-
-            constexpr auto begin_str = "Could not find the serial handle named \""sv;
-            constexpr auto end_str = "\"."sv;
-
-            err_msg.clear();
-            err_msg << begin_str << name << end_str;
-
-            EMDEVIF_FATAL_HANDLER(err_msg.c_str());
-            err_msg.clear();
+            EMDEVIF_FATAL_HANDLER("Could not find the serial handle named \"%s\"", name.data());
         }
     }
 

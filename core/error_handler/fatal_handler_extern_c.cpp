@@ -5,6 +5,8 @@
  * @brief 致命错误 - C 语言 API
  */
 
+#include <cstdarg>
+
 #include "emdevif/fatal_handler.h"
 
 #include "emdevif/attributes_and_useful_macros.h"
@@ -13,15 +15,29 @@ import emdevif.errorHandler;
 
 EMDEVIF_EXTERN_C_BEGIN
 
-EMDEVIF_NO_RETURN void emdevif_fatal_handler_(emdevif_FatalHandlerParam_ param)  // NOLINT
+/**
+ * 供 C 语言调用的致命错误处理函数
+ * @attention 不应该直接调用这个函数，而是应该使用宏 @ref EMDEVIF_FATAL_HANDLER
+ *
+ * @param file 所在文件名
+ * @param line 所在行号
+ * @param format 错误信息的格式化字符串
+ * @param ... 填充占位符的值
+ */
+EMDEVIF_NO_RETURN void emdevif_fatal_handler_(const char* file, const int line, const char* format, ...)
 {
-    if (param.message == nullptr) {
-        param.message = "";
-    }
-    emdevif::fatalHandler(param.file, param.line, param.message);
+    std::va_list args;
+    va_start(args, format);
+    emdevif::fatalHandler(file, line, format, args);
+    va_end(args);
 }
 
-void emdevif_assert_(emdevif_AssertFuncParam_ param)  // NOLINT
+/**
+ * 供 C 语言调用的断言函数
+ * @attention 不应该直接调用这个函数，而是应该使用宏 @ref EMDEVIF_ASSERT
+ * @param param 参数
+ */
+void emdevif_assert_(emdevif_AssertFuncParam_ param)
 {
     if (param.message == nullptr) {
         param.message = "";
