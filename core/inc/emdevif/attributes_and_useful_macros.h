@@ -30,6 +30,7 @@
 #define EMDEVIF_UNUSED(X)      (void)X
 
 /// 计算 C 风格数组的元素个数
+/// @note 如果是 C++ 调用，建议使用 std::size （在 <iterator> 中）代替这个宏
 #define EMDEVIF_COUNTOF(array) (sizeof(array) / sizeof(array[0]))
 
 #endif  // !EMDEVIF_ATTRIBUTES_H
