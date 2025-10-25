@@ -26,6 +26,39 @@ target_compile_definitions(emdevif_logger PUBLIC EMDEVIF_LOGGER_BUFFER_SIZE=128)
 异步模式时，依赖 `emdevif_system` 子模块。
 同步模式时，如果启用了锁，则依赖 `emdevif_system` 子模块。
 
+## emdevif_user_declares 的需求
+
+该模块需要用户在 emdevif_user_declares 中声明 `getTimeLine`、`printLogMessage` 函数：
+
+```C++
+#include <cstddef>            // for std::size_t
+import emdevif.errorHandler;  // for emdevif::ErrorCode
+
+export namespace emdevif::user_declares {
+
+// 实现在 logger 命名空间中声明
+namespace logger {
+
+// 用于获取当前时间戳的函数
+std::size_t getTimeLine()  // 可选 inline、noexcept 等修饰符
+{
+    // 返回时间戳，单位可以是毫秒、微秒等，取决于具体实现
+}
+
+// 用于打印日志消息的函数
+// message: 要打印的日志消息，已经格式化完成
+ErrorCode printLogMessage(const char* message)
+{
+    // 在这里实现日志消息的打印逻辑，例如输出到控制台、文件、串口外设等
+
+    // 返回 emdevif::ErrorCode::Success 表示成功，其他值表示失败
+}
+
+}  // namespace logger
+
+}  // namespace emdevif::user_declares
+```
+
 ## 示例
 
 ```C++

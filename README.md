@@ -212,7 +212,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE emdevif)
 add_library(emdevif_user_declares STATIC)
 target_sources(emdevif_user_declares
     PUBLIC FILE_SET emdevif_user_declares_module TYPE CXX_MODULES
-    FILES emdevif_user_declares/emdevif_user_declares.cppm  # 您的实现文件，需要提供 C++ 模块
+    FILES emdevif_user_declares/emdevif_user_declares.cppm  # 您的实现文件，需要提供为 C++ 模块
 )
 ```
 
