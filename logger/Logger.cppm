@@ -277,7 +277,7 @@ private:
         mutex_ = Mutex::create({.name = "loggerMutex",
                                 .static_instance = &mutex_static_instance_,
                                 .instance_size = mutex_static_instance_.getInstanceSize()});
-        if (!mutex_.getHandle().has_value()) {
+        if (mutex_.getHandle() == nullptr) {
             EMDEVIF_FATAL_HANDLER("Failed to create logger mutex");
         }
 #endif
@@ -287,7 +287,7 @@ private:
             {.name = "loggerSemaphore",
              .static_instance = &logger_async_printer_semaphore_static_instance_,
              .instance_size = logger_async_printer_semaphore_static_instance_.getInstanceSize()});
-        if (!logger_async_printer_semaphore_.getHandle().has_value()) {
+        if (logger_async_printer_semaphore_.getHandle() == nullptr) {
             EMDEVIF_FATAL_HANDLER("Failed to create logger semaphore");
         }
 
@@ -298,7 +298,7 @@ private:
                             .stack_size = logger_async_printer_thread_instance_.getStackDepth()},
                            logPrinterThread,
                            this);
-        if (!logger_async_printer_thread_.getHandle().has_value()) {
+        if (logger_async_printer_thread_.getHandle() == nullptr) {
             EMDEVIF_FATAL_HANDLER("Failed to create logger async printer thread");
         }
 #endif
