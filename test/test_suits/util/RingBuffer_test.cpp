@@ -9,7 +9,7 @@
 
 #include <array>
 
-import emdevif.util.ringBuffer;
+import emdevif.container.ringBuffer;
 
 TEST_SUIT(RingBufferTest)
 {

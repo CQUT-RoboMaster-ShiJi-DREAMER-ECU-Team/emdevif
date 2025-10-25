@@ -6,7 +6,7 @@ add_library(${PROJECT_NAME} STATIC)
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC emdevif_core
-    PRIVATE emdevif_compile_options emdevif_util emdevif_user_declares emdevif_system
+    PRIVATE emdevif_compile_options emdevif_user_declares emdevif_system
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC inc/)

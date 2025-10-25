@@ -13,7 +13,6 @@ target_sources(${PROJECT_NAME}
     PUBLIC FILE_SET emdevif_util_export_module_units TYPE CXX_MODULES FILES
         InitOnce.cppm
         BitInt.cppm
-        RingBuffer.cppm
 
     PUBLIC FILE_SET emdevif_util_modules TYPE CXX_MODULES FILES
         Implements/BitInt/bit_int_base.cppm

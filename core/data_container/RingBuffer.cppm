@@ -15,7 +15,7 @@ module;
 #include <span>
 #include <type_traits>
 
-export module emdevif.util.ringBuffer;
+export module emdevif.container.ringBuffer;
 
 export namespace emdevif {
 

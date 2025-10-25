@@ -46,7 +46,7 @@ import emdevif.userDeclares;
 import emdevif.errorHandler;
 
 #if (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_ASYNC)
-import emdevif.util.ringBuffer;
+import emdevif.container.ringBuffer;
 #endif
 
 #if (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_ASYNC || \
