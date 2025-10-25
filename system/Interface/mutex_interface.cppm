@@ -8,7 +8,6 @@
 module;
 
 #include <cstdint>
-#include <optional>
 
 #include "emdevif/fatal_handler.h"
 
