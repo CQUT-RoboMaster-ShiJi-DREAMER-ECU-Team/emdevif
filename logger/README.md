@@ -36,7 +36,7 @@ import emdevif.errorHandler;  // for emdevif::ErrorCode
 
 export namespace emdevif::user_declares {
 
-// 实现在 logger 命名空间中声明
+// 实现在 emdevif::user_declares::logger 命名空间中声明
 namespace logger {
 
 // 用于获取当前时间戳的函数
