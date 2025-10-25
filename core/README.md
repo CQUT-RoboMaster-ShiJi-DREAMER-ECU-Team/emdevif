@@ -41,6 +41,11 @@
 | `EMDEVIF_LINE_SEPARATOR_MODE_LF  `      | 使用 LF 作为换行符（`\n`）     |
 | `EMDEVIF_LINE_SEPARATOR_MODE_CR  `      | 使用 CR 作为换行符（`\r`）     |
 
+例如：
+```CMake
+target_compile_definitions(emdevif_core PUBLIC EMDEVIF_LINE_SEPARATOR_MODE=EMDEVIF_LINE_SEPARATOR_MODE_LF)
+```
+
 然后就能使用宏 `EMDEVIF_LINE_SEPARATOR` 来表示换行符了，例如：
 
 ```C
