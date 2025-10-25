@@ -5,6 +5,8 @@ emdevif: embedded developing interface 嵌入式开发接口。
 ## todo
 
 - [] 合并 [peripheral_handle_map](peripheral_handle_map) 与 [peripheral](peripheral)
+- [] 把 logger、system 模块拆分成单独的仓库
+- [] 把环形缓冲区从 util 移动到 data_container
 
 ## 子模块
 

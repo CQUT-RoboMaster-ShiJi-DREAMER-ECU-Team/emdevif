@@ -51,15 +51,6 @@ export EMDEVIF_NO_RETURN void terminate()
 export void registerTerminateFunction(TerminateFunction func) noexcept;
 
 /**
- * 默认的致命错误处理函数
- * @param file 所在文件名
- * @param line 所在行号
- * @param format 错误信息的格式化字符串
- * @param args 填充占位符的可变参列表
- */
-EMDEVIF_NO_RETURN void defaultFatalHandler(const char* file, int line, const char* format, std::va_list args) noexcept;
-
-/**
  * 致命错误回调函数指针
  * @param file 将会传入致命错误产生的文件名称
  * @param line 将会传入致命错误产生的行号
@@ -71,7 +62,8 @@ export using FatalHandlerCallBack = void(*)(const char* file, int line, const ch
 /**
  * 致命错误回调函数（编译期初始化为默认的回调函数）
  */
-constinit FatalHandlerCallBack fatalHandlerCallback = defaultFatalHandler;
+constinit FatalHandlerCallBack fatalHandlerCallback = nullptr;
+// 默认为 nullptr，表示不进行额外处理，直接调用 terminate
 
 /**
  * 致命错误处理函数
@@ -113,20 +105,6 @@ export EMDEVIF_NO_RETURN void fatalHandler(const char* file, const int line, con
 export void registerFatalHandler(FatalHandlerCallBack callback) noexcept;
 
 /**
- * 默认的断言失败处理函数
- * @param file 调用函数所在文件
- * @param line 调用函数所在行号
- * @param func_name 包含函数名称
- * @param condition_name 表达式名称
- * @param message 信息
- */
-void defaultAssertFailedHandler(const char* file,
-                                int line,
-                                const char* func_name,
-                                const char* condition_name,
-                                const char* message) noexcept;
-
-/**
  * 断言失败处理函数指针类型
  */
 export using AssertFailedHandler =
@@ -135,7 +113,7 @@ export using AssertFailedHandler =
 /**
  * 断言失败处理函数指针（编译期初始化为默认的断言失败处理函数）
  */
-constinit AssertFailedHandler assertFailedHandler = defaultAssertFailedHandler;
+constinit AssertFailedHandler assertFailedHandler = nullptr;
 
 /**
  * 断言入口
@@ -158,7 +136,11 @@ export inline void emdevif_assert(const bool condition,
                                   const char* message = "") noexcept
 {
     if (!condition) {
-        assertFailedHandler(file, line, func_name, condition_name, message);
+        if (assertFailedHandler != nullptr) {
+            assertFailedHandler(file, line, func_name, condition_name, message);
+        }
+
+        terminate();
     }
 }
 
