@@ -59,12 +59,8 @@ public:
 
     void unlock();
 
-    [[nodiscard]] std::optional<Handle> getHandle() const
+    [[nodiscard]] Handle getHandle() const
     {
-        if (handle_ == nullptr) {
-            return std::nullopt;
-        }
-
         return handle_;
     }
 

@@ -376,12 +376,8 @@ public:
      * 获得底层实现的句柄
      * @return 一个可选值，如果线程存在，返回底层实现的句柄，否则返回 std::nullopt
      */
-    [[nodiscard]] std::optional<Handle> getHandle() const
+    [[nodiscard]] Handle getHandle() const
     {
-        if (handle_ == nullptr) {
-            return std::nullopt;
-        }
-
         return handle_;
     }
 

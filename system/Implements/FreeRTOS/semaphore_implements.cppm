@@ -10,7 +10,6 @@
 module;
 
 #include <cstddef>
-#include <optional>
 
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -165,12 +164,8 @@ public:
         return acquire(in_isr, 0U);
     }
 
-    [[nodiscard]] std::optional<Handle> getHandle() const
+    [[nodiscard]] Handle getHandle() const
     {
-        if (handle_ == nullptr) {
-            return std::nullopt;
-        }
-
         return handle_;
     }
 

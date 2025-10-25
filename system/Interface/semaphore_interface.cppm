@@ -8,7 +8,6 @@
 module;
 
 #include <cstddef>
-#include <optional>
 
 #include "emdevif/fatal_handler.h"
 
@@ -61,12 +60,8 @@ public:
         return acquire(in_isr, 0U);
     }
 
-    [[nodiscard]] std::optional<Handle> getHandle() const
+    [[nodiscard]] Handle getHandle() const
     {
-        if (handle_ == nullptr) {
-            return std::nullopt;
-        }
-
         return handle_;
     }
 

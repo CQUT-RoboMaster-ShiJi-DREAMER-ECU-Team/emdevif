@@ -69,10 +69,10 @@ TEST_SUIT(MutexTest)
         using emdevif::Mutex;
 
         Mutex mutex;
-        ASSERT_TRUE(!mutex.getHandle().has_value(), "");
+        ASSERT_TRUE(mutex.getHandle() == nullptr, "");
 
         mutex = Mutex::create({.name = "basic 1"});
-        ASSERT_TRUE(mutex.getHandle().has_value(), "");
+        ASSERT_TRUE(mutex.getHandle() != nullptr, "");
 
         auto ret = mutex.lock();
         ASSERT_TRUE(ret == emdevif::ErrorCode::Success, "Failed to lock!");
@@ -89,7 +89,7 @@ TEST_SUIT(MutexTest)
         using emdevif::Mutex;
 
         Mutex mutex({.name = "basic 1"});
-        ASSERT_TRUE(mutex.getHandle().has_value(), "");
+        ASSERT_TRUE(mutex.getHandle() != nullptr, "");
 
         auto ret = mutex.lock();
         ASSERT_TRUE(ret == emdevif::ErrorCode::Success, "Failed to lock!");
@@ -100,7 +100,7 @@ TEST_SUIT(MutexTest)
         mutex.unlock();
 
         mutex.destroy();
-        ASSERT_TRUE(!mutex.getHandle().has_value(), "");
+        ASSERT_TRUE(mutex.getHandle() == nullptr, "");
     }
     TEST_CASE_END();
 
@@ -115,8 +115,8 @@ TEST_SUIT(ThreadBasicTest)
         MutexGuard<int32_t> counter{0};
         MutexGuard<uint8_t> flag{0};
 
-        ASSERT_TRUE(counter.mutex.getHandle().has_value(), "Mutex Create Failed!");
-        ASSERT_TRUE(flag.mutex.getHandle().has_value(), "Mutex Create Failed!");
+        ASSERT_TRUE(counter.mutex.getHandle() != nullptr, "Mutex Create Failed!");
+        ASSERT_TRUE(flag.mutex.getHandle() != nullptr, "Mutex Create Failed!");
         UINT_ASSERT_EQ(0, flag.get(), "");
         INT_ASSERT_EQ(0, counter.get(), "");
 
@@ -145,7 +145,7 @@ TEST_SUIT(ThreadBasicTest)
                 thd->exit();
             },
             &arga);
-        ASSERT_TRUE(a_thread.getHandle().has_value(), "Thread Create failed!");
+        ASSERT_TRUE(a_thread.getHandle() != nullptr, "Thread Create failed!");
 
         emdevif::Thread b_thread;
         Arg argb{&b_thread, &counter, &flag};
@@ -166,11 +166,11 @@ TEST_SUIT(ThreadBasicTest)
                 thd->exit();
             },
             &argb);
-        ASSERT_TRUE(b_thread.getHandle().has_value(), "Thread Create failed!");
-        ASSERT_TRUE(a_thread.getHandle().value_or(nullptr) != b_thread.getHandle().value_or(nullptr),
+        ASSERT_TRUE(b_thread.getHandle() != nullptr, "Thread Create failed!");
+        ASSERT_TRUE(a_thread.getHandle() != b_thread.getHandle(),
                     "a_thread = %p, b_thread = %p",
-                    a_thread.getHandle().value_or(nullptr),
-                    b_thread.getHandle().value_or(nullptr));
+                    a_thread.getHandle(),
+                    b_thread.getHandle());
 
         flag.set(flag.get() | 0b0001);
         flag.set(flag.get() | 0b0010);
@@ -183,11 +183,10 @@ TEST_SUIT(ThreadBasicTest)
         emdevif::Thread::delay(1);
 
         INT_EXPECT_EQ(counter.get(), 353 + 100);
-        ASSERT_TRUE(
-            a_thread.getHandle().value_or(nullptr) == nullptr && b_thread.getHandle().value_or(nullptr) == nullptr,
-            "a_thread = %p, b_thread = %p",
-            a_thread.getHandle().value_or(nullptr),
-            b_thread.getHandle().value_or(nullptr));
+        ASSERT_TRUE(a_thread.getHandle() == nullptr && b_thread.getHandle() == nullptr,
+                    "a_thread = %p, b_thread = %p",
+                    a_thread.getHandle(),
+                    b_thread.getHandle());
     }
     TEST_CASE_END();
 
@@ -202,8 +201,8 @@ TEST_SUIT(ThreadAssignAndMoveTest)
     {
         MutexGuard<int32_t> counter{0};
         MutexGuard<uint8_t> flag{0};
-        ASSERT_TRUE(counter.mutex.getHandle().has_value(), "Mutex Create Failed!");
-        ASSERT_TRUE(flag.mutex.getHandle().has_value(), "Mutex Create Failed!");
+        ASSERT_TRUE(counter.mutex.getHandle() != nullptr, "Mutex Create Failed!");
+        ASSERT_TRUE(flag.mutex.getHandle() != nullptr, "Mutex Create Failed!");
 
         struct Arg {
             emdevif::Thread& thd;
@@ -217,7 +216,7 @@ TEST_SUIT(ThreadAssignAndMoveTest)
         emdevif::Thread a_;
         emdevif::Thread b_;
 
-        ASSERT_TRUE(!a_.getHandle().has_value() && !b_.getHandle().has_value(), "");
+        ASSERT_TRUE(a_.getHandle() == nullptr && b_.getHandle() == nullptr, "");
 
         Arg arga{a_thread, counter, flag};
         a_thread = emdevif::Thread::create(
@@ -237,7 +236,7 @@ TEST_SUIT(ThreadAssignAndMoveTest)
                 thd.exit();
             },
             &arga);
-        ASSERT_TRUE(a_thread.getHandle().has_value(), "Thread Create failed!");
+        ASSERT_TRUE(a_thread.getHandle() != nullptr, "Thread Create failed!");
 
         Arg argb{b_thread, counter, flag};
         b_thread = emdevif::Thread::create(
@@ -257,24 +256,20 @@ TEST_SUIT(ThreadAssignAndMoveTest)
                 thd.exit();
             },
             &argb);
-        ASSERT_TRUE(b_thread.getHandle().has_value(), "Thread Create failed!");
-        ASSERT_TRUE(a_thread.getHandle().value_or(nullptr) != b_thread.getHandle().value_or(nullptr),
+        ASSERT_TRUE(b_thread.getHandle() != nullptr, "Thread Create failed!");
+        ASSERT_TRUE(a_thread.getHandle() != b_thread.getHandle(),
                     "a_thread = %p, b_thread = %p",
-                    a_thread.getHandle().value_or(nullptr),
-                    b_thread.getHandle().value_or(nullptr));
+                    a_thread.getHandle(),
+                    b_thread.getHandle());
 
         const auto [a_previous, b_previous] = std::pair{a_thread.getHandle(), b_thread.getHandle()};
-        ASSERT_TRUE(a_previous.value_or(nullptr) == a_thread.getHandle().value_or(nullptr) &&
-                        b_previous.value_or(nullptr) == b_thread.getHandle().value_or(nullptr),
-                    "");
-        ASSERT_TRUE(a_thread.getHandle().has_value() && b_thread.getHandle().has_value(), "");
+        ASSERT_TRUE(a_previous == a_thread.getHandle() && b_previous == b_thread.getHandle(), "");
+        ASSERT_TRUE(a_thread.getHandle() != nullptr && b_thread.getHandle() != nullptr, "");
         a_ = std::move(a_thread);
         b_ = std::move(b_thread);
-        ASSERT_TRUE(!a_thread.getHandle().has_value() && !b_thread.getHandle().has_value(), "");
-        ASSERT_TRUE(a_.getHandle().has_value() && b_.getHandle().has_value(), "");
-        ASSERT_TRUE(a_.getHandle().value_or(nullptr) == a_previous.value_or(nullptr) &&
-                        b_.getHandle().value_or(nullptr) == b_previous.value_or(nullptr),
-                    "");
+        ASSERT_TRUE(a_thread.getHandle() == nullptr && b_thread.getHandle() == nullptr, "");
+        ASSERT_TRUE(a_.getHandle() != nullptr && b_.getHandle() != nullptr, "");
+        ASSERT_TRUE(a_.getHandle() == a_previous && b_.getHandle() == b_previous, "");
 
         flag.set(flag.get() | 0b0001);
         flag.set(flag.get() | 0b0010);
@@ -283,7 +278,7 @@ TEST_SUIT(ThreadAssignAndMoveTest)
         } while (flag.get() != 0b1111);
 
         INT_EXPECT_EQ(counter.get(), 353 + 100);
-        ASSERT_TRUE(!a_thread.getHandle().has_value() && !b_thread.getHandle().has_value(),
+        ASSERT_TRUE(a_thread.getHandle() == nullptr && b_thread.getHandle() == nullptr,
                     "a_thread = %p, b_thread = %p",
                     a_thread.getHandle(),
                     b_thread.getHandle());
@@ -332,15 +327,15 @@ TEST_SUIT(MulParamFuncTest)
                                      123,
                                      114.514f,
                                      std::ref(num_for_ref));
-        ASSERT_TRUE(th.getHandle().has_value(), "");
+        ASSERT_TRUE(th.getHandle() != nullptr, "");
 
         flag.set(flag.get() | 0b011);
 
         do {
             emdevif::Thread::delay(1);
-        } while ((flag.get() != 0b111) || (th.getHandle().has_value()));
+        } while ((flag.get() != 0b111) || (th.getHandle() != nullptr));
 
-        ASSERT_TRUE(!th.getHandle().has_value(), "");
+        ASSERT_TRUE(th.getHandle() == nullptr, "");
         INT_EXPECT_EQ(num_for_ref, -352);
         EXPECT_TRUE(is_pass)->MESSAGE("%s", error_msg);
     }
@@ -355,5 +350,5 @@ void threadAndMutexTest()
     RUN_SUIT(MutexTest);
     RUN_SUIT(ThreadBasicTest);
     RUN_SUIT(ThreadAssignAndMoveTest);
-    //RUN_SUIT(MulParamFuncTest);
+    //RUN_SUIT(MulParamFuncTest);  // todo 待修改测试内容
 }
