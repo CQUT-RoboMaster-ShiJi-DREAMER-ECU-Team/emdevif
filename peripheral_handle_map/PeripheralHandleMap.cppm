@@ -8,7 +8,6 @@
 module;
 
 #include <string_view>
-#include <optional>
 #include <type_traits>
 
 #include "emdevif/simplify_decl_macros.hpp"
@@ -35,11 +34,12 @@ public:
     ~PeripheralHandleMap() = delete;
     EMDEVIF_DELETE_COPY_AND_MOVE(PeripheralHandleMap);
 
-    static constexpr std::optional<void*> findHandle(const std::string_view name) noexcept
+    static constexpr void* findHandle(const std::string_view name) noexcept
     {
         const auto handle = user_declares::peripheral_handle_map.at(name);
+
         if (handle == nullptr) {
-            return std::nullopt;
+            return nullptr;
         }
 
         return *handle;

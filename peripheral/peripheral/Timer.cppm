@@ -29,7 +29,7 @@ private:
 
 public:
     explicit constexpr Timer(const std::string_view name) noexcept
-        : instance_(static_cast<TimerModel::Instance*>(PeripheralHandleMap::findHandle(name).value_or(nullptr)))
+        : instance_(static_cast<TimerModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
         internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "Timer");
     }

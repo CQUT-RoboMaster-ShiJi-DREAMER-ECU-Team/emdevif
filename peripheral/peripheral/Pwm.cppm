@@ -25,7 +25,7 @@ private:
 
 public:
     explicit constexpr Pwm(const std::string_view name) noexcept
-        : instance_(static_cast<PwmModel::Instance*>(PeripheralHandleMap::findHandle(name).value_or(nullptr)))
+        : instance_(static_cast<PwmModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
         internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "PWM");
     }
