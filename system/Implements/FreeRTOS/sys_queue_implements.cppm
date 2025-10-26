@@ -1,8 +1,8 @@
 /**
- * @file msg_queue_implements.cppm
+ * @file sys_queue_implements.cppm
  * @author 杜以成
  * @date 2025-06-18
- * @brief 消息队列的实现
+ * @brief 系统队列的实现
  */
 
 module;
@@ -12,13 +12,13 @@ module;
 #include "FreeRTOS.h"
 #include "queue.h"
 
-export module emdevif.sys.messageQueue:implements;
+export module emdevif.sys.sysQueue:implements;
 import :interface;
 
 export namespace emdevif {
 
 template<typename Type, std::size_t item_size>
-class MessageQueue<Type, item_size>::StaticInstance
+class SysQueue<Type, item_size>::StaticInstance
 {
 public:
     StaticInstance() noexcept : instance(), queue_buffer() {}
@@ -39,13 +39,13 @@ private:
 };
 
 template<typename Type, std::size_t item_size>
-auto MessageQueue<Type, item_size>::create(const Attribute& attribute)
-    -> MessageQueue<Type, item_size>::StronglyTypedHandle
+auto SysQueue<Type, item_size>::create(const Attribute& attribute)
+    -> SysQueue<Type, item_size>::StronglyTypedHandle
 {
     Handle new_handle = nullptr;
 
     if (attribute.static_instance != nullptr) {
-        auto& static_instance = *static_cast<MessageQueue<Type, item_size>::StaticInstance*>(attribute.static_instance);
+        auto& static_instance = *static_cast<SysQueue<Type, item_size>::StaticInstance*>(attribute.static_instance);
 
         new_handle = xQueueCreateStatic(item_size,
                                         sizeof(Type),
@@ -66,7 +66,7 @@ auto MessageQueue<Type, item_size>::create(const Attribute& attribute)
 }
 
 template<typename Type, std::size_t item_size>
-void MessageQueue<Type, item_size>::destroy(MessageQueue& obj)
+void SysQueue<Type, item_size>::destroy(SysQueue& obj)
 {
     if (obj.handle_ != nullptr) {
         vQueueDelete(obj.handle_);
@@ -80,7 +80,7 @@ void MessageQueue<Type, item_size>::destroy(MessageQueue& obj)
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode MessageQueue<Type, item_size>::push(const bool in_isr, const Type& data, std::size_t timeout)
+ErrorCode SysQueue<Type, item_size>::push(const bool in_isr, const Type& data, std::size_t timeout)
 {
     if (in_isr) {
         BaseType_t xHigherPriorityTaskWokenByPost = pdFALSE;
@@ -113,7 +113,7 @@ ErrorCode MessageQueue<Type, item_size>::push(const bool in_isr, const Type& dat
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode MessageQueue<Type, item_size>::pop(const bool in_isr, Type& data, std::size_t timeout)
+ErrorCode SysQueue<Type, item_size>::pop(const bool in_isr, Type& data, std::size_t timeout)
 {
     if (in_isr) {
         BaseType_t xHigherPriorityTaskWokenByPost = pdFALSE;
@@ -146,14 +146,14 @@ ErrorCode MessageQueue<Type, item_size>::pop(const bool in_isr, Type& data, std:
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode MessageQueue<Type, item_size>::pop(const bool in_isr)
+ErrorCode SysQueue<Type, item_size>::pop(const bool in_isr)
 {
     Type data;
     return pop(in_isr, &data, 0U);
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode MessageQueue<Type, item_size>::peek(const bool in_isr, Type& data, std::size_t timeout)
+ErrorCode SysQueue<Type, item_size>::peek(const bool in_isr, Type& data, std::size_t timeout)
 {
     if (in_isr) {
         const auto ret = xQueuePeekFromISR(handle_, &data);
@@ -181,19 +181,19 @@ ErrorCode MessageQueue<Type, item_size>::peek(const bool in_isr, Type& data, std
 }
 
 template<typename Type, std::size_t item_size>
-std::size_t MessageQueue<Type, item_size>::storeCount() const
+std::size_t SysQueue<Type, item_size>::storeCount() const
 {
     return uxQueueMessagesWaiting(static_cast<QueueHandle_t>(handle_));
 }
 
 template<typename Type, std::size_t item_size>
-std::size_t MessageQueue<Type, item_size>::remainCount() const
+std::size_t SysQueue<Type, item_size>::remainCount() const
 {
     return uxQueueSpacesAvailable(static_cast<QueueHandle_t>(handle_));
 }
 
 template<typename Type, std::size_t item_size>
-MessageQueue<Type, item_size>::~MessageQueue()
+SysQueue<Type, item_size>::~SysQueue()
 {
     if (handle_ != nullptr) {
         this->destroy();

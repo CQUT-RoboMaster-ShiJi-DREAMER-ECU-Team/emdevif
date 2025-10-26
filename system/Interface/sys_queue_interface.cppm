@@ -1,8 +1,8 @@
 /**
- * @file msg_queue_interface.cppm
+ * @file sys_queue_interface.cppm
  * @author 杜以成
  * @date 2025-06-18
- * @brief 消息队列接口
+ * @brief 系统队列接口
  */
 
 module;
@@ -11,14 +11,14 @@ module;
 
 #include "emdevif/fatal_handler.h"
 
-export module emdevif.sys.messageQueue:interface;
+export module emdevif.sys.sysQueue:interface;
 
 export import emdevif.errorHandler;
 
 namespace emdevif {
 
-template<typename Type = void*, std::size_t item_size = 0>
-class MessageQueue
+template<typename Type, std::size_t item_size>
+class SysQueue
 {
 public:
     using Handle = void*;
@@ -39,7 +39,7 @@ private:
 public:
     static auto create(const Attribute& attribute) -> StronglyTypedHandle;
 
-    static void destroy(MessageQueue& obj);
+    static void destroy(SysQueue& obj);
 
     void destroy()
     {
@@ -64,18 +64,17 @@ public:
         return handle_;
     }
 
-    MessageQueue() : handle_(nullptr) {}
+    SysQueue() : handle_(nullptr) {}
 
-    explicit MessageQueue(const StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}
+    explicit SysQueue(const StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}
 
-    MessageQueue& operator=(const MessageQueue&) = delete;
-    MessageQueue(const MessageQueue&) = delete;
+    SysQueue& operator=(const SysQueue&) = delete;
+    SysQueue(const SysQueue&) = delete;
 
-    MessageQueue& operator=(const StronglyTypedHandle strongly_handle)
+    SysQueue& operator=(const StronglyTypedHandle strongly_handle)
     {
         if (handle_ != nullptr) {
             EMDEVIF_FATAL_HANDLER("Should not create message queue on non-deleted message queue!");
-            return *this;
         }
 
         handle_ = strongly_handle.value;
@@ -83,14 +82,14 @@ public:
         return *this;
     }
 
-    explicit MessageQueue(const Attribute& attribute) : MessageQueue(create(attribute)) {}
+    explicit SysQueue(const Attribute& attribute) : SysQueue(create(attribute)) {}
 
-    MessageQueue(MessageQueue&& other) noexcept : handle_(other.handle_)
+    SysQueue(SysQueue&& other) noexcept : handle_(other.handle_)
     {
         other.handle_ = nullptr;
     }
 
-    MessageQueue& operator=(MessageQueue&& other) noexcept
+    SysQueue& operator=(SysQueue&& other) noexcept
     {
         if (this == &other) {
             return *this;
@@ -102,7 +101,7 @@ public:
         return *this;
     }
 
-    ~MessageQueue();
+    ~SysQueue();
 
 private:
     Handle handle_;

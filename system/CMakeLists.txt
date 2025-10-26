@@ -14,7 +14,7 @@ target_link_libraries(${PROJECT_NAME}
 
 target_sources(${PROJECT_NAME}
     PUBLIC FILE_SET emdevif_thread_exported_modules_unit TYPE CXX_MODULES FILES
-        message_queue.cppm
+        sys_queue.cppm
         thread.cppm
         atomic.cppm
         mutex.cppm
@@ -23,7 +23,7 @@ target_sources(${PROJECT_NAME}
         heap_memory.cppm
 
     PUBLIC FILE_SET emdevif_thread_interface_modules TYPE CXX_MODULES FILES
-        Interface/msg_queue_interface.cppm
+        Interface/sys_queue_interface.cppm
         Interface/thread_interface.cppm
         Interface/mutex_interface.cppm
         Interface/semaphore_interface.cppm
@@ -47,7 +47,7 @@ if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
 
     target_sources(${PROJECT_NAME} PUBLIC
         FILE_SET emdevif__freertos_impl_modules TYPE CXX_MODULES FILES
-            Implements/FreeRTOS/msg_queue_implements.cppm
+            Implements/FreeRTOS/sys_queue_implements.cppm
             Implements/FreeRTOS/thread_implements.cppm
             Implements/FreeRTOS/mutex_implements.cppm
             Implements/FreeRTOS/semaphore_implements.cppm
@@ -55,6 +55,13 @@ if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
             Implements/FreeRTOS/event_group_definitions.cppm
             Implements/FreeRTOS/heap_memory_implements.cppm
     )
+else ()
+    if (NOT (TARGET emdevif_system_impl))
+        message(FATAL_ERROR "If EMDEVIF_THREAD_SYSTEM not equal to FreeRTOS, it requires \
+target `emdevif_system_impl\' to implements system interface.")
+    endif ()
+
+    target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_system_impl)
 endif ()
 
 block()
