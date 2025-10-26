@@ -454,8 +454,8 @@ public:
     ~Thread();
 
 private:
-    Handle handle_;
-    void* func_wrapper_memory_block_{nullptr};
+    Handle handle_;                             ///< 底层实现的句柄
+    void* func_wrapper_memory_block_{nullptr};  ///< 对任意参数的函数的包装器的内存块
 };
 
 }  // namespace emdevif

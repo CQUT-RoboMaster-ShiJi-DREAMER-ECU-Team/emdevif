@@ -29,6 +29,10 @@ export namespace emdevif {
 
 static_assert(std::is_same_v<SysTick_t, ::TickType_t>, "We need to keep SysTick_t same to TickType_t in FreeRTOS");
 
+/**
+ * 线程的静态实例
+ * @tparam stack_depth 栈的深度（以字为单位）
+ */
 template<std::size_t stack_depth>
 class Thread::StaticInstance
 {
@@ -51,19 +55,27 @@ private:
     }
 
 public:
+    /**
+     * 获取静态实例的地址（用于初始化填入 Attribute 形参）
+     * @return 静态实例存储的地址
+     */
     void* getInstanceAddr() noexcept
     {
         return &instance;
     }
 
+    /**
+     * 获取静态实例的栈深（用于初始化填入 Attribute 形参）
+     * @return 静态实例的栈深（以字为单位）
+     */
     std::size_t getStackDepth() noexcept  // NOLINT
     {
         return stack_depth;
     }
 
 private:
-    StaticTask_t instance;
-    StackType_t stack_buffer[stack_depth];
+    StaticTask_t instance;                  ///< 任务静态实例
+    StackType_t stack_buffer[stack_depth];  ///< 任务栈内存
 };
 
 consteval SysTick_t Thread::maxDelay() noexcept
