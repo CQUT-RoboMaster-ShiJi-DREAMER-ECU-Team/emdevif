@@ -45,7 +45,7 @@ EventGroup::StronglyTypedHandle EventGroup::create(const Attribute& attribute)
 {
     Handle handle;
 
-    if (attribute.static_instance != nullptr && attribute.instance_size != 0) {
+    if (attribute.static_instance != nullptr) {
         auto& static_instance = static_cast<StaticEventGroup_t&>(*attribute.static_instance);
 
         handle = xEventGroupCreateStatic(&static_instance);

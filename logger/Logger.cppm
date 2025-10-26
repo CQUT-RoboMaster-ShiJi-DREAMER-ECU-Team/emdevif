@@ -274,9 +274,7 @@ private:
     void initImpl() noexcept
     {
 #if (EMDEVIF_LOGGER_USE_MUTEX)
-        mutex_ = Mutex::create({.name = "loggerMutex",
-                                .static_instance = &mutex_static_instance_,
-                                .instance_size = mutex_static_instance_.getInstanceSize()});
+        mutex_ = Mutex::create({.name = "loggerMutex", .static_instance = &mutex_static_instance_});
         if (mutex_.getHandle() == nullptr) {
             EMDEVIF_FATAL_HANDLER("Failed to create logger mutex");
         }
@@ -285,8 +283,7 @@ private:
 #if (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_ASYNC)
         logger_async_printer_semaphore_ = BinarySemaphore::create(
             {.name = "loggerSemaphore",
-             .static_instance = &logger_async_printer_semaphore_static_instance_,
-             .instance_size = logger_async_printer_semaphore_static_instance_.getInstanceSize()});
+             .static_instance = &logger_async_printer_semaphore_static_instance_});
         if (logger_async_printer_semaphore_.getHandle() == nullptr) {
             EMDEVIF_FATAL_HANDLER("Failed to create logger semaphore");
         }

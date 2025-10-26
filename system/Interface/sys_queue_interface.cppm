@@ -17,14 +17,20 @@ export import emdevif.errorHandler;
 
 namespace emdevif {
 
+/**
+ * 系统队列
+ * @tparam Type 队列每个元素的类型
+ * @tparam item_size 队列的大小
+ */
 template<typename Type, std::size_t item_size>
 class SysQueue
 {
 public:
-    using Handle = void*;
+    using Handle = void*;///< 句柄
 
     class StaticInstance;
 
+    /// 属性
     struct Attribute {
         const char* name{};                        ///< 名称
 
@@ -36,7 +42,7 @@ private:
         Handle value;
     };
 
-public:
+public:  // todo 等消息队列接口做好了之后再来补注释
     static auto create(const Attribute& attribute) -> StronglyTypedHandle;
 
     static void destroy(SysQueue& obj);

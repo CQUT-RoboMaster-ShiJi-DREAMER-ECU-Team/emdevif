@@ -162,7 +162,7 @@ constexpr bool is_same_tuple_style_v = is_same_tuple_style<T, U>::value;
 export
 {
     /**
-     * @page diff_tuple_like_and_tuple_style
+     * @page diff_tuple_like_and_tuple_style 类似元组与元组形式类型的区别
      * **类似元组（tuple_like）** 与 **元组形式（tuple_style）** 的区别
      *     @arg 类似元组：只能是 std::tuple 或 std::pair
      *     @arg 元组形式：struct { T1 t1; T2 t2; } 或 std::array<int, 2> 也是元组形式

@@ -32,11 +32,6 @@ public:
 
     friend class CountingSemaphore<least_max_value>;
 
-    [[nodiscard]] constexpr std::size_t getInstanceSize() const noexcept
-    {
-        return sizeof instance;
-    }
-
 private:
     explicit operator StaticSemaphore_t&() noexcept
     {
@@ -44,7 +39,7 @@ private:
     }
 
 private:
-    StaticSemaphore_t instance;
+    StaticSemaphore_t instance;  ///< 静态创建所需的内存块
 };
 
 template<std::ptrdiff_t least_max_value>
@@ -53,7 +48,7 @@ auto CountingSemaphore<least_max_value>::create(const Attribute& attribute)
 {
     Handle handle = nullptr;
 
-    if (attribute.static_instance != nullptr && attribute.instance_size != 0U) {
+    if (attribute.static_instance != nullptr) {
         auto& static_instance =
             *static_cast<CountingSemaphore<least_max_value>::StaticInstance*>(attribute.static_instance);
 
@@ -134,7 +129,6 @@ public:
         const char* name{};                        ///< 名称
 
         StaticInstance* static_instance{nullptr};  ///< 静态实例内存
-        std::size_t instance_size{0U};             ///< 实例大小
     };
 
 private:
@@ -152,8 +146,6 @@ public:
         destroy(*this);
         handle_ = nullptr;
     }
-
-    static constexpr std::ptrdiff_t max = 1;
 
     void release(bool in_isr) noexcept;
 
@@ -239,7 +231,7 @@ CountingSemaphore<1>::StronglyTypedHandle CountingSemaphore<1>::create(const Att
 {
     Handle handle = nullptr;
 
-    if (attribute.static_instance != nullptr && attribute.instance_size != 0U) {
+    if (attribute.static_instance != nullptr) {
         auto& static_instance = *static_cast<CountingSemaphore<1>::StaticInstance*>(attribute.static_instance);
 
         handle = xSemaphoreCreateBinaryStatic(&static_cast<StaticSemaphore_t&>(static_instance));

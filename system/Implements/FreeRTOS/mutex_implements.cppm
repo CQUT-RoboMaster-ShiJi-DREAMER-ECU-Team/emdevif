@@ -30,11 +30,6 @@ public:
 
     friend class Mutex;
 
-    std::size_t getInstanceSize() noexcept
-    {
-        return sizeof instance;
-    }
-
 private:
     explicit operator StaticSemaphore_t&() noexcept
     {
@@ -49,7 +44,7 @@ Mutex::StronglyTypedHandle Mutex::create(const Attribute& attribute)
 {
     QueueHandle_t handle = nullptr;
 
-    if (attribute.static_instance != nullptr && attribute.instance_size != 0U) {
+    if (attribute.static_instance != nullptr) {
         auto& static_instance = *static_cast<Mutex::StaticInstance*>(attribute.static_instance);
 
         handle = xSemaphoreCreateMutexStatic(&static_cast<StaticSemaphore_t&>(static_instance));

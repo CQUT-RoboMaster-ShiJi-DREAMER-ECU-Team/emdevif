@@ -29,10 +29,6 @@ export namespace emdevif {
 
 static_assert(std::is_same_v<SysTick_t, ::TickType_t>, "We need to keep SysTick_t same to TickType_t in FreeRTOS");
 
-/**
- * 线程的静态实例
- * @tparam stack_depth 栈的深度（以字为单位）
- */
 template<std::size_t stack_depth>
 class Thread::StaticInstance
 {

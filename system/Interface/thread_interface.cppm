@@ -45,6 +45,21 @@ public:
     using ThreadEntry = void (*)(void*);  ///< 线程标准入口函数指针
     using Handle = void*;                 ///< 线程句柄
 
+    /**
+     * @page sys_static_instance 静态实例
+     * 静态实例是用于线程、信号量、系统队列等功能静态创建实例的载体，用于提供静态创建的内存块。
+     *
+     * 在接口中，静态实例仅作声明，定义在实现模块分区中（因为不同的操作系统的静态创建所需要的类型不一定相同）
+     */
+
+    /**
+     * 线程的静态实例
+     *
+     * @copydoc sys_static_instance
+     *
+     * 对于开发者：线程的静态实例需要提供 `getInstanceAddr` 和 `getStackDepth` 方法，用于用户创建静态实例时调用。
+     * @tparam stack_depth 栈的深度（以字为单位）
+     */
     template<std::size_t stack_depth>
     class StaticInstance;
 
@@ -89,10 +104,17 @@ public:
 
 private:
     /**
-     * 强类型句柄
+     * @page sys_strongly_typed_handle 强类型句柄
+     * 用于相关方法的返回值，同时也是类的其中一个构造函数接受的形参，这是为了区分类型，
+     * 防止用户不要直接将 void* 类型传入构造函数。
      *
-     * 用于 Thread::create 的返回值，同时也是 Thread 的其中一个构造函数的参数类型。
-     * 将 Handle 包装一层结构体，用于区分类型，同时提醒用户不要直接将 void* 类型传入构造函数。
+     * 类型的定义会设置成 private 的，也是防止用户直接创建内部实现的强类型句柄
+     * （尽管语言上可以实现，但请不要使用 decltype 获取这个类型）。
+     */
+
+    /**
+     * 强类型句柄
+     * @copydoc sys_strongly_typed_handle
      */
     struct StronglyTypedHandle {
         Handle value;
@@ -127,7 +149,7 @@ public:
     /**
      * 绝对延时
      *
-     * 示例：@code
+     * 示例：@code{.cpp}
      * import emdevif.sys.thread;
      * using namespace emdevif;
      *
@@ -149,7 +171,7 @@ public:
     /**
      * 创建线程
      *
-     * 动态创建的使用示例：@code
+     * 动态创建的使用示例：@code{.cpp}
      * import emdevif.sys.thread;
      * using namespace emdevif;
      *
@@ -174,7 +196,7 @@ public:
      * }
      * @endcode
      *
-     * 静态创建的使用示例：@code
+     * 静态创建的使用示例：@code{.cpp}
      * import emdevif.sys.thread;
      * using namespace emdevif;
      *
@@ -185,8 +207,8 @@ public:
      * void init()
      * {
      *     thread = Thread::create({.name = "thread",
-     *                              .static_instance = &thread_instance,
-     *                              .stack_size = thread_instance_stack_size
+     *                              .static_instance = thread_instance.getInstanceAddr(),
+     *                              .stack_size = thread_instance.getStackDepth()
      *                             },
      *                             threadEntry,
      *                             &arg);
@@ -247,7 +269,7 @@ public:
     /**
      * 创建任意参数的入口函数的线程
      *
-     * 使用示例：@code
+     * 使用示例：@code{.cpp}
      * #include <functional>  // std::ref requires
      *
      * import emdevif.sys.thread;
@@ -308,7 +330,7 @@ public:
     /**
      * 退出当前线程
      *
-     * 使用示例：@code
+     * 使用示例：@code{.cpp}
      * import emdevif.sys.thread;
      * using namespace emdevif;
      *
