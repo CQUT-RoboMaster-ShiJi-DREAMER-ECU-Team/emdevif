@@ -88,7 +88,7 @@ consteval auto Thread::priorityMapRange() noexcept
                                                centered_priority + static_cast<UBaseType_t>(Priority::Realtime)};
 }
 
-constexpr auto Thread::priorityMapToSystem(const Priority priority)
+constexpr auto Thread::priorityMapToSystem(const Priority priority) noexcept
 {
     if (priority == Priority::Idle) {
         return static_cast<UBaseType_t>(0U);
@@ -104,7 +104,7 @@ constexpr auto Thread::priorityMapToSystem(const Priority priority)
     return static_cast<UBaseType_t>(centered_priority + static_cast<UBaseType_t>(priority));
 }
 
-inline SysTick_t Thread::getTick(const bool in_isr)
+inline SysTick_t Thread::getTick(const bool in_isr) noexcept
 {
     if (in_isr) {
         return xTaskGetTickCount();
@@ -114,12 +114,12 @@ inline SysTick_t Thread::getTick(const bool in_isr)
     }
 }
 
-inline void Thread::delay(const SysTick_t ticks)
+inline void Thread::delay(const SysTick_t ticks) noexcept
 {
     vTaskDelay(ticks);
 }
 
-inline ErrorCode Thread::delayUntil(const SysTick_t ticks)
+inline ErrorCode Thread::delayUntil(const SysTick_t ticks) noexcept
 {
     auto tcnt = xTaskGetTickCount();
 
@@ -135,7 +135,7 @@ inline ErrorCode Thread::delayUntil(const SysTick_t ticks)
     return ErrorCode::Success;
 }
 
-inline SysTick_t Thread::msToTick(const SysTick_t ms)
+inline SysTick_t Thread::msToTick(const SysTick_t ms) noexcept
 {
     return pdMS_TO_TICKS(ms);
 }
@@ -174,7 +174,7 @@ Thread::StronglyTypedHandle Thread::create(const Attribute& attribute,
     return {.value = handle};
 }
 
-ErrorCode Thread::destroy(Thread& obj)
+ErrorCode Thread::destroy(Thread& obj) noexcept
 {
     if (obj.getHandle() == nullptr) {
         return ErrorCode::InvalidArgument;
@@ -193,7 +193,7 @@ ErrorCode Thread::destroy(Thread& obj)
     return ErrorCode::Success;
 }
 
-inline void Thread::exit()
+inline void Thread::exit() noexcept
 {
     handle_ = nullptr;
     vTaskDelete(nullptr);
@@ -204,12 +204,12 @@ inline void Thread::exit()
     }
 }
 
-inline void Thread::suspend(Handle handle)
+inline void Thread::suspend(Handle handle) noexcept
 {
     vTaskSuspend(static_cast<TaskHandle_t>(handle));
 }
 
-inline void Thread::resume(bool in_isr, Handle handle)
+inline void Thread::resume(bool in_isr, Handle handle) noexcept
 {
     if (in_isr) {
         const auto xYieldRequired = xTaskResumeFromISR(static_cast<TaskHandle_t>(handle));
@@ -221,17 +221,17 @@ inline void Thread::resume(bool in_isr, Handle handle)
     }
 }
 
-inline void Thread::startScheduler()
+inline void Thread::startScheduler() noexcept
 {
     vTaskStartScheduler();
 }
 
-inline void Thread::endScheduler()
+inline void Thread::endScheduler() noexcept
 {
     vTaskEndScheduler();
 }
 
-inline void Thread::yield()
+inline void Thread::yield() noexcept
 {
     taskYIELD();
 }
@@ -241,12 +241,12 @@ inline void Thread::yield()
     return false;
 }
 
-[[maybe_unused]] inline void Thread::join()  // NOLINT
+[[maybe_unused]] inline void Thread::join() noexcept  // NOLINT
 {
     EMDEVIF_FATAL_HANDLER("FreeRTOS can not join!");
 }
 
-Thread::~Thread()
+Thread::~Thread() noexcept
 {
     if (handle_ != nullptr) {
         destroy(*this);

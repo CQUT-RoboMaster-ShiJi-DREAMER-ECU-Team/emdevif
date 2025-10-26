@@ -43,7 +43,7 @@ private:
 };
 
 template<std::ptrdiff_t least_max_value>
-auto CountingSemaphore<least_max_value>::create(const Attribute& attribute)
+auto CountingSemaphore<least_max_value>::create(const Attribute& attribute) noexcept
     -> CountingSemaphore<least_max_value>::StronglyTypedHandle
 {
     Handle handle = nullptr;
@@ -62,7 +62,7 @@ auto CountingSemaphore<least_max_value>::create(const Attribute& attribute)
 }
 
 template<std::ptrdiff_t least_max_value>
-void CountingSemaphore<least_max_value>::destroy(CountingSemaphore& obj)
+void CountingSemaphore<least_max_value>::destroy(CountingSemaphore& obj) noexcept
 {
     if (obj.handle_ != nullptr) {
         vSemaphoreDelete(obj.handle_);
@@ -105,7 +105,7 @@ ErrorCode CountingSemaphore<least_max_value>::acquire(bool in_isr, SysTick_t tim
 }
 
 template<std::ptrdiff_t least_max_value>
-CountingSemaphore<least_max_value>::~CountingSemaphore()
+CountingSemaphore<least_max_value>::~CountingSemaphore() noexcept
 {
     if (handle_ != nullptr) {
         this->destroy();
@@ -137,11 +137,11 @@ private:
     };
 
 public:
-    static StronglyTypedHandle create(const Attribute& attribute);
+    static StronglyTypedHandle create(const Attribute& attribute) noexcept;
 
-    static void destroy(CountingSemaphore& obj);
+    static void destroy(CountingSemaphore& obj) noexcept;
 
-    void destroy()
+    void destroy() noexcept
     {
         destroy(*this);
         handle_ = nullptr;
@@ -156,19 +156,19 @@ public:
         return acquire(in_isr, 0U);
     }
 
-    [[nodiscard]] Handle getHandle() const
+    [[nodiscard]] Handle getHandle() const noexcept
     {
         return handle_;
     }
 
-    CountingSemaphore() : handle_(nullptr) {}
+    CountingSemaphore() noexcept : handle_(nullptr) {}
 
-    explicit CountingSemaphore(const StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}
+    explicit CountingSemaphore(const StronglyTypedHandle strongly_handle) noexcept : handle_(strongly_handle.value) {}
 
     CountingSemaphore& operator=(const CountingSemaphore&) = delete;
     CountingSemaphore(const CountingSemaphore&) = delete;
 
-    CountingSemaphore& operator=(const StronglyTypedHandle strongly_handle)
+    CountingSemaphore& operator=(const StronglyTypedHandle strongly_handle) noexcept
     {
         if (handle_ != nullptr) {
             EMDEVIF_FATAL_HANDLER("Should not create binary semaphore on non-deleted binary semaphore!");
@@ -180,7 +180,7 @@ public:
         return *this;
     }
 
-    explicit CountingSemaphore(const Attribute& attribute) : CountingSemaphore(create(attribute)) {}
+    explicit CountingSemaphore(const Attribute& attribute) noexcept : CountingSemaphore(create(attribute)) {}
 
     CountingSemaphore(CountingSemaphore&& other) noexcept : handle_(other.handle_)
     {
@@ -199,7 +199,7 @@ public:
         return *this;
     }
 
-    ~CountingSemaphore();
+    ~CountingSemaphore() noexcept;
 
 private:
     Handle handle_;
@@ -227,7 +227,7 @@ private:
     StaticSemaphore_t instance;
 };
 
-CountingSemaphore<1>::StronglyTypedHandle CountingSemaphore<1>::create(const Attribute& attribute)
+CountingSemaphore<1>::StronglyTypedHandle CountingSemaphore<1>::create(const Attribute& attribute) noexcept
 {
     Handle handle = nullptr;
 
@@ -249,7 +249,7 @@ CountingSemaphore<1>::StronglyTypedHandle CountingSemaphore<1>::create(const Att
     return {handle};
 }
 
-void CountingSemaphore<1>::destroy(CountingSemaphore<1>& obj)
+void CountingSemaphore<1>::destroy(CountingSemaphore<1>& obj) noexcept
 {
     if (obj.handle_ != nullptr) {
         vSemaphoreDelete(obj.handle_);
@@ -289,7 +289,7 @@ inline ErrorCode CountingSemaphore<1>::acquire(bool in_isr, SysTick_t timeout_ti
     }
 }
 
-CountingSemaphore<1>::~CountingSemaphore()
+CountingSemaphore<1>::~CountingSemaphore() noexcept
 {
     if (handle_ != nullptr) {
         this->destroy();

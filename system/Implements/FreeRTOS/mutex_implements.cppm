@@ -40,7 +40,7 @@ private:
     StaticSemaphore_t instance;
 };
 
-Mutex::StronglyTypedHandle Mutex::create(const Attribute& attribute)
+Mutex::StronglyTypedHandle Mutex::create(const Attribute& attribute) noexcept
 {
     QueueHandle_t handle = nullptr;
 
@@ -62,7 +62,8 @@ Mutex::StronglyTypedHandle Mutex::create(const Attribute& attribute)
     return {.value = handle};
 }
 
-void Mutex::destroy(Mutex& obj)  // NOLINT
+void Mutex::destroy(Mutex& obj) noexcept
+// NOLINT
 {
     if (obj.handle_ != nullptr) {
         vSemaphoreDelete(obj.handle_);
@@ -75,7 +76,7 @@ void Mutex::destroy(Mutex& obj)  // NOLINT
     }
 }
 
-inline ErrorCode Mutex::lock(const SysTick_t timeout_tick)
+inline ErrorCode Mutex::lock(const SysTick_t timeout_tick) noexcept
 {
     const auto ret = xSemaphoreTake(static_cast<SemaphoreHandle_t>(handle_), timeout_tick);
 
@@ -87,14 +88,14 @@ inline ErrorCode Mutex::lock(const SysTick_t timeout_tick)
     }
 }
 
-inline void Mutex::unlock()
+inline void Mutex::unlock() noexcept
 {
     if (xSemaphoreGive(handle_) != pdTRUE) {
         EMDEVIF_FATAL_HANDLER("Failed to Unlock mutex!");
     }
 }
 
-Mutex::~Mutex()
+Mutex::~Mutex() noexcept
 {
     if (handle_ != nullptr) {
         this->destroy();

@@ -125,7 +125,7 @@ private:
      * @param priority 优先级
      * @return 这个优先级映射到实际系统的优先级的值
      */
-    static constexpr auto priorityMapToSystem(Priority priority);
+    static constexpr auto priorityMapToSystem(Priority priority) noexcept;
 
 public:
     /**
@@ -138,13 +138,13 @@ public:
      * @param in_isr 是否在中断中调用的这个函数
      * @return 当前系统时间戳的时间值
      */
-    static SysTick_t getTick(bool in_isr);
+    static SysTick_t getTick(bool in_isr) noexcept;
 
     /**
      * 延时
      * @param ticks 需要延时的 tick 数
      */
-    static void delay(SysTick_t ticks);
+    static void delay(SysTick_t ticks) noexcept;
 
     /**
      * 绝对延时
@@ -159,14 +159,14 @@ public:
      * @param ticks 要等待到的绝对时间
      * @return 如果成功延时，返回 Success。如果预计等待到的绝对时间已经过去，返回 InvalidArgument。
      */
-    static ErrorCode delayUntil(SysTick_t ticks);
+    static ErrorCode delayUntil(SysTick_t ticks) noexcept;
 
     /**
      * 将毫秒时间转化成 tick 单位
      * @param ms 毫秒
      * @return 转化后的 tick 数
      */
-    static SysTick_t msToTick(SysTick_t ms);
+    static SysTick_t msToTick(SysTick_t ms) noexcept;
 
     /**
      * 创建线程
@@ -325,7 +325,7 @@ public:
      * @param obj 待删除的线程实例
      * @return 成功删除返回 Success；传入未创建好的或者已删除的线程实例返回 InvalidArgument
      */
-    static ErrorCode destroy(Thread& obj);
+    static ErrorCode destroy(Thread& obj) noexcept;
 
     /**
      * 退出当前线程
@@ -351,36 +351,36 @@ public:
      * @attention[1] 这个函数一旦调用就不会返回。
      * @attention[2] 静态创建的线程不能退出。
      */
-    EMDEVIF_NO_RETURN void exit();
+    EMDEVIF_NO_RETURN void exit() noexcept;
 
     /**
      * 挂起线程
      * @param handle 待挂起的线程的句柄（可以通过 getHandle 方法获取）
      */
-    static void suspend(Handle handle);
+    static void suspend(Handle handle) noexcept;
 
     /**
      * 恢复被挂起的线程
      * @param in_isr 是否在中断里调用
      * @param handle 待恢复的线程的句柄（可以通过 getHandle 方法获取）
      */
-    static void resume(bool in_isr, Handle handle);
+    static void resume(bool in_isr, Handle handle) noexcept;
 
     /**
      * 启动调度器
      */
-    static void startScheduler();
+    static void startScheduler() noexcept;
 
     /**
      * 关闭调度器
      */
-    static void endScheduler();
+    static void endScheduler() noexcept;
 
     /**
      * 向实现提供一个提示，以重新调度当前线程的执行，允许其他线程运行。
      * @attention 此函数的具体行为取决于底层系统的实现，需要参考实际系统的文档。
      */
-    static void yield();
+    static void yield() noexcept;
 
     /**
      * 检查当前对象是否可连接的
@@ -391,22 +391,22 @@ public:
     /**
      * 连接线程。即阻塞当前线程，直到实例线程执行完毕
      */
-    void join();
+    void join() noexcept;
 
     /**
      * 获得底层实现的句柄
-     * @return 一个可选值，如果线程存在，返回底层实现的句柄，否则返回 std::nullopt
+     * @return 底层实现的句柄
      */
-    [[nodiscard]] Handle getHandle() const
+    [[nodiscard]] Handle getHandle() const noexcept
     {
         return handle_;
     }
 
-    Thread() : handle_(nullptr) {}
+    Thread() noexcept : handle_(nullptr) {}
 
-    Thread(const StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}  // NOLINT
+    Thread(const StronglyTypedHandle strongly_handle) noexcept : handle_(strongly_handle.value) {}  // NOLINT
 
-    Thread& operator=(const StronglyTypedHandle strongly_handle)
+    Thread& operator=(const StronglyTypedHandle strongly_handle) noexcept
     {
         if (handle_ != nullptr) {
             EMDEVIF_FATAL_HANDLER("Should not create thread on non-deleted thread!");
@@ -418,18 +418,18 @@ public:
         return *this;
     }
 
-    Thread(const Attribute& attribute, const ThreadEntry entry, void* arguments)
+    Thread(const Attribute& attribute, const ThreadEntry entry, void* arguments) noexcept
         : Thread(create(attribute, entry, arguments))
     {
     }
 
-    Thread(const MulParamThreadFuncHandle mul_param_thread_func_handle)  // NOLINT
+    Thread(const MulParamThreadFuncHandle mul_param_thread_func_handle) noexcept  // NOLINT
         : handle_(mul_param_thread_func_handle.handle),
           func_wrapper_memory_block_(mul_param_thread_func_handle.func_wrapper_memory_block)
     {
     }
 
-    Thread& operator=(const MulParamThreadFuncHandle mul_param_thread_func_handle)
+    Thread& operator=(const MulParamThreadFuncHandle mul_param_thread_func_handle) noexcept
     {
         if (handle_ != nullptr || func_wrapper_memory_block_ != nullptr) {
             EMDEVIF_FATAL_HANDLER("Should not create thread on non-deleted thread!");
@@ -443,7 +443,7 @@ public:
     }
 
     template<typename Func, typename... Args>
-    Thread(const Attribute& attribute, MulParam, const Func& entry, Args&&... args)
+    Thread(const Attribute& attribute, MulParam, const Func& entry, Args&&... args) noexcept
         : Thread(create(attribute, mulparam, entry, std::forward<Args>(args)...))
     {
     }
@@ -473,7 +473,7 @@ public:
         return *this;
     }
 
-    ~Thread();
+    ~Thread() noexcept;
 
 private:
     Handle handle_;                             ///< 底层实现的句柄

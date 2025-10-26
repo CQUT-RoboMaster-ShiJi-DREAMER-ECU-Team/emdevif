@@ -92,18 +92,18 @@ public:
      * @param attribute 属性
      * @return 创建的强类型句柄
      */
-    static auto create(const Attribute& attribute) -> StronglyTypedHandle;
+    static auto create(const Attribute& attribute) noexcept -> StronglyTypedHandle;
 
     /**
      * 销毁信号量
      * @param obj 待销毁的信号量
      */
-    static void destroy(CountingSemaphore& obj);
+    static void destroy(CountingSemaphore& obj) noexcept;
 
     /**
      * 销毁信号量（自身）
      */
-    void destroy()
+    void destroy() noexcept
     {
         destroy(*this);
         handle_ = nullptr;
@@ -141,19 +141,19 @@ public:
      * 获取底层实现所用的句柄
      * @return 底层句柄
      */
-    [[nodiscard]] Handle getHandle() const
+    [[nodiscard]] Handle getHandle() const noexcept
     {
         return handle_;
     }
 
-    CountingSemaphore() : handle_(nullptr) {}
+    CountingSemaphore() noexcept : handle_(nullptr) {}
 
-    explicit CountingSemaphore(const StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}
+    explicit CountingSemaphore(const StronglyTypedHandle strongly_handle) noexcept : handle_(strongly_handle.value) {}
 
     CountingSemaphore& operator=(const CountingSemaphore&) = delete;
     CountingSemaphore(const CountingSemaphore&) = delete;
 
-    CountingSemaphore& operator=(const StronglyTypedHandle strongly_handle)
+    CountingSemaphore& operator=(const StronglyTypedHandle strongly_handle) noexcept
     {
         if (handle_ != nullptr) {
             EMDEVIF_FATAL_HANDLER("Should not create counting semaphore on non-deleted counting semaphore!");
@@ -164,7 +164,7 @@ public:
         return *this;
     }
 
-    explicit CountingSemaphore(const Attribute& attribute) : CountingSemaphore(create(attribute)) {}
+    explicit CountingSemaphore(const Attribute& attribute) noexcept : CountingSemaphore(create(attribute)) {}
 
     CountingSemaphore(CountingSemaphore&& other) noexcept : handle_(other.handle_)
     {
@@ -183,7 +183,7 @@ public:
         return *this;
     }
 
-    ~CountingSemaphore();
+    ~CountingSemaphore() noexcept;
 
 private:
     Handle handle_;  ///< 底层实现所用的句柄
