@@ -9,7 +9,7 @@ add_library(${PROJECT_NAME} STATIC)
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC emdevif_core
-    PRIVATE emdevif_compile_options
+    PRIVATE emdevif_compile_options emdevif_util
 )
 
 target_sources(${PROJECT_NAME}
