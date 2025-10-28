@@ -15,9 +15,16 @@ emdevif: embedded developing interface 嵌入式开发接口。
 * [system](./system) 对操作系统（例如 FreeRTOS）调用的封装。
 * [util](./util) 其他实用功能。
 
+## 外部模块
+
+* [emdevif_stm32_peripheral](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/emdevif_stm32_peripheral.git):
+  提供一部分 STM32 HAL/LL 外设库的封装
+
 ## 相关文档
 
 [命名约定](.)  (todo)
+
+[rmdev](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev.git)
 
 ## 使用方法
 
@@ -41,7 +48,7 @@ project_root
 您可以使用 `git clone` 或 `git submodule add` 将本仓库添加到一个合适的目录中，例如：
 
 ```Shell
-git submodule add https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/emdevif.git emdevif
+git submodule add https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/emdevif.git emdevif_collection/emdevif
 ```
 
 这样，文件结构将会变成：
@@ -53,8 +60,9 @@ project_root
 ├── src/
 │   └── ...
 ├── CMakeLists.txt
-├── emdevif/
-│   └── ...
+├── emdevif_collection/
+│   └── emdevif/
+│       └── ...
 └── ...
 ```
 
@@ -102,7 +110,7 @@ set(EMDEVIF_ENABLED_MODULES
     CACHE STRING "" FORCE
 )  # 您也可以通过命令行传递这个变量，例如: cmake -DEMDEVIF_ENABLED_MODULES="logger;util" ...
 
-add_subdirectory(emdevif)  # 请注意，这一条语句需要放在设置变量之后
+add_subdirectory(emdevif_collection/emdevif)  # 请注意，这一条语句需要放在设置变量之后
 
 target_link_libraries(${PROJECT_NAME} PRIVATE emdevif)  # 链接 emdevif 库
 ```
@@ -122,8 +130,9 @@ project_root
 ├── src/
 │   └── ...
 ├── CMakeLists.txt
-├── emdevif/
-│   └── ...
+├── emdevif_collection/
+│   └── emdevif/
+│       └── ...
 └── ...
 ```
 
@@ -157,7 +166,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE emdevif)
 
 # 按照相同的方式设置所需的模块
 set(EMDEVIF_ENABLED_MODULES "logger;util" CACHE STRING "" FORCE)
-add_subdirectory(emdevif)
+add_subdirectory(${CMAKE_SOURCE_DIR}/emdevif_collection/emdevif)
 
 # 尽管这样看上去有些多余，但如果子模块的配置选项较多，这样做会使得 CMakeLists.txt 更加清晰。
 ```
@@ -181,11 +190,12 @@ project_root
 ├── src/
 │   └── ...
 ├── CMakeLists.txt
-├── emdevif/
-│   └── ...
-├── emdevif_user_declares/  # 用户自定义的实现模块
-│   ├── emdevif_user_declares.cppm
-│   └── ...
+├── emdevif_collection/
+│   ├── emdevif/
+│   │   └── ...
+│   └── emdevif_user_declares/  # 用户自定义的实现模块
+│       ├── emdevif_user_declares.cppm
+│       └── ...
 └── ...
 ```
 
@@ -210,12 +220,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE emdevif)
 add_library(emdevif_user_declares STATIC)
 target_sources(emdevif_user_declares
     PUBLIC FILE_SET emdevif_user_declares_module TYPE CXX_MODULES
-    FILES emdevif_user_declares/emdevif_user_declares.cppm  # 您的实现文件，需要提供为 C++ 模块
+    FILES emdevif_collection/emdevif_user_declares/emdevif_user_declares.cppm  # 您的实现文件，需要提供为 C++ 模块
 )
 ```
 
 ```C++
-// emdevif_user_declares/emdevif_user_declares.cppm
+// emdevif_collection/emdevif_user_declares/emdevif_user_declares.cppm
 
 module;
 
@@ -236,3 +246,15 @@ export namespace emdevif::user_declares  // 命名空间也必须与它相同
 
 }
 ```
+
+### CMake 变量配置
+
+| CMake 变量                | 类型     | 默认值                              | 说明                |
+|-------------------------|--------|----------------------------------|-------------------|
+| EMDEVIF_ENABLE_TESTS    | Bool   | OFF                              | 是否启用测试            |
+| EMDEVIF_USE_STM32CUBEMX | Bool   | OFF                              | 是否使用 STM32CubeMX  |
+| EMDEVIF_ENABLED_MODULES | String | `${emdevifAllModules}`(默认开启所有模块) | 要使用的模块，模块名之间用分号间隔 |
+
+## 测试
+
+见 [test](./test)。
