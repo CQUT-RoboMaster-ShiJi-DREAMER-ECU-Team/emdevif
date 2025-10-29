@@ -17,8 +17,9 @@ emdevif: embedded developing interface 嵌入式开发接口。
 
 ## 外部模块
 
-* [emdevif_stm32_peripheral](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/emdevif_stm32_peripheral.git):
+* [emdevif_stm32_peripheral](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/emdevif_stm32_peripheral.git)
   提供一部分 STM32 HAL/LL 外设库的封装
+* [emdevif_test_framework](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/emdevif_test_framework.git) 单元测试框架
 
 ## 相关文档
 
