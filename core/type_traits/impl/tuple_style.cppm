@@ -144,8 +144,8 @@ private:
     template<typename T_, typename U_, std::size_t... I>
     static constexpr bool is_same_type_for_each_member(std::index_sequence<I...>) noexcept
     {
-        return ((std::is_same_v<typename tuple_operations<T_>::tuple_element_t<I>,
-                                typename tuple_operations<U_>::tuple_element_t<I>>) &&
+        return ((std::is_same_v<typename tuple_operations<T_>::template tuple_element_t<I>,
+                                typename tuple_operations<U_>::template tuple_element_t<I>>) &&
                 ...);
     }
 
