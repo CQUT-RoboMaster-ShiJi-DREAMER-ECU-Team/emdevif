@@ -4,9 +4,12 @@ project(emdevif_esp_idf_support C CXX)
 
 add_library(${PROJECT_NAME} INTERFACE)
 
+idf_component_get_property(emdevifEspIdfFreertosLibName freertos COMPONENT_ALIAS)
+
 target_include_directories(${PROJECT_NAME} INTERFACE
-    $<TARGET_PROPERTY:idf::freertos,INTERFACE_INCLUDE_DIRECTORIES>
+    ${emdevifEspIdfFreertosLibName}
 )
+
 target_compile_definitions(${PROJECT_NAME} INTERFACE
     EMDEVIF_THREAD_USE_ESPIDF_FREERTOS=1
 )
