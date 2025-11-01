@@ -9,15 +9,23 @@ set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 set(emdevifAllModules "logger;timeline;system;peripheral_handle_map;peripheral;util")
 
 option(EMDEVIF_ENABLE_TESTS "Enable the test for emdevif." OFF)
-option(EMDEVIF_USE_STM32CUBEMX "Enable it will link stm32cubemx lib to emdevif" OFF)
 set(EMDEVIF_ENABLED_MODULES ${emdevifAllModules} CACHE STRING
     "Set the modules to be enabled in emdevif, separated by semicolons(\'\;\'). \
 Default value is all modules(Listed in local variable `emdevifAllModules\')."
 )
 
+option(EMDEVIF_USE_STM32CUBEMX "Enable it will link stm32cubemx lib to emdevif" OFF)
+option(EMDEVIF_USE_ESP_IDF "Enable it to use ESP-IDF." OFF)
+
+include(cmake/utility.cmake)
+
+emdevif_assertMutuallyExclusiveOptions(EMDEVIF_USE_STM32CUBEMX EMDEVIF_USE_ESP_IDF)
+
 if (EMDEVIF_USE_STM32CUBEMX)
     enable_language(ASM)
     add_subdirectory(support/stm32cubemx)
+elseif (EMDEVIF_USE_ESP_IDF)
+    add_subdirectory(support/esp-idf)
 endif ()
 
 add_subdirectory(core)
