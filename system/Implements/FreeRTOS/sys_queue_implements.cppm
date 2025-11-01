@@ -9,8 +9,13 @@ module;
 
 #include <cstddef>
 
+#if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
+#else
 #include "FreeRTOS.h"
 #include "queue.h"
+#endif
 
 export module emdevif.sys.sysQueue:implements;
 import :interface;

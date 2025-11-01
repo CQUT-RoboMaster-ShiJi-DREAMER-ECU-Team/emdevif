@@ -11,7 +11,11 @@ module;
 #include <utility>
 #include <type_traits>
 
+#if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+#include "freertos/FreeRTOS.h"
+#else
 #include "FreeRTOS.h"
+#endif
 
 export module emdevif.sys.heap:implements;
 

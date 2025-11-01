@@ -30,10 +30,26 @@ target_sources(${PROJECT_NAME}
         Interface/event_group_interface.cppm
 )
 
+if (EMDEVIF_USE_ESP_IDF)
+    if (NOT (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS"))
+        message(WARNING "[${PROJECT_NAME}]: Usage ESP-IDF, so the value EMDEVIF_THREAD_SYSTEM\
+        (was set to `${EMDEVIF_THREAD_SYSTEM}\') ignored and forced to be set with `FreeRTOS\'.")
+
+        set(EMDEVIF_THREAD_SYSTEM "FreeRTOS")
+    endif ()
+endif ()
+
 if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
     option(EMDEVIF_FREERTOS_USE_STM32CUBEMX "FreeRTOS will use stm32cubemx generated FreeRTOS sources" OFF)
 
-    if (EMDEVIF_FREERTOS_USE_STM32CUBEMX)
+    if (EMDEVIF_USE_ESP_IDF)
+        if (EMDEVIF_FREERTOS_USE_STM32CUBEMX)
+            message(WARNING "[${PROJECT_NAME}]: EMDEVIF_FREERTOS_USE_STM32CUBEMX is set to ON while usage \
+            ESP-IDF(EMDEVIF_USE_ESP_IDF is ON), ignored.")
+        endif ()
+
+        target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_esp_idf_support)
+    elseif (EMDEVIF_FREERTOS_USE_STM32CUBEMX)
         if (NOT EMDEVIF_USE_STM32CUBEMX)
             message(FATAL_ERROR "Let FreeRTOS to use stm32cubemx requires to set EMDEVIF_USE_STM32CUBEMX equal to ON")
         endif ()

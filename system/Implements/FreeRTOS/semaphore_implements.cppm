@@ -11,8 +11,13 @@ module;
 
 #include <cstddef>
 
+#if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+#include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
+#else
 #include "FreeRTOS.h"
 #include "semphr.h"
+#endif
 
 #include "emdevif/fatal_handler.h"
 

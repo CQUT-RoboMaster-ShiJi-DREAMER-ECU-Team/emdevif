@@ -16,8 +16,13 @@ module;
 // 如果没有这个头文件，会导致模板推导失败
 #include <concepts>
 
+#if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+#include "freertos/FreeRTOS.h"
+#include "freertos/event_groups.h"
+#else
 #include "FreeRTOS.h"
 #include "event_groups.h"
+#endif
 
 export module emdevif.sys.eventGroup:implements;
 import :definitions;

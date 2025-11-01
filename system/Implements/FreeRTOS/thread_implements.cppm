@@ -7,8 +7,14 @@
 
 module;
 
+#if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+#include <cassert>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#else
 #include "FreeRTOS.h"
 #include "task.h"
+#endif
 
 #include <utility>
 #include <type_traits>
