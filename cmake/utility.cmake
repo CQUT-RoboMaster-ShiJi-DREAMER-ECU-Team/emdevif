@@ -2,8 +2,8 @@
 function(emdevif_trueOptionsCount out_result)
     set(trueCount 0)
 
-    foreach (item IN ${ARGN})
-        if (item)
+    foreach (item IN LISTS ARGN)
+        if (${item})
             math(EXPR trueCount "${trueCount} + 1")
         endif ()
     endforeach ()
