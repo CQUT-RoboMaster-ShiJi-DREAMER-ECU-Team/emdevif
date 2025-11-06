@@ -6,7 +6,7 @@ add_library(${PROJECT_NAME} INTERFACE)
 
 idf_component_get_property(emdevifEspIdfFreertosLibName freertos COMPONENT_ALIAS)
 
-target_include_directories(${PROJECT_NAME} INTERFACE
+target_link_libraries(${PROJECT_NAME} INTERFACE
     ${emdevifEspIdfFreertosLibName}
 )
 

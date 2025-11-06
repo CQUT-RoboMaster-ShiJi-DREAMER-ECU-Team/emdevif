@@ -10,6 +10,8 @@ target_sources(${PROJECT_NAME} PUBLIC FILE_SET header TYPE HEADERS
 
 if (EMDEVIF_FREERTOS_USE_STM32CUBEMX)
     target_link_libraries(${PROJECT_NAME} PRIVATE emdevif_stm32cubemx_support)
+elseif (EMDEVIF_USE_ESP_IDF)
+    target_link_libraries(${PROJECT_NAME} PRIVATE emdevif_esp_idf_support)
 else ()
     target_link_libraries(${PROJECT_NAME} PRIVATE freertos_kernel)
 endif ()
