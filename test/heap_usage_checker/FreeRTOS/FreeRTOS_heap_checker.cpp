@@ -9,24 +9,14 @@
 
 #include <cstring>
 
-#if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#else
 #include "FreeRTOS.h"
 #include "task.h"
-#endif
 
 #include "printf.h"
 
 #include "emdevif_test_framework.h"
 
 static char buffer[500];
-
-extern "C" int nva_putchar(char)
-{
-    return 1;
-}
 
 void logSystemHeapUsage() noexcept
 {

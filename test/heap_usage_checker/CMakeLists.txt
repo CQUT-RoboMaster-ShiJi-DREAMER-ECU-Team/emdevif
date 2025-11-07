@@ -21,6 +21,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     PUBLIC printf
 )
 
-if ((DEFINED EMDEVIF_THREAD_SYSTEM) AND (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS"))
+if (EMDEVIF_USE_ESP_IDF)
+    target_sources(${PROJECT_NAME} PRIVATE ESP-IDF/esp_idf_heap_checker.cpp)
+    message("[${PROJECT_NAME}]: Use ESP-IDF")
+elseif (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
     target_sources(${PROJECT_NAME} PRIVATE FreeRTOS/FreeRTOS_heap_checker.cpp)
+    message("[${PROJECT_NAME}]: Use FreeRTOS")
 endif ()
