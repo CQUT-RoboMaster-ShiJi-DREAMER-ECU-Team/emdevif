@@ -18,7 +18,7 @@ add_library(${PROJECT_NAME} STATIC)
 # 强制忽略给定测试
 # @param[in, out] in_out_testIgnoreList 待判断的测试忽略列表，将返回强制忽略后的测试忽略列表
 # @param forcedToIgnoreList 需要强制忽略的测试列表。
-# 如果 in_out_testIgnoreList 中没有 forcedToIgnoreList 中的元素，将给出警告，并强制补充
+# 如果 in_out_testIgnoreList 中没有 forcedToIgnoreList 中的元素，将给出提示，并强制补充
 # in_out_testIgnoreList 中没有的值。
 ]==]
 function(testForceToIgnore in_out_testIgnoreList forcedToIgnoreList)
@@ -34,7 +34,7 @@ function(testForceToIgnore in_out_testIgnoreList forcedToIgnoreList)
     endforeach ()
 
     if (NOT (unignoredItemList STREQUAL ""))
-        message(WARNING "Function `${CMAKE_CURRENT_FUNCTION}\': "
+        message(NOTICE "Function `${CMAKE_CURRENT_FUNCTION}\': "
             "Should add this test(s) into ignore list: ${unignoredItemList} ,\n"
             "but have not add in fact."
         )
@@ -45,7 +45,7 @@ function(testForceToIgnore in_out_testIgnoreList forcedToIgnoreList)
 endfunction()
 
 emdevif_listToCCppStringTypeInitializerList(emdevifUnitTestIgnoreNameList "${EMDEVIF_TEST_IGNORE_NAME_LIST}")
-message("[${PROJECT_NAME}]: macro `EMDEVIF_TEST_IGNORE_NAME_LIST\' defined to ${emdevifUnitTestIgnoreNameList}")
+message(STATUS "[${PROJECT_NAME}]: macro `EMDEVIF_TEST_IGNORE_NAME_LIST\' defined to ${emdevifUnitTestIgnoreNameList}")
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     EMDEVIF_TEST_IGNORE_NAME_LIST=${emdevifUnitTestIgnoreNameList}
 )

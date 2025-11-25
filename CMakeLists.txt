@@ -36,7 +36,7 @@ block()
     if (EMDEVIF_ENABLE_TESTS)
         enable_testing()
         add_subdirectory(test)
-        message("[${PROJECT_NAME}]: Enabled tests, will link all modules.")
+        message(STATUS "[${PROJECT_NAME}]: Enabled tests, will link all modules.")
 
         set(emdevifFinallyEnabledModules ${emdevifAllModules})
     else ()
@@ -49,7 +49,7 @@ block()
 
         list(APPEND emdevifFinallyLinkedLibs "emdevif_${moduleName}")
 
-        message("[${PROJECT_NAME}]: Enabled module: emdevif_${moduleName}")
+        message(STATUS "[${PROJECT_NAME}]: Enabled module: emdevif_${moduleName}")
     endforeach ()
 
     target_link_libraries(${PROJECT_NAME} INTERFACE

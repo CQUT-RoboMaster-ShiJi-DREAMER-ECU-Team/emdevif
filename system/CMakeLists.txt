@@ -86,5 +86,5 @@ block()
         set(additionalMessage " Use STM32CubeMX generated FreeRTOS lib.")
     endif ()
 
-    message("[${PROJECT_NAME}]: Use \"${EMDEVIF_THREAD_SYSTEM}\".${additionalMessage}")
+    message(STATUS "[${PROJECT_NAME}]: Use \"${EMDEVIF_THREAD_SYSTEM}\".${additionalMessage}")
 endblock()

@@ -13,4 +13,4 @@ if (EMDEVIF_USE_STM32CUBEMX AND EMDEVIF_FREERTOS_USE_STM32CUBEMX)
     target_link_libraries(${PROJECT_NAME} PUBLIC FreeRTOS)
 endif ()
 
-message("[${PROJECT_NAME}]: Usage STM32CubeMX.")
+message(STATUS "[${PROJECT_NAME}]: Use STM32CubeMX.")
