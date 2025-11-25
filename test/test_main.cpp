@@ -14,7 +14,8 @@
 #include "heap_usage_checker.hpp"
 
 #ifndef EMDEVIF_TEST_IGNORE_NAME_LIST
-#define EMDEVIF_TEST_IGNORE_NAME_LIST {""}
+#error \
+    "Please define the macro `EMDEVIF_TEST_IGNORE_NAME_LIST'. If nothing to ignore, define it to {""} ."
 #endif
 
 #define TEST_LIST_ARG(func_name) #func_name, func_name

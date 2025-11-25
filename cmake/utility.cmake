@@ -35,3 +35,28 @@ function(emdevif_assertMutuallyExclusiveOptions)
         message(FATAL_ERROR "Assert `mutuallyExclusiveOptions\' Failed.")
     endif ()
 endfunction()
+
+#[==[
+# @function emdevif_listToCCppStringTypeInitializerList(<out_var> <inputList>)
+#
+# 将 CMake 的分号分隔列表转化为 C/C++ 的字符串类型的初始化列表。
+# 例如："foo;bar;c" 将被转化为 {"foo", "bar", "c"} ，可以用于 C/C++
+# 字符串数组等能够使用 initializer_list<const char*> 形式初始化的类型。
+# @note 会对输入的列表进行以下额外的操作：去除列表内每个元素的前缀、后缀空格；
+# 去除重复的元素，仅保留第一个。
+# @param[out] out_var 转化后的初始化列表
+# @param inputList 待转化的列表类型
+]==]
+function(emdevif_listToCCppStringTypeInitializerList out_var inputList)
+    list(TRANSFORM ${inputList} STRIP)
+    list(REMOVE_DUPLICATES ${inputList})
+
+    list(TRANSFORM ${inputList} PREPEND "\"")
+    list(TRANSFORM ${inputList} APPEND "\"")
+
+    string(REPLACE ";" ", " outputInitializerList ${inputList})
+    string(PREPEND outputInitializerList "{")
+    string(APPEND outputInitializerList "}")
+
+    set(${out_var} ${outputInitializerList} PARENT_SCOPE)
+endfunction()
