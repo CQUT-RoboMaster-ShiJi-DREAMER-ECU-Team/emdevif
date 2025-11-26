@@ -40,6 +40,10 @@ module;
 #define EMDEVIF_LOGGER_ASYNC_THREAD_STACK_SIZE 128
 #endif
 
+#ifndef EMDEVIF_LOGGER_DYNAMIC_CREATE
+#define EMDEVIF_LOGGER_DYNAMIC_CREATE false
+#endif
+
 export module emdevif.logger;
 
 import emdevif.userDeclares;
@@ -274,16 +278,25 @@ private:
     void initImpl() noexcept
     {
 #if (EMDEVIF_LOGGER_USE_MUTEX)
-        mutex_ = Mutex::create({.name = "loggerMutex", .static_instance = &mutex_static_instance_});
+        mutex_ = Mutex::create({.name = "loggerMutex"
+#if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
+                                ,
+                                .static_instance = &mutex_static_instance_
+#endif
+        });
         if (mutex_.getHandle() == nullptr) {
             EMDEVIF_FATAL_HANDLER("Failed to create logger mutex");
         }
 #endif
 
 #if (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_ASYNC)
-        logger_async_printer_semaphore_ = BinarySemaphore::create(
-            {.name = "loggerSemaphore",
-             .static_instance = &logger_async_printer_semaphore_static_instance_});
+        logger_async_printer_semaphore_ =
+            BinarySemaphore::create({.name = "loggerSemaphore"
+#if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
+                                     ,
+                                     .static_instance = &logger_async_printer_semaphore_static_instance_
+#endif
+            });
         if (logger_async_printer_semaphore_.getHandle() == nullptr) {
             EMDEVIF_FATAL_HANDLER("Failed to create logger semaphore");
         }
@@ -291,8 +304,13 @@ private:
         logger_async_printer_thread_ =
             Thread::create({.name = "loggerThread",
                             .priority = Thread::Priority::Low,
+#if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
                             .static_instance = logger_async_printer_thread_instance_.getInstanceAddr(),
-                            .stack_size = logger_async_printer_thread_instance_.getStackDepth()},
+                            .stack_size = logger_async_printer_thread_instance_.getStackDepth()
+#else
+                            .stack_size = logger_async_thread_stack_size
+#endif
+                           },
                            logPrinterThread,
                            this);
         if (logger_async_printer_thread_.getHandle() == nullptr) {
@@ -304,7 +322,10 @@ private:
 #if (EMDEVIF_LOGGER_USE_MUTEX)
 private:
     Mutex mutex_{};
+#if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
     Mutex::StaticInstance mutex_static_instance_{};
+#endif
+
 #endif
 
 #if (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_SYNC)
@@ -318,7 +339,7 @@ private:
         return buffer_;
     }
 
-#else   // (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_SYNC)
+#else  // (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_SYNC)
 private:
     RingBuffer<std::array<char, logger_buffer_size>, logger_buffer_count> buffer_{};
 
@@ -335,14 +356,20 @@ private:
     }
 
     Thread logger_async_printer_thread_{};
+#if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
     Thread::StaticInstance<logger_async_thread_stack_size> logger_async_printer_thread_instance_{};
+#endif
 
     BinarySemaphore logger_async_printer_semaphore_{};
+#if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
     BinarySemaphore::StaticInstance logger_async_printer_semaphore_static_instance_{};
+#endif
 
     EMDEVIF_NO_RETURN static void logPrinterThread(void* arguments) noexcept
     {
         auto& logger = *static_cast<Logger*>(arguments);
+
+        logger.logger_async_printer_semaphore_.release(false);
 
         while (true) {
             logger.logger_async_printer_semaphore_.acquire(false);
