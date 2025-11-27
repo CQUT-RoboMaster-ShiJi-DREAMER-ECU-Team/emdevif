@@ -48,6 +48,11 @@ endfunction()
 # @param inputList 待转化的列表类型
 ]==]
 function(emdevif_listToCCppStringTypeInitializerList out_var inputList)
+    if ("${inputList}" STREQUAL "")
+        set(${out_var} [[{""}]] PARENT_SCOPE)
+        return ()
+    endif ()
+
     set(inputList_ ${inputList})
 
     list(TRANSFORM inputList_ STRIP)
@@ -56,7 +61,7 @@ function(emdevif_listToCCppStringTypeInitializerList out_var inputList)
     list(TRANSFORM inputList_ PREPEND [["]])
     list(TRANSFORM inputList_ APPEND [["]])
 
-    string(REPLACE ";" ", " outputInitializerList ${inputList_})
+    string(REPLACE ";" ", " outputInitializerList "${inputList_}")
     string(PREPEND outputInitializerList "{")
     string(APPEND outputInitializerList "}")
 
