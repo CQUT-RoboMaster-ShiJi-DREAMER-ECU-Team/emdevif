@@ -5,7 +5,7 @@ project(emdevif_unit_test C CXX)
 add_subdirectory(emdevif_test_framework)
 add_subdirectory(heap_usage_checker)
 
-set(EMDEVIF_TEST_IGNORE_NAME_LIST "\"\"" CACHE STRING "Set to ignore specific emdevif test. \
+set(EMDEVIF_TEST_IGNORE_NAME_LIST "" CACHE STRING "Set to ignore specific emdevif test. \
 You can use \';\' to set multiple tests(eg: set it equals to \"loggerTest;heapTest\" will ignore \
 loggerTest and heapTest)."
 )
