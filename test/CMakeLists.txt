@@ -19,16 +19,27 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 )
 
 macro(unitTestRegisterSrc resultSrcList ignoreList testName srcList)
-    list(FIND ${ignoreList} ${testName} testNameInIgnoreList)
-    if (testNameInIgnoreList EQUAL -1)
+    message(DEBUG "[${PROJECT_NAME}]: In macro `unitTestRegisterSrc\': ignoreList: ${ignoreList}, testName: ${testName}")
+
+    set(ignoreList_ ${ignoreList})
+    list(FIND ignoreList_ "${testName}" testNameInIgnoreList)
+    if (testNameInIgnoreList EQUAL "-1")
+        message(DEBUG "    this test(${testName}) was not in ignore list(${ignoreList_})"
+            "(testNameInIgnoreList=${testNameInIgnoreList}), add it in."
+        )
+
         list(APPEND ${resultSrcList} ${srcList})
+    else ()
+        message(DEBUG "    this test(${testName}) was in ignore list(${ignoreList_})"
+            "(testNameInIgnoreList=${testNameInIgnoreList}), ignored."
+        )
     endif ()
 endmacro()
 
 set(emdevifTestSuitsSrc "")
 
 macro(emdevifUnitTestRegisterSrc testName srcList)
-    unitTestRegisterSrc(emdevifTestSuitsSrc emdevifUnitTestIgnoreNameList ${testName} ${srcList})
+    unitTestRegisterSrc(emdevifTestSuitsSrc "${EMDEVIF_TEST_IGNORE_NAME_LIST}" "${testName}" "${srcList}")
 endmacro()
 
 emdevifUnitTestRegisterSrc("cFeatureTest"       "test_suits/language_feature_test/c_feature_test.c")
