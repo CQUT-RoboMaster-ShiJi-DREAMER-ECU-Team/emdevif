@@ -32,28 +32,29 @@ add_subdirectory(core)
 
 add_library(${PROJECT_NAME} INTERFACE)
 
-block()
-    if (EMDEVIF_ENABLE_TESTS)
-        enable_testing()
-        add_subdirectory(test)
-        message(STATUS "[${PROJECT_NAME}]: Enabled tests, will link all modules.")
+if (EMDEVIF_ENABLE_TESTS)
+    message(STATUS "[${PROJECT_NAME}]: Enabled tests, will link all modules.")
 
-        set(emdevifFinallyEnabledModules ${emdevifAllModules})
-    else ()
-        set(emdevifFinallyEnabledModules ${EMDEVIF_ENABLED_MODULES})
-    endif ()
+    set(emdevifFinallyEnabledModules ${emdevifAllModules})
+else ()
+    set(emdevifFinallyEnabledModules ${EMDEVIF_ENABLED_MODULES})
+endif ()
 
-    set(emdevifFinallyLinkedLibs "")
-    foreach (moduleName IN LISTS emdevifFinallyEnabledModules)
-        add_subdirectory(${moduleName})
+set(emdevifFinallyLinkedLibs "")
+foreach (moduleName IN LISTS emdevifFinallyEnabledModules)
+    add_subdirectory(${moduleName})
 
-        list(APPEND emdevifFinallyLinkedLibs "emdevif_${moduleName}")
+    list(APPEND emdevifFinallyLinkedLibs "emdevif_${moduleName}")
 
-        message(STATUS "[${PROJECT_NAME}]: Enabled module: emdevif_${moduleName}")
-    endforeach ()
+    message(STATUS "[${PROJECT_NAME}]: Enabled module: emdevif_${moduleName}")
+endforeach ()
 
-    target_link_libraries(${PROJECT_NAME} INTERFACE
-        emdevif_core
-        ${emdevifFinallyLinkedLibs}
-    )
-endblock()
+target_link_libraries(${PROJECT_NAME} INTERFACE
+    emdevif_core
+    ${emdevifFinallyLinkedLibs}
+)
+
+if (EMDEVIF_ENABLE_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif ()

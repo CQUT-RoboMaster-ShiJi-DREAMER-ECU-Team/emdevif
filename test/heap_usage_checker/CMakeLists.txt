@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(emdevif_test_heap_checker C)
+project(emdevif_test_heap_checker C CXX)
 
 add_library(${PROJECT_NAME} STATIC)
 
