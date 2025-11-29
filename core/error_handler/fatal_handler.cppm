@@ -85,6 +85,9 @@ export EMDEVIF_NO_RETURN void fatalHandler(const char* file,
 
     terminate();
 }
+
+export EMDEVIF_NO_RETURN void fatalHandler(const char* file, int line, const char* format, ...) noexcept
+    EMDEVIF_FORMAT_CHECK(printf, 3, 4);
 /**
  * @overload
  * @param ... 填充占位符的值

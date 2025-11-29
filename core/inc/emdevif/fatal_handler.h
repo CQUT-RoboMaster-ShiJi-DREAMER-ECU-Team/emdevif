@@ -27,7 +27,8 @@ typedef struct emdevif_AssertFuncParam_ {
 
 #ifndef __cplusplus
 
-EMDEVIF_NO_RETURN void emdevif_fatal_handler_(const char* file, int line, const char* format, ...);
+EMDEVIF_NO_RETURN void emdevif_fatal_handler_(const char* file, int line, const char* format, ...)
+    EMDEVIF_FORMAT_CHECK(printf, 3, 4);
 
 void emdevif_assert_(emdevif_AssertFuncParam_ param);
 

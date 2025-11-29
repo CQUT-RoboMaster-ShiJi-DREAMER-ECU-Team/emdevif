@@ -8,7 +8,7 @@
 #ifndef EMDEVIF_GNU_ATTRIBUTES_H
 #define EMDEVIF_GNU_ATTRIBUTES_H
 
-#if (defined(__GNUC__) || defined(__CC_ARM))
+#if ((!defined(__clang__)) && (defined(__GNUC__) || defined(__CC_ARM)))
 
 /* clang-format off */
 
@@ -50,8 +50,10 @@
 
 #define EMDEVIF_SECTION(section_name) __attribute__((section(#section_name)))
 
+#define EMDEVIF_FORMAT_CHECK(func, string_index, first_to_check) __attribute__((format(func, string_index, first_to_check)))
+
 /* clang-format on */
 
-#endif  // (defined(__GNUC__) || defined(__CC_ARM))
+#endif  // ((!defined(__clang__)) && (defined(__GNUC__) || defined(__CC_ARM)))
 
 #endif  // !EMDEVIF_GNU_ATTRIBUTES_H
