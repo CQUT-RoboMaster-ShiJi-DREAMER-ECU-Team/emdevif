@@ -44,10 +44,10 @@ void logSystemHeapUsage() noexcept
     TEST_LOG("%s", buffer);
 }
 
-std::tuple<std::size_t, std::size_t> getHeapAllocationInfo() noexcept
+HeapUsageInfo getHeapAllocationInfo() noexcept
 {
     HeapStats_t heap_stats;
     vPortGetHeapStats(&heap_stats);
 
-    return std::make_tuple(heap_stats.xNumberOfSuccessfulAllocations, heap_stats.xNumberOfSuccessfulFrees);
+    return {heap_stats.xNumberOfSuccessfulAllocations, heap_stats.xNumberOfSuccessfulFrees};
 }

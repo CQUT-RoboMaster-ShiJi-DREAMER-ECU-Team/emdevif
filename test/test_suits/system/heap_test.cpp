@@ -21,6 +21,8 @@ using namespace emdevif;
 
 TEST_SUIT(HeapTest)
 {
+    RECORD_MEMORY_INFO();
+
     TEST_CASE_BEGIN(BasicTest)
     {
         auto a = heap::construct<int>(std::nothrow);

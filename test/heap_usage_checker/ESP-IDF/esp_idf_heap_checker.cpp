@@ -15,17 +15,18 @@
 
 #include "emdevif_test_framework.h"
 
-static char buffer[500];
+constexpr auto heap_caps = MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT;
 
 void logSystemHeapUsage() noexcept
 {
     multi_heap_info_t heap_info;
-    heap_caps_get_info(&heap_info, MALLOC_CAP_8BIT);
+    heap_caps_get_info(&heap_info, heap_caps);
 
     const char* const endl = emdevif_test___line_break_character___;
 
     int pos = 0;
 
+    static char buffer[500];
     /* clang-format off */
     pos += ::sprintf(&buffer[pos], "System heap usage:%s", endl);
     pos += ::sprintf(&buffer[pos], "total_free_bytes      = %zu%s", heap_info.total_free_bytes, endl);
@@ -40,10 +41,10 @@ void logSystemHeapUsage() noexcept
     TEST_LOG("%s", buffer);
 }
 
-std::tuple<std::size_t, std::size_t> getHeapAllocationInfo() noexcept
+HeapUsageInfo getHeapAllocationInfo() noexcept
 {
     multi_heap_info_t heap_info;
-    heap_caps_get_info(&heap_info, MALLOC_CAP_8BIT);
+    heap_caps_get_info(&heap_info, heap_caps);
 
-    return std::make_tuple(heap_info.allocated_blocks, heap_info.free_blocks);
+    return {heap_info.allocated_blocks, heap_info.free_blocks};
 }

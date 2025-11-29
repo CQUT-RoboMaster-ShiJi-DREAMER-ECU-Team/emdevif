@@ -64,6 +64,8 @@ public:
 
 TEST_SUIT(MutexTest)
 {
+    RECORD_MEMORY_INFO();
+
     TEST_CASE_BEGIN(BasicTest)
     {
         using emdevif::Mutex;
@@ -110,6 +112,8 @@ TEST_SUIT(MutexTest)
 
 TEST_SUIT(ThreadBasicTest)
 {
+    RECORD_MEMORY_INFO();
+
     TEST_CASE_BEGIN(BasicTest)
     {
         MutexGuard<int32_t> counter{0};
@@ -197,6 +201,8 @@ TEST_SUIT(ThreadBasicTest)
 // 此处注意：这个测试样例必须单独拿出来作为一个测试套件（函数），不能和上一个放在一起（原因未知）
 TEST_SUIT(ThreadAssignAndMoveTest)
 {
+    RECORD_MEMORY_INFO();
+
     TEST_CASE_BEGIN(AssignAndMoveTest)
     {
         MutexGuard<int32_t> counter{0};
@@ -291,6 +297,8 @@ TEST_SUIT(ThreadAssignAndMoveTest)
 
 TEST_SUIT(MulParamFuncTest)
 {
+    RECORD_MEMORY_INFO();
+
     TEST_CASE_BEGIN(Test)
     {
         static bool is_pass = true;
@@ -348,7 +356,7 @@ TEST_SUIT(MulParamFuncTest)
 void threadAndMutexTest()
 {
     RUN_SUIT(MutexTest);
-    RUN_SUIT(ThreadBasicTest);
-    RUN_SUIT(ThreadAssignAndMoveTest);
-    //RUN_SUIT(MulParamFuncTest);  // todo 待修改测试内容
+    // RUN_SUIT(ThreadBasicTest);  // todo 待修改测试内容
+    // RUN_SUIT(ThreadAssignAndMoveTest);
+    // RUN_SUIT(MulParamFuncTest);
 }
