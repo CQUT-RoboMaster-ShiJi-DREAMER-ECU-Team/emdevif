@@ -1,7 +1,5 @@
 /**
  * @file FreeRTOS_heap_checker.cpp
- * @author DuYicheng
- * @date 2025-08-31
  * @brief FreeRTOS 堆内存使用记录
  */
 

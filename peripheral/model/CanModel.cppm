@@ -1,7 +1,5 @@
 /**
  * @file CanModel.cppm
- * @author DuYicheng
- * @date 2025-10-13
  * @brief CAN 通信模型
  */
 

@@ -1,7 +1,5 @@
 /**
  * @file fatal_handler_extern_c.cpp
- * @author DuYicheng
- * @date 2025-10-16
  * @brief 致命错误 - C 语言 API
  */
 

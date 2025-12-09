@@ -1,7 +1,5 @@
 /**
  * @file tuple_style.cppm
- * @author DuYicheng
- * @date 2025-10-08
  * @brief 类型特征 - 元组相关
  */
 

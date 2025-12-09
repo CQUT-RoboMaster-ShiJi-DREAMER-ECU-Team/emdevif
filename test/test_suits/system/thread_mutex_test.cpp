@@ -1,7 +1,5 @@
 /**
  * @file thread_mutex_test.cpp
- * @author DuYicheng
- * @date 2025-08-01
  * @brief 对线程接口的测试
  */
 

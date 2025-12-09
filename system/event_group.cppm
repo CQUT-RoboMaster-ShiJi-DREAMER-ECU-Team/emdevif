@@ -1,7 +1,5 @@
 /**
  * @file event_group.cppm
- * @author DuYicheng
- * @date 2025-08-16
  * @brief 事件组
  */
 

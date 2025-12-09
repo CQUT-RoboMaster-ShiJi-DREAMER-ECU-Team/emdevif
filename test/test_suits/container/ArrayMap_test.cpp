@@ -1,7 +1,5 @@
 /**
  * @file ArrayMap_test.cpp
- * @author DuYicheng
- * @date 2025-09-04
  * @brief 数组键值对测试
  */
 

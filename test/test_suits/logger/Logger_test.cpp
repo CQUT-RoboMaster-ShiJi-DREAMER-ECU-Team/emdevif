@@ -1,7 +1,5 @@
 /**
  * @file Logger_test.cpp
- * @author DuYicheng
- * @date 2025-09-19
  * @brief 日志测试
  */
 

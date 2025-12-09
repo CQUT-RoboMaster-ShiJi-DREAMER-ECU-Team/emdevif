@@ -1,7 +1,5 @@
 /**
  * @file Logger.cppm
- * @author DuYicheng
- * @date 2025-09-17
  * @brief 日志
  */
 

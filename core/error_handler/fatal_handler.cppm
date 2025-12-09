@@ -1,7 +1,5 @@
 /**
  * @file fatal_handler.cppm
- * @author DuYicheng
- * @date 2025-09-05
  * @brief 致命错误处理函数与断言
  */
 

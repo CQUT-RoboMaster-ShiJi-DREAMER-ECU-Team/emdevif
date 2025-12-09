@@ -1,7 +1,5 @@
 /**
  * @file BitInt_exception_config.hpp
- * @author DuYicheng
- * @date 2025-08-24
  * @brief emdevif.util.BitInt 模块的异常配置
  */
 

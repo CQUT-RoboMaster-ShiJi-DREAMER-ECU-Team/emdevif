@@ -1,7 +1,5 @@
 /**
  * @file endian_test.cpp
- * @author DuYicheng
- * @date 2025-10-17
  * @brief 端序测试
  */
 

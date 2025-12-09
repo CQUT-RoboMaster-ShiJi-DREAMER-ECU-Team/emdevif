@@ -1,7 +1,5 @@
 /**
  * @file attributes_and_useful_macros.h
- * @author 杜以成
- * @date 2025-06-01
  * @brief 属性与常用宏
  */
 

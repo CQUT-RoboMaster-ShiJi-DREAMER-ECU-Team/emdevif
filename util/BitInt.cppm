@@ -1,7 +1,5 @@
 /**
  * @file BitInt.cppm
- * @author DuYicheng
- * @date 2025-08-16
  * @brief 指定宽度整型
  */
 

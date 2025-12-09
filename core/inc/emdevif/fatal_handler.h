@@ -1,7 +1,5 @@
 /**
  * @file fatal_handler.h
- * @author 杜以成
- * @date 2025-06-14
  * @brief 致命错误宏
  */
 

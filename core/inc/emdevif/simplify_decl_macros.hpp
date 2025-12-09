@@ -1,7 +1,5 @@
 /**
  * @file simplify_decl_macros.hpp
- * @author 杜以成
- * @date 2025-05-09
  * @brief 简化定义宏
  */
 

@@ -1,7 +1,5 @@
 /**
  * @file integer_suffix.hpp
- * @author DuYicheng
- * @date 2025-10-07
  * @brief 整型字面量后缀
  */
 

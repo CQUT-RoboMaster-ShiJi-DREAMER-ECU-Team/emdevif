@@ -1,7 +1,5 @@
 /**
  * @file c_feature_test.c
- * @author DuYicheng
- * @date 2025-10-16
  * @brief C 语言特性测试
  */
 

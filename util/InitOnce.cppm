@@ -1,7 +1,5 @@
 /**
  * @file InitOnce.cppm
- * @author 杜以成
- * @date 2025-05-09
  * @brief 单次初始化类
  */
 

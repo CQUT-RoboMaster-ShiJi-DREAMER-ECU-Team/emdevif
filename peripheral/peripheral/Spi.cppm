@@ -1,7 +1,5 @@
 /**
  * @file Spi.cppm
- * @author DuYicheng
- * @date 2025-10-04
  * @brief SPI 通信
  */
 

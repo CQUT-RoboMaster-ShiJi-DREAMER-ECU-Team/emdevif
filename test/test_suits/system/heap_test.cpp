@@ -1,7 +1,5 @@
 /**
  * @file heap_test.cpp
- * @author DuYicheng
- * @date 2025-08-31
  * @brief 堆内存测试
  */
 

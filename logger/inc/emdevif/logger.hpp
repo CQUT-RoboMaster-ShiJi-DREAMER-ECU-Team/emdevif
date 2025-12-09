@@ -1,7 +1,5 @@
 /**
  * @file logger.hpp
- * @author DuYicheng
- * @date 2025-09-18
  * @brief 日志
  */
 

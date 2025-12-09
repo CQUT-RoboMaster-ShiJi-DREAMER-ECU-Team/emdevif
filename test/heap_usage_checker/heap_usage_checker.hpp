@@ -1,7 +1,5 @@
 /**
  * @file heap_usage_checker.hpp
- * @author DuYicheng
- * @date 2025-08-31
  * @brief 堆内存使用记录输出函数
  */
 

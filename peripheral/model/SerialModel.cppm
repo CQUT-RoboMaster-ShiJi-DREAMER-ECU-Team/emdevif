@@ -1,7 +1,5 @@
 /**
  * @file SerialModel.cppm
- * @author DuYicheng
- * @date 2025-10-13
  * @brief 串口模型
  */
 

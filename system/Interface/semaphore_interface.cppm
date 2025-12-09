@@ -1,7 +1,5 @@
 /**
  * @file semaphore_interface.cppm
- * @author DuYicheng
- * @date 2025-08-16
  * @brief 信号量接口
  */
 

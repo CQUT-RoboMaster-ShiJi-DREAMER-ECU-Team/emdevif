@@ -1,7 +1,5 @@
 /**
  * @file SpiModel.cppm
- * @author DuYicheng
- * @date 2025-10-13
  * @brief SPI 通信模型
  */
 

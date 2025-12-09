@@ -1,7 +1,5 @@
 /**
  * @file type_traits_test.cpp
- * @author DuYicheng
- * @date 2025-10-05
  * @brief 类型特征测试
  */
 

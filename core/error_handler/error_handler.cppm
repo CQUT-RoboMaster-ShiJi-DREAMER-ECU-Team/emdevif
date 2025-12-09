@@ -1,7 +1,5 @@
 /**
  * @file error_handler.cppm
- * @author 杜以成
- * @date 2025-06-01
  * @brief 错误处理
  */
 

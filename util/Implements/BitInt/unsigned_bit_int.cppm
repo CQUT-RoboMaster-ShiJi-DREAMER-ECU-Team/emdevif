@@ -1,7 +1,5 @@
 /**
  * @file unsigned_bit_int.cppm
- * @author DuYicheng
- * @date 2025-08-16
  * @brief 无符号指定宽度整型
  */
 

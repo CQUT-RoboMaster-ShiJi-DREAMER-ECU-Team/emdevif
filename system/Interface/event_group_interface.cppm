@@ -1,7 +1,5 @@
 /**
  * @file event_group_interface.cppm
- * @author DuYicheng
- * @date 2025-08-16
  * @brief 事件组接口
  */
 

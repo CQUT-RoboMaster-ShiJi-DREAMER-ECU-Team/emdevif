@@ -1,7 +1,5 @@
 /**
  * @file atomic.cppm
- * @author DuYicheng
- * @date 2025-08-01
  * @brief 原子操作
  */
 

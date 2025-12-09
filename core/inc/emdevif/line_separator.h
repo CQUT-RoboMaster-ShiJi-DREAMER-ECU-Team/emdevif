@@ -1,7 +1,5 @@
 /**
  * @file line_separator.h
- * @author DuYicheng
- * @date 2025-10-04
  * @brief 换行符
  */
 

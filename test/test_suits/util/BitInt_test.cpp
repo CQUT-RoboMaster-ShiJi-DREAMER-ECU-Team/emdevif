@@ -1,7 +1,5 @@
 /**
  * @file BitInt_test.cpp
- * @author DuYicheng
- * @date 2025-08-17
  * @brief BitInt 测试
  */
 

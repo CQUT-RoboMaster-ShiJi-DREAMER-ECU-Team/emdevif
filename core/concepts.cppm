@@ -1,7 +1,5 @@
 /**
  * @file concepts.cppm
- * @author DuYicheng
- * @date 2025-10-23
  * @brief 概念
  */
 

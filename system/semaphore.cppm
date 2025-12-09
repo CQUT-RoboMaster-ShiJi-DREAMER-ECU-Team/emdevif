@@ -1,7 +1,5 @@
 /**
  * @file semaphore.cppm
- * @author DuYicheng
- * @date 2025-08-16
  * @brief 信号量
  */
 

@@ -1,7 +1,5 @@
 /**
  * @file RingBuffer.cppm
- * @author DuYicheng
- * @date 2025-09-18
  * @brief 环形缓冲区
  */
 

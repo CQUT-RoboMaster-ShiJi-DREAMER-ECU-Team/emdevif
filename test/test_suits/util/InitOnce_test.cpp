@@ -1,7 +1,5 @@
 /**
  * @file InitOnce_test.cpp
- * @author 杜以成
- * @date 2025-06-14
  * @brief 单次初始化类测试
  */
 

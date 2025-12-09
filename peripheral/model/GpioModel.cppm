@@ -1,7 +1,5 @@
 /**
  * @file GpioModel.cppm
- * @author DuYicheng
- * @date 2025-10-13
  * @brief GPIO 模型
  */
 

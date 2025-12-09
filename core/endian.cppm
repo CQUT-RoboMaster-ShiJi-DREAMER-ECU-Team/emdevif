@@ -1,7 +1,5 @@
 /**
  * @file endian.cppm
- * @author DuYicheng
- * @date 2025-10-16
  * @brief 端序
  */
 
