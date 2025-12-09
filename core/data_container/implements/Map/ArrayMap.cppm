@@ -1,7 +1,5 @@
 /**
  * @file ArrayMap.cppm
- * @author DuYicheng
- * @date 2025-09-04
  * @brief 用数组实现的键值对
  */
 

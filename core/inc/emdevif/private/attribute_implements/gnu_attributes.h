@@ -1,7 +1,5 @@
 /**
  * @file gnu_attributes.h
- * @author 杜以成
- * @date 2025-02-05
  * @brief GNU 或 CCARM 的属性宏实现
  */
 

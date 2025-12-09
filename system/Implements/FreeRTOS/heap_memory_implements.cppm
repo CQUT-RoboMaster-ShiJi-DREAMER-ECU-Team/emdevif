@@ -1,7 +1,5 @@
 /**
  * @file heap_memory_implements.cppm
- * @author DuYicheng
- * @date 2025-08-30
  * @brief 堆内存 - FreeRTOS 实现
  */
 

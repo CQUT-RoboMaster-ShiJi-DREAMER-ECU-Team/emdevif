@@ -1,7 +1,5 @@
 /**
  * @file sys_queue_implements.cppm
- * @author 杜以成
- * @date 2025-06-18
  * @brief 系统队列的实现
  */
 

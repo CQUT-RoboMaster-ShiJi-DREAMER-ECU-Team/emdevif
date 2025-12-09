@@ -1,7 +1,5 @@
 /**
  * @file esp_idf_heap_checker.cpp
- * @author DuYicheng
- * @date 2025-11-06
  * @brief ESP-IDF 堆内存使用记录
  */
 

@@ -1,7 +1,5 @@
 /**
  * @file msvc_attributes.h
- * @author DuYicheng
- * @date 2025-08-20
  * @brief MSCV 属性
  */
 

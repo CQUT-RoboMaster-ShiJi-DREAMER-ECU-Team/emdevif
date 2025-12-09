@@ -1,7 +1,5 @@
 /**
  * @file semaphore_implements.cppm
- * @author DuYicheng
- * @date 2025-08-16
  * @brief 信号量 FreeRTOS 实现
  */
 

@@ -1,7 +1,5 @@
 /**
  * @file mutex_implements.cppm
- * @author DuYicheng
- * @date 2025-08-01
  * @brief 互斥锁 FreeRTOS 实现
  */
 
