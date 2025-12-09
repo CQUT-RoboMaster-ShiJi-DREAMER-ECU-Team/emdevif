@@ -21,6 +21,7 @@ void ringBufferTest();
 void loggerTest();
 
 void heapTest();
+void sysQueueTest();
 void threadAndMutexTest();
 
 #endif  // !EMDEVIF_TEST_MAIN_HPP

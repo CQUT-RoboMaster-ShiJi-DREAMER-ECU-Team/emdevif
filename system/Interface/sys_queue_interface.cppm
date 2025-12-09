@@ -14,8 +14,9 @@ module;
 export module emdevif.sys.sysQueue:interface;
 
 export import emdevif.errorHandler;
+export import emdevif.container.messageQueue;
 
-namespace emdevif {
+export namespace emdevif {
 
 /**
  * 系统队列
@@ -23,10 +24,10 @@ namespace emdevif {
  * @tparam item_size 队列的大小
  */
 template<typename Type, std::size_t item_size>
-class SysQueue
+class SysQueue : public MessageQueueInterface<SysQueue, Type, item_size>
 {
 public:
-    using Handle = void*;///< 句柄
+    using Handle = void*;  ///< 句柄
 
     class StaticInstance;
 
@@ -53,19 +54,19 @@ public:  // todo 等消息队列接口做好了之后再来补注释
         handle_ = nullptr;
     }
 
-    ErrorCode push(bool in_isr, const Type& data, std::size_t timeout = 0U);
+    ErrorCode pushImpl(bool in_isr, const Type& data, std::size_t timeout = 0U);
 
-    ErrorCode pop(bool in_isr, Type& data, std::size_t timeout = 0U);
+    ErrorCode popImpl(bool in_isr, Type& data, std::size_t timeout = 0U);
 
-    ErrorCode pop(bool in_isr);
+    ErrorCode popImpl(bool in_isr);
 
-    ErrorCode peek(bool in_isr, Type& data, std::size_t timeout = 0U);
+    ErrorCode peekImpl(bool in_isr, Type& data, std::size_t timeout = 0U);
 
-    [[nodiscard]] std::size_t storeCount() const;
+    [[nodiscard]] std::size_t storeCountImpl() const;
 
-    [[nodiscard]] std::size_t remainCount() const;
+    [[nodiscard]] std::size_t remainCountImpl() const;
 
-    [[nodiscard]] Handle getHandle() const
+    [[nodiscard]] Handle getHandleImpl() const
     {
         return handle_;
     }

@@ -30,6 +30,7 @@ static constexpr auto emdevif_test_list =
                                                             {TEST_LIST_ARG(ringBufferTest)},
                                                             {TEST_LIST_ARG(loggerTest)},
                                                             {TEST_LIST_ARG(heapTest)},
+                                                            {TEST_LIST_ARG(sysQueueTest)},
                                                             {TEST_LIST_ARG(threadAndMutexTest)},
                                                             {TEST_LIST_ARG(logSystemHeapUsage)}});
 

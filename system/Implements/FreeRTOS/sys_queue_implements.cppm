@@ -44,8 +44,7 @@ private:
 };
 
 template<typename Type, std::size_t item_size>
-auto SysQueue<Type, item_size>::create(const Attribute& attribute)
-    -> SysQueue<Type, item_size>::StronglyTypedHandle
+auto SysQueue<Type, item_size>::create(const Attribute& attribute) -> SysQueue<Type, item_size>::StronglyTypedHandle
 {
     Handle new_handle = nullptr;
 
@@ -54,7 +53,7 @@ auto SysQueue<Type, item_size>::create(const Attribute& attribute)
 
         new_handle = xQueueCreateStatic(item_size,
                                         sizeof(Type),
-                                        static_cast<void*>(static_instance),
+                                        static_cast<uint8_t*>(static_cast<void*>(static_instance)),
                                         &static_cast<StaticQueue_t&>(static_instance));
     }
     else {
@@ -63,7 +62,7 @@ auto SysQueue<Type, item_size>::create(const Attribute& attribute)
 
 #if (configQUEUE_REGISTRY_SIZE > 0)
     if (new_handle != nullptr) {
-        vQueueAddToRegistry(new_handle, attribute.name);
+        vQueueAddToRegistry(static_cast<QueueHandle_t>(new_handle), attribute.name);
     }
 #endif
 
@@ -74,10 +73,10 @@ template<typename Type, std::size_t item_size>
 void SysQueue<Type, item_size>::destroy(SysQueue& obj)
 {
     if (obj.handle_ != nullptr) {
-        vQueueDelete(obj.handle_);
+        vQueueDelete(static_cast<QueueHandle_t>(obj.handle_));
 
 #if (configQUEUE_REGISTRY_SIZE > 0)
-        vQueueUnregisterQueue(obj.handle_);
+        vQueueUnregisterQueue(static_cast<QueueHandle_t>(obj.handle_));
 #endif
 
         obj.handle_ = nullptr;
@@ -85,11 +84,11 @@ void SysQueue<Type, item_size>::destroy(SysQueue& obj)
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode SysQueue<Type, item_size>::push(const bool in_isr, const Type& data, std::size_t timeout)
+ErrorCode SysQueue<Type, item_size>::pushImpl(const bool in_isr, const Type& data, std::size_t timeout)
 {
     if (in_isr) {
         BaseType_t xHigherPriorityTaskWokenByPost = pdFALSE;
-        const auto ret = xQueueSendFromISR(handle_, &data, &xHigherPriorityTaskWokenByPost);
+        const auto ret = xQueueSendFromISR(static_cast<QueueHandle_t>(handle_), &data, &xHigherPriorityTaskWokenByPost);
 
         ErrorCode final_ret;
 
@@ -107,7 +106,7 @@ ErrorCode SysQueue<Type, item_size>::push(const bool in_isr, const Type& data, s
         return final_ret;
     }
     else {
-        const auto ret = xQueueSend(handle_, &data, timeout);
+        const auto ret = xQueueSend(static_cast<QueueHandle_t>(handle_), &data, timeout);
         if (ret == pdTRUE) {
             return ErrorCode::Success;
         }
@@ -118,11 +117,12 @@ ErrorCode SysQueue<Type, item_size>::push(const bool in_isr, const Type& data, s
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode SysQueue<Type, item_size>::pop(const bool in_isr, Type& data, std::size_t timeout)
+ErrorCode SysQueue<Type, item_size>::popImpl(const bool in_isr, Type& data, std::size_t timeout)
 {
     if (in_isr) {
         BaseType_t xHigherPriorityTaskWokenByPost = pdFALSE;
-        const auto ret = xQueueReceiveFromISR(handle_, &data, &xHigherPriorityTaskWokenByPost);
+        const auto ret =
+            xQueueReceiveFromISR(static_cast<QueueHandle_t>(handle_), &data, &xHigherPriorityTaskWokenByPost);
 
         ErrorCode final_ret;
 
@@ -140,7 +140,7 @@ ErrorCode SysQueue<Type, item_size>::pop(const bool in_isr, Type& data, std::siz
         return final_ret;
     }
     else {
-        const auto ret = xQueueReceive(handle_, &data, timeout);
+        const auto ret = xQueueReceive(static_cast<QueueHandle_t>(handle_), &data, timeout);
         if (ret == pdTRUE) {
             return ErrorCode::Success;
         }
@@ -151,17 +151,17 @@ ErrorCode SysQueue<Type, item_size>::pop(const bool in_isr, Type& data, std::siz
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode SysQueue<Type, item_size>::pop(const bool in_isr)
+ErrorCode SysQueue<Type, item_size>::popImpl(const bool in_isr)
 {
     Type data;
-    return pop(in_isr, &data, 0U);
+    return popImpl(in_isr, data, 0U);
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode SysQueue<Type, item_size>::peek(const bool in_isr, Type& data, std::size_t timeout)
+ErrorCode SysQueue<Type, item_size>::peekImpl(const bool in_isr, Type& data, std::size_t timeout)
 {
     if (in_isr) {
-        const auto ret = xQueuePeekFromISR(handle_, &data);
+        const auto ret = xQueuePeekFromISR(static_cast<QueueHandle_t>(handle_), &data);
 
         ErrorCode final_ret;
 
@@ -175,7 +175,7 @@ ErrorCode SysQueue<Type, item_size>::peek(const bool in_isr, Type& data, std::si
         return final_ret;
     }
     else {
-        const auto ret = xQueuePeek(handle_, &data, timeout);
+        const auto ret = xQueuePeek(static_cast<QueueHandle_t>(handle_), &data, timeout);
         if (ret == pdTRUE) {
             return ErrorCode::Success;
         }
@@ -186,13 +186,13 @@ ErrorCode SysQueue<Type, item_size>::peek(const bool in_isr, Type& data, std::si
 }
 
 template<typename Type, std::size_t item_size>
-std::size_t SysQueue<Type, item_size>::storeCount() const
+std::size_t SysQueue<Type, item_size>::storeCountImpl() const
 {
     return uxQueueMessagesWaiting(static_cast<QueueHandle_t>(handle_));
 }
 
 template<typename Type, std::size_t item_size>
-std::size_t SysQueue<Type, item_size>::remainCount() const
+std::size_t SysQueue<Type, item_size>::remainCountImpl() const
 {
     return uxQueueSpacesAvailable(static_cast<QueueHandle_t>(handle_));
 }
