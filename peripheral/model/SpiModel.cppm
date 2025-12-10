@@ -26,9 +26,9 @@ public:
                                                   uint32_t timeout_ms);
 
     struct Instance {
-        void* const handle_;
+        void* const handle{nullptr};
 
-        const TransmitReceiveFunction transmit_receive_function_;
+        const TransmitReceiveFunction transmit_receive_function{nullptr};
     };
 };
 

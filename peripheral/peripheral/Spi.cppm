@@ -34,7 +34,7 @@ public:
     explicit constexpr Spi(const std::string_view name) noexcept
         : instance_(static_cast<SpiModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
-        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "SPI");
+        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "SPI", name);
     }
 
     // NOLINTNEXTLINE
@@ -47,7 +47,7 @@ public:
             return ErrorCode::InvalidArgument;
         }
 
-        return instance_->transmit_receive_function_(in_isr, instance_->handle_, tx_data, rx_data, timeout_ms);
+        return instance_->transmit_receive_function(in_isr, instance_->handle, tx_data, rx_data, timeout_ms);
     }
 
     static constexpr uint32_t max_delay = std::numeric_limits<uint32_t>::max();

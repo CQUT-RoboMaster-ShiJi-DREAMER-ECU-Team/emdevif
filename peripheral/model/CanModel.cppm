@@ -51,35 +51,13 @@ public:
                                            std::span<const uint8_t> data);
 
     struct Instance {
-        void* const handle_{nullptr};
+        void* const handle{nullptr};
 
-        const ReceiveCallback receive_callback_{noReceive};
-        const TransmitFunction transmit_function_{noTransmit};
+        const ReceiveCallback receive_callback{nullptr};
+        const TransmitFunction transmit_function{nullptr};
     };
-
-private:
-    static ErrorCode noTransmit(bool, void*, const DataHeader&, std::span<const uint8_t>) noexcept;
-
-    static ErrorCode noReceive(bool, void*, DataHeader&, std::span<uint8_t>) noexcept;
 };
 
 static_assert(std::is_standard_layout_v<CanModel::Instance>);
-
-}  // namespace emdevif
-
-// 待编译器实现
-// module :private;
-
-namespace emdevif {
-
-ErrorCode CanModel::noTransmit(bool, void*, const DataHeader&, std::span<const uint8_t>) noexcept
-{
-    return ErrorCode::NotImplemented;
-}
-
-ErrorCode CanModel::noReceive(bool, void*, DataHeader&, std::span<uint8_t>) noexcept
-{
-    return ErrorCode::NotImplemented;
-}
 
 }  // namespace emdevif

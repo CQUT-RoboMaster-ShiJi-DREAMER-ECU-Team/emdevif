@@ -28,25 +28,25 @@ public:
     explicit constexpr Gpio(const std::string_view name) noexcept
         : instance_(static_cast<GpioModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
-        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "GPIO");
+        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "GPIO", name);
     }
 
     void write(const PinState pin_state) const noexcept
     {
-        EMDEVIF_ASSERT(instance_->write_function_ != nullptr);
-        instance_->write_function_(instance_->handle_, static_cast<uint_fast8_t>(pin_state));
+        EMDEVIF_ASSERT(instance_->write_function != nullptr);
+        instance_->write_function(instance_->handle, static_cast<uint_fast8_t>(pin_state));
     }
 
     [[nodiscard]] PinState read() const noexcept
     {
-        EMDEVIF_ASSERT(instance_->write_function_ != nullptr);
-        return (instance_->read_function_(instance_->handle_) == 0U ? Gpio::Reset : Gpio::Set);
+        EMDEVIF_ASSERT(instance_->write_function != nullptr);
+        return (instance_->read_function(instance_->handle) == 0U ? Gpio::Reset : Gpio::Set);
     }
 
     void toggle() const noexcept
     {
-        EMDEVIF_ASSERT(instance_->write_function_ != nullptr);
-        instance_->toggle_function_(instance_->handle_);
+        EMDEVIF_ASSERT(instance_->write_function != nullptr);
+        instance_->toggle_function(instance_->handle);
     }
 };
 

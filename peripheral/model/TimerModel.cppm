@@ -7,6 +7,8 @@ module;
 
 #include <cstdint>
 
+#include <type_traits>
+
 export module emdevif.peripheral.model.timer;
 
 export namespace emdevif {
@@ -26,19 +28,21 @@ public:
     using PeriodElapsedCallback = void (*)(void* handle);
 
     struct Instance {
-        void* const handle_;
+        void* const handle{nullptr};
 
-        const EnableFunction enable;
-        const DisableFunction disable;
+        const EnableFunction enable{nullptr};
+        const DisableFunction disable{nullptr};
 
-        const GetCounterFunction getCounter;
-        const SetCounterFunction setCounter;
+        const GetCounterFunction getCounter{nullptr};
+        const SetCounterFunction setCounter{nullptr};
 
-        const EnableInterruptFunction enableInterrupt;
-        const DisableInterruptFunction disableInterrupt;
+        const EnableInterruptFunction enableInterrupt{nullptr};
+        const DisableInterruptFunction disableInterrupt{nullptr};
 
         const PeriodElapsedCallback periodElapsed{nullptr};
     };
 };
+
+static_assert(std::is_standard_layout_v<TimerModel::Instance>);
 
 }  // namespace emdevif

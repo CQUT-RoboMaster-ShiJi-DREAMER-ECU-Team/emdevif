@@ -23,15 +23,20 @@ export class PeripheralErrorHandler
 public:
     EMDEVIF_DECLARE_ZERO_INSTANCE(PeripheralErrorHandler);
 
-    static constexpr void checkInstanceIsExist(const void* handle, const std::string_view name) noexcept
+    static constexpr void checkInstanceIsExist(const void* handle,
+                                               const std::string_view peripheral_name,
+                                               const std::string_view handle_name) noexcept
     {
         if (handle == nullptr) {
             if (std::is_constant_evaluated()) {
+                // 通过 ill-formated code（在常量表达式求值上下文中调用非常量表达式函数）触发编译期错误信息
                 ThisIsACompileTimeMessage_CouldNotFoundHandle();
                 return;
             }
 
-            EMDEVIF_FATAL_HANDLER("Could not find the serial handle named \"%s\"", name.data());
+            EMDEVIF_FATAL_HANDLER("Could not find the %s handle named \"%s\"",
+                                  peripheral_name.data(),
+                                  handle_name.data());
         }
     }
 

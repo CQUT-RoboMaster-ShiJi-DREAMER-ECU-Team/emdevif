@@ -32,7 +32,7 @@ public:
     explicit constexpr Can(const std::string_view name) noexcept
         : instance_(static_cast<CanModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
-        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "CAN");
+        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "CAN", name);
     }
 
     ErrorCode receiveCallbackEntry(const bool in_isr,
@@ -40,15 +40,15 @@ public:
                                    DataHeader& received_header,
                                    const std::span<uint8_t> received_data) const noexcept
     {
-        EMDEVIF_ASSERT(instance_->receive_callback_ != nullptr);
-        return instance_->receive_callback_(in_isr, handle, received_header, received_data);
+        EMDEVIF_ASSERT(instance_->receive_callback != nullptr);
+        return instance_->receive_callback(in_isr, handle, received_header, received_data);
     }
 
     // NOLINTNEXTLINE
     ErrorCode transmit(const bool in_isr, const DataHeader& header, const std::span<const uint8_t> data) const noexcept
     {
-        EMDEVIF_ASSERT(instance_->transmit_function_ != nullptr);
-        return instance_->transmit_function_(in_isr, instance_->handle_, header, data);
+        EMDEVIF_ASSERT(instance_->transmit_function != nullptr);
+        return instance_->transmit_function(in_isr, instance_->handle, header, data);
     }
 };
 

@@ -29,42 +29,42 @@ public:
     explicit constexpr Timer(const std::string_view name) noexcept
         : instance_(static_cast<TimerModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
-        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "Timer");
+        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "Timer", name);
     }
 
     void enable() const noexcept
     {
         EMDEVIF_ASSERT(instance_->enable != nullptr);
-        instance_->enable(instance_->handle_);
+        instance_->enable(instance_->handle);
     }
 
     void disable() const noexcept
     {
         EMDEVIF_ASSERT(instance_->disable != nullptr);
-        instance_->disable(instance_->handle_);
+        instance_->disable(instance_->handle);
     }
 
     [[nodiscard]] uint32_t getCounter() const noexcept
     {
         EMDEVIF_ASSERT(instance_->getCounter != nullptr);
-        return instance_->getCounter(instance_->handle_);
+        return instance_->getCounter(instance_->handle);
     }
 
     void setCounter(const uint32_t counter) const noexcept
     {
         EMDEVIF_ASSERT(instance_->setCounter != nullptr);
-        instance_->setCounter(instance_->handle_, counter);
+        instance_->setCounter(instance_->handle, counter);
     }
 
     void enableInterrupt() const noexcept
     {
         EMDEVIF_ASSERT(instance_->enableInterrupt != nullptr);
-        instance_->enableInterrupt(instance_->handle_);
+        instance_->enableInterrupt(instance_->handle);
     }
     void disableInterrupt() const noexcept
     {
         EMDEVIF_ASSERT(instance_->disableInterrupt != nullptr);
-        instance_->disableInterrupt(instance_->handle_);
+        instance_->disableInterrupt(instance_->handle);
     }
 
     void periodElapsedCallback(void* handle) const noexcept

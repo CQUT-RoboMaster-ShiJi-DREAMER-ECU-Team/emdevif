@@ -34,37 +34,37 @@ public:
     explicit constexpr Serial(const std::string_view name) noexcept
         : instance_(static_cast<SerialModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
-        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "Serial");
+        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "Serial", name);
     }
 
     SerialModel::State getStatus(const bool in_isr) const noexcept  // NOLINT(*-use-nodiscard)
     {
-        EMDEVIF_ASSERT(instance_->get_state_function_ != nullptr);
-        return instance_->get_state_function_(in_isr, instance_->handle_);
+        EMDEVIF_ASSERT(instance_->get_state_function != nullptr);
+        return instance_->get_state_function(in_isr, instance_->handle);
     }
 
     ErrorCode receive(const bool in_isr,  // NOLINT(*-use-nodiscard)
                       const std::span<uint8_t> received_data,
                       const uint32_t timeout_ms) const noexcept
     {
-        EMDEVIF_ASSERT(instance_->receive_function_ != nullptr);
-        return instance_->receive_function_(in_isr, instance_->handle_, received_data, timeout_ms);
+        EMDEVIF_ASSERT(instance_->receive_function != nullptr);
+        return instance_->receive_function(in_isr, instance_->handle, received_data, timeout_ms);
     }
 
     ErrorCode receiveCallbackEntry(const bool in_isr,
                                    void* handle,
                                    const std::span<uint8_t> received_data) const noexcept
     {
-        EMDEVIF_ASSERT(instance_->receive_callback_ != nullptr);
-        return instance_->receive_callback_(in_isr, handle, received_data);
+        EMDEVIF_ASSERT(instance_->receive_callback != nullptr);
+        return instance_->receive_callback(in_isr, handle, received_data);
     }
 
     ErrorCode transmit(const bool in_isr,  // NOLINT(*-use-nodiscard)
                        const std::span<const uint8_t> transmit_data,
                        const uint32_t timeout_ms) const noexcept
     {
-        EMDEVIF_ASSERT(instance_->transmit_function_ != nullptr);
-        const auto status = instance_->transmit_function_(in_isr, instance_->handle_, transmit_data, timeout_ms);
+        EMDEVIF_ASSERT(instance_->transmit_function != nullptr);
+        const auto status = instance_->transmit_function(in_isr, instance_->handle, transmit_data, timeout_ms);
         return status;
     }
 

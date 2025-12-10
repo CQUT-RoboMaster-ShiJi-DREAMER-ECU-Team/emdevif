@@ -22,11 +22,11 @@ public:
     using setRatioFunction = void (*)(void* handle, uint8_t ratio);
 
     struct Instance {
-        void* const handle_;
+        void* const handle{nullptr};
 
-        const EnableFunction enable_;
-        const DisableFunction disable_;
-        const setRatioFunction setRatio_;
+        const EnableFunction enable{nullptr};
+        const DisableFunction disable{nullptr};
+        const setRatioFunction setRatio{nullptr};
     };
 };
 

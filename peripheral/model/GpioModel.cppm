@@ -26,31 +26,14 @@ public:
     using ToggleFunction = void (*)(void* handle);
 
     struct Instance {
-        void* const handle_{nullptr};
+        void* const handle{nullptr};
 
-        const WriteFunction write_function_{noWrite};
-        const ReadFunction read_function_{noRead};
-        const ToggleFunction toggle_function_{nullptr};
+        const WriteFunction write_function{nullptr};
+        const ReadFunction read_function{nullptr};
+        const ToggleFunction toggle_function{nullptr};
     };
-
-private:
-    static void noWrite(void*, uint_fast8_t) noexcept;
-    static uint_fast8_t noRead(void*) noexcept;
 };
 
 static_assert(std::is_standard_layout_v<GpioModel::Instance>);
-
-}  // namespace emdevif
-
-// module :private;
-
-namespace emdevif {
-
-void GpioModel::noWrite(void*, uint_fast8_t) noexcept {}
-
-uint_fast8_t GpioModel::noRead(void*) noexcept
-{
-    return 0;
-}
 
 }  // namespace emdevif

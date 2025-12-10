@@ -39,39 +39,17 @@ public:
                                            uint32_t timeout_ms);
 
     struct Instance {
-        void* const handle_{nullptr};
+        void* const handle{nullptr};
 
-        const GetStateFunction get_state_function_{nullptr};
+        const GetStateFunction get_state_function{nullptr};
 
-        const ReceiveFunction receive_function_{noReceive};
-        const ReceiveCallback receive_callback_{nullptr};
+        const ReceiveFunction receive_function{nullptr};
+        const ReceiveCallback receive_callback{nullptr};
 
-        const TransmitFunction transmit_function_{noTransmit};
+        const TransmitFunction transmit_function{nullptr};
     };
-
-private:
-    static ErrorCode noTransmit(bool, void*, std::span<const uint8_t>, uint32_t) noexcept;
-
-    static ErrorCode noReceive(bool, void*, std::span<uint8_t>, uint32_t) noexcept;
 };
 
 static_assert(std::is_standard_layout_v<SerialModel::Instance>);
-
-}  // namespace emdevif
-
-// 待编译器实现
-// module :private;
-
-namespace emdevif {
-
-ErrorCode SerialModel::noTransmit(bool, void*, const std::span<const uint8_t>, uint32_t) noexcept
-{
-    return ErrorCode::NotImplemented;
-}
-
-ErrorCode SerialModel::noReceive(bool, void*, std::span<uint8_t>, uint32_t) noexcept
-{
-    return ErrorCode::NotImplemented;
-}
 
 }  // namespace emdevif

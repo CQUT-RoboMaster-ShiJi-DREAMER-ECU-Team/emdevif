@@ -25,22 +25,22 @@ public:
     explicit constexpr Pwm(const std::string_view name) noexcept
         : instance_(static_cast<PwmModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
-        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "PWM");
+        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "PWM", name);
     }
 
     void enable() const noexcept
     {
-        instance_->enable_(instance_->handle_);
+        instance_->enable(instance_->handle);
     }
 
     void disable() const noexcept
     {
-        instance_->disable_(instance_->handle_);
+        instance_->disable(instance_->handle);
     }
 
     void setRatio(const uint8_t ratio) const noexcept
     {
-        instance_->setRatio_(instance_->handle_, ratio);
+        instance_->setRatio(instance_->handle, ratio);
     }
 };
 
