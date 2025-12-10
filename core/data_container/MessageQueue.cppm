@@ -77,6 +77,9 @@ template<template<typename T, std::size_t sz> class Impl, typename Type, std::si
 class MessageQueue : public Impl<Type, item_size>
 {
 public:
+    static_assert(std::is_base_of_v<MessageQueueInterface<Impl, Type, item_size>, Impl<Type, item_size>>,
+                  "The template parameter `Impl\' should be derived from `MessageQueueInterface\'.");
+
     // 以下函数仅用于适配 Impl 的工厂函数（静态的 create 方法）
 
     constexpr MessageQueue() = default;
