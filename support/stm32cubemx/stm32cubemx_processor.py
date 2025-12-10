@@ -6,7 +6,8 @@ Requires:
     Python3
 
 Example:
-    python emdevif_stm32cubemx_processor cmake/stm32cubemx/CMakeLists.txt
+    python stm32cubemx_processor.py <process file>       -- if process file is relative path
+    python stm32cubemx_processor.py <process file> -a    -- if process file is absolute path
 """
 
 import sys
@@ -41,16 +42,23 @@ def add_comment_for_not_use_command(src: list[str], _i: int, comment: str, comma
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Use: python stm32cubemx_processor <process file>")
+    argc = len(sys.argv)
+    if argc != 2 and argc != 3:
+        print("Use: python stm32cubemx_processor.py <process file>      -- if process file is relative path", "\n",
+              "Or: python stm32cubemx_processor.py <process file> -a    -- if process file is absolute path")
         exit(1)
 
     argv_file_name = sys.argv[1]
     argv_file_name.replace("\\", "/")
 
-    process_file_name = get_caller_path()
-    process_file_name.replace("\\", "/")
-    process_file_name += "/" + argv_file_name
+    if argc == 3 and sys.argv[2] == "-a":
+        # 本身就是绝对路径
+        process_file_name = argv_file_name
+    else:
+        # 传入的相对路径，则转化为绝对路径
+        process_file_name = get_caller_path()
+        process_file_name.replace("\\", "/")
+        process_file_name += "/" + argv_file_name
 
     process_file = open(process_file_name, "r")
 
