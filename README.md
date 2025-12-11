@@ -235,6 +235,7 @@ module;
 export module emdevif.userDeclares;  // 导出的模块名称必须与它相同
 
 // 可以在这里导入其他模块
+// 注意，部分 emdevif 的模块（相应模块会有说明）不能在这里导入，否则会产生循环依赖。
 
 export namespace emdevif::user_declares  // 命名空间也必须与它相同
 {

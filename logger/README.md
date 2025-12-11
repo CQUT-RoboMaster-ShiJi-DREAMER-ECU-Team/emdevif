@@ -28,6 +28,8 @@ target_compile_definitions(emdevif_logger PUBLIC EMDEVIF_LOGGER_BUFFER_SIZE=128)
 
 ## emdevif_user_declares 的需求
 
+**不可导入 `emdevif.logger` 模块，否则导致循环依赖！**
+
 该模块需要用户在 emdevif_user_declares 中声明 `getTimeLine`、`printLogMessage` 函数：
 
 ```C++
