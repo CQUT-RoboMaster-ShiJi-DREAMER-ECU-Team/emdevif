@@ -8,29 +8,12 @@
 #include <string_view>
 
 #include "test_main.hpp"
-
-#include "heap_usage_checker.hpp"
+#include "emdevif_test_list.hpp"
 
 #ifndef EMDEVIF_TEST_IGNORE_NAME_LIST
 #error \
     "Please define the macro `EMDEVIF_TEST_IGNORE_NAME_LIST'. If nothing to ignore, define it to {""} ."
 #endif
-
-#define TEST_LIST_ARG(func_name) #func_name, func_name
-
-static constexpr auto emdevif_test_list =
-    std::to_array<std::pair<std::string_view, void (*)()>>({{TEST_LIST_ARG(cFeatureTest)},
-                                                            {TEST_LIST_ARG(endianTest)},
-                                                            {TEST_LIST_ARG(typeTraitsTest)},
-                                                            {TEST_LIST_ARG(logSystemHeapUsage)},
-                                                            {TEST_LIST_ARG(initOnceTest)},
-                                                            {TEST_LIST_ARG(bitIntTest)},
-                                                            {TEST_LIST_ARG(ringBufferTest)},
-                                                            {TEST_LIST_ARG(loggerTest)},
-                                                            {TEST_LIST_ARG(heapTest)},
-                                                            {TEST_LIST_ARG(sysQueueTest)},
-                                                            {TEST_LIST_ARG(threadAndMutexTest)},
-                                                            {TEST_LIST_ARG(logSystemHeapUsage)}});
 
 static constexpr auto emdevif_test_ignore_name_list = std::to_array<std::string_view>(EMDEVIF_TEST_IGNORE_NAME_LIST);
 
