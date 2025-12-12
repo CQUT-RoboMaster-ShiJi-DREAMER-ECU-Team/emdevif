@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(emdevif_peripheral_behaviour CXX)
+project(emdevif_peripheral_impl_ CXX)
 
 add_library(${PROJECT_NAME} STATIC)
 
 target_link_libraries(${PROJECT_NAME}
-    PUBLIC emdevif_core emdevif_util emdevif_peripheral_handle_map emdevif_peripheral_model
+    PUBLIC emdevif_core emdevif_util emdevif_peripheral_handle_map_ emdevif_peripheral_model
     PRIVATE emdevif_compile_options
 )
 

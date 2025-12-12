@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(emdevif_peripheral_handle_map CXX)
+project(emdevif_peripheral_handle_map_ CXX)
 
 add_library(${PROJECT_NAME} STATIC)
 

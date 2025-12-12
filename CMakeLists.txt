@@ -6,7 +6,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 
-set(emdevifAllModules "logger;timeline;system;peripheral_handle_map;peripheral;util")
+set(emdevifAllModules "logger;timeline;system;peripheral;util")
 
 option(EMDEVIF_ENABLE_TESTS "Enable the test for emdevif." OFF)
 set(EMDEVIF_ENABLED_MODULES ${emdevifAllModules} CACHE STRING
