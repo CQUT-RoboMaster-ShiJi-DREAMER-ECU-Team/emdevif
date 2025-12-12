@@ -6,6 +6,7 @@
 
 ## emdevif_user_declares 的需求
 
+**不可链接 `emdevif_timeline` 库，否则导致循环依赖！**<br>
 **不可导入 `emdevif.timeline` 模块，否则导致循环依赖！**
 
 该模块需要用户在 emdevif_user_declares 中声明 `getMicroseconds` 函数：

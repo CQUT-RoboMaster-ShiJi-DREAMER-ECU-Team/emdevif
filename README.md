@@ -223,6 +223,10 @@ target_sources(emdevif_user_declares
     PUBLIC FILE_SET emdevif_user_declares_module TYPE CXX_MODULES
     FILES emdevif_collection/emdevif_user_declares/emdevif_user_declares.cppm  # 您的实现文件，需要提供为 C++ 模块
 )
+target_link_libraries(emdevif_user_declares
+    # 可以链接其他库
+    # 注意，部分库（相应库的文档会有说明）不能在这里链接，否则会产生循环依赖。
+)
 ```
 
 ```C++
@@ -235,7 +239,7 @@ module;
 export module emdevif.userDeclares;  // 导出的模块名称必须与它相同
 
 // 可以在这里导入其他模块
-// 注意，部分 emdevif 的模块（相应模块会有说明）不能在这里导入，否则会产生循环依赖。
+// 注意，部分 emdevif 的模块（相应模块内会有说明）不能在这里导入，否则会产生循环依赖。
 
 export namespace emdevif::user_declares  // 命名空间也必须与它相同
 {
