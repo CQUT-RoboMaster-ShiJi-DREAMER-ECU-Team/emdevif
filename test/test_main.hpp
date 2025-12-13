@@ -14,6 +14,7 @@ void typeTraitsTest();
 
 void initOnceTest();
 void bitIntTest();
+void mapTest();
 void ringBufferTest();
 
 void loggerTest();

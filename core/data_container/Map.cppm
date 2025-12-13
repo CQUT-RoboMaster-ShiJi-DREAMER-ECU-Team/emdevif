@@ -6,4 +6,6 @@
 module;
 
 export module emdevif.container.map;
+export import :basicArrayMap;
 export import :arrayMap;
+export import :staticMap;
