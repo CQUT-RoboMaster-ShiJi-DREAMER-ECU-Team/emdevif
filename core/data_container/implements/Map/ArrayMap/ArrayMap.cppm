@@ -333,16 +333,20 @@ constexpr auto makeArrayMap(const std::pair<KeyType, ValueType> (&init_arr)[arr_
     return ArrayMap<KeyType, ValueType, map_size, KeyEqual>(init_arr, real_size);
 }
 
+}  // namespace emdevif
+
+namespace emdevif {
+
 template<typename Callable, typename Arg>
 concept ValidArrayMapEraseIfPred = requires(Callable callable, const Arg& arg) {
     { callable(arg) } -> std::same_as<bool>;
 };
 
-template<typename KeyType,
-         typename ValueType,
-         std::size_t max_size,
-         typename KeyEqual = std::equal_to<KeyType>,
-         typename Pred>
+export template<typename KeyType,
+                typename ValueType,
+                std::size_t max_size,
+                typename KeyEqual = std::equal_to<KeyType>,
+                typename Pred>
     requires ValidArrayMapEraseIfPred<Pred, typename ArrayMap<KeyType, ValueType, max_size, KeyEqual>::value_type>
 std::size_t erase_if(ArrayMap<KeyType, ValueType, max_size, KeyEqual>& c, Pred pred)
 {
