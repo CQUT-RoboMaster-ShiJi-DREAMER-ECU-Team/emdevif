@@ -208,6 +208,24 @@ public:
 
         *it = v;
     }
+    /**
+     * @overload
+     * 向容器内移动元素（一个键值对）
+     * @param v 插入的元素
+     */
+    void constexpr insert(value_type&& v) noexcept
+    {
+        auto it = find(v.first);
+        if (it != end()) {
+            it->second = v.second;
+            return;
+        }
+
+        ++item_count;
+        EMDEVIF_ASSERT(item_count <= max_size);
+
+        *it = std::move(v);
+    }
 
     /**
      * 擦除给定迭代器的元素

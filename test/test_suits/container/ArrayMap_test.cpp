@@ -72,6 +72,13 @@ TEST_SUIT(ArrayMapTest)
             ++cnt;
         }
 
+        // 由于 map1 是由 map2 拷贝构造而来，而 map2 的测试检测是通过循环变量实现的，
+        // 因此 map1 的“改”操作在这里进行
+        map1["three"] = 333;
+        map1["four"] = 444;
+        INT_EXPECT_EQ(map1["three"], 333);
+        INT_EXPECT_EQ(map1["four"], 444);
+
         auto map3 =
             makeArrayMap<std::string_view, int, 10>({{"qwe", 23}, {"rty", 12}, {"3245", 3245}, {"afsfew", 6311}});
         UINT_EXPECT_EQ(map3.size(), 4);
