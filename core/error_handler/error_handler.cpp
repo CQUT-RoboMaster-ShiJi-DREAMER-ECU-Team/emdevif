@@ -33,6 +33,8 @@ void registerFatalHandler(const FatalHandlerCallBack callback) noexcept
     }
 }
 
+void illFormatedCodeToAssertFailed() noexcept {}
+
 void registerAssertFailedHandler(const AssertFailedHandler handler) noexcept
 {
     if (handler != nullptr) {

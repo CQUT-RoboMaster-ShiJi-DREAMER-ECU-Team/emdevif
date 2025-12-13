@@ -7,6 +7,8 @@ module;
 
 #include <cstdarg>
 
+#include <type_traits>
+
 #include "emdevif/attributes_and_useful_macros.h"
 
 export module emdevif.errorHandler:fatalHandlerAndAssert;
@@ -116,6 +118,9 @@ export using AssertFailedHandler =
  */
 constinit AssertFailedHandler assertFailedHandler = nullptr;
 
+/// 用于在编译期触发断言失败的函数，详见 @ref emdevif_assert 函数内部的注释
+void illFormatedCodeToAssertFailed() noexcept;
+
 /**
  * 断言入口
  * @attention 不应直接调用这个函数，应当使用宏 @ref EMDEVIF_ASSERT，可以自动填充文件名、行号、函数名与表达式名称，
@@ -129,14 +134,25 @@ constinit AssertFailedHandler assertFailedHandler = nullptr;
  * @param condition_name 表达式名称
  * @param message 信息
  */
-export inline void emdevif_assert(const bool condition,
-                                  const char* file,
-                                  const int line,
-                                  const char* func_name,
-                                  const char* condition_name,
-                                  const char* message = "") noexcept
+export constexpr void emdevif_assert(const bool condition,
+                                     const char* file,
+                                     const int line,
+                                     const char* func_name,
+                                     const char* condition_name,
+                                     const char* message = "") noexcept
 {
+    // 把这个函数设置为 constexpr 是为了在常量表达式函数里使用（运行时也可以断言）
+
     if (!condition) {
+        if (std::is_constant_evaluated()) {
+            // 在常量表达式求值上下文中，用 illFormatedCodeToAssertFailed 函数触发编译错误表示断言失败。
+            //
+            // 如果在编译时提示“在常量求值上下文调用了非 constexpr 的 illFormatedCodeToAssertFailed 函数”，
+            // 说明是触发了断言失败，您可以查看编译错误信息提示的调用栈查看触发断言的位置。
+            illFormatedCodeToAssertFailed();
+            return;
+        }
+
         if (assertFailedHandler != nullptr) {
             assertFailedHandler(file, line, func_name, condition_name, message);
         }
