@@ -12,7 +12,7 @@ module;
 
 #include "emdevif/fatal_handler.h"
 
-export module emdevif.container.map:staticMap;
+export module emdevif.container.arrayMap:staticMap;
 import :basicArrayMap;
 
 import emdevif.errorHandler;

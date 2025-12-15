@@ -12,7 +12,7 @@
 
 #include "emdevif/integer_suffix.hpp"
 
-import emdevif.container.map;
+import emdevif.container.arrayMap;
 
 namespace emdevif::test::static_map {
 
