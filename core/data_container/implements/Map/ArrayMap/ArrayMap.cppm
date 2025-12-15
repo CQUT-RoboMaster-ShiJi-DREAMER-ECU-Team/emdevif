@@ -241,6 +241,7 @@ public:
             std::memmove(pos, pos + 1, std::distance(pos + 1, end()) * sizeof(value_type));
         }
         else {
+            std::destroy_at(std::addressof(*pos));
             std::ranges::move(pos + 1, end(), pos);
         }
 
