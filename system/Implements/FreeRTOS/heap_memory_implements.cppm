@@ -38,6 +38,9 @@ export namespace emdevif::heap {
 template<typename T, typename... Args>
 T* construct(Args&&... args)
 {
+    static_assert(!std::is_void_v<T>, "can't create pointer to incomplete type");
+    static_assert(sizeof(T) > 0, "can't create pointer to incomplete type");
+
     auto ret = static_cast<T*>(internal::mallocByte(sizeof(T)));
     if (ret == nullptr) {
         throw std::bad_alloc();
@@ -57,6 +60,9 @@ T* construct(Args&&... args)
 template<typename T, typename... Args>
 T* construct(std::nothrow_t, Args&&... args) noexcept
 {
+    static_assert(!std::is_void_v<T>, "can't create pointer to incomplete type");
+    static_assert(sizeof(T) > 0, "can't create pointer to incomplete type");
+
     auto ret = static_cast<T*>(internal::mallocByte(sizeof(T)));
     if (ret == nullptr) {
         return nullptr;
@@ -70,45 +76,44 @@ T* construct(std::nothrow_t, Args&&... args) noexcept
 template<PointerType T>
 void destruct(T& p) noexcept
 {
+    static_assert(!std::is_void_v<T> && !std::is_void_v<std::remove_pointer_t<T>>,
+                  "can't delete pointer to incomplete type");
+    static_assert(sizeof(T) > 0, "can't delete pointer to incomplete type");
+
     if (p == nullptr) {
         return;
     }
 
-    if constexpr (!std::is_same_v<std::remove_pointer_t<T>, void>) {
-        std::destroy_at(p);
-    }
+    std::destroy_at(p);
 
     internal::free(p);
 
     p = nullptr;
 }
 
+template<typename T>
 class Deleter
 {
 public:
-    void operator()(void* p) const
+    void operator()(T* p) const
     {
-        internal::free(p);
+        static_assert(!std::is_void_v<T>, "can't delete pointer to incomplete type");
+        static_assert(sizeof(T) > 0, "can't delete pointer to incomplete type");
+
+        destruct(p);
     }
 };
 
 template<typename T>
-using unique_ptr = std::unique_ptr<T, Deleter>;
+using unique_ptr = std::unique_ptr<T, Deleter<T>>;
 
 template<typename T, typename... Args>
 unique_ptr<T> make_unique(Args&&... args)
 {
-    auto p = static_cast<T*>(internal::mallocByte(sizeof(T)));
-    if (p == nullptr) {
-        throw std::bad_alloc();
-    }
-
     try {
-        std::construct_at(p, std::forward<Args>(args)...);
-        return unique_ptr<T>(p);
+        return unique_ptr<T>{construct<T>(std::forward<Args>(args)...)};
     }
     catch (...) {
-        internal::free(p);
         throw;
     }
 }
@@ -116,14 +121,7 @@ unique_ptr<T> make_unique(Args&&... args)
 template<typename T, typename... Args>
 unique_ptr<T> make_unique(std::nothrow_t, Args&&... args) noexcept
 {
-    auto p = static_cast<T*>(internal::mallocByte(sizeof(T)));
-    if (p == nullptr) {
-        return nullptr;
-    }
-
-    std::construct_at(p, std::forward<Args>(args)...);
-
-    return unique_ptr<T>(p);
+    return unique_ptr<T>{construct<T>(std::nothrow, std::forward<Args>(args)...)};
 }
 
 template<typename T>
