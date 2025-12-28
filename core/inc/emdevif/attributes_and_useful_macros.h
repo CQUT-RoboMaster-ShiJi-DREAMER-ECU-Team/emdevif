@@ -19,6 +19,7 @@
 #endif  // !__cplusplus
 
 /* Attributes ================================================================================== */
+#include "private/attribute_implements/clang_attributes.h"
 #include "private/attribute_implements/gnu_attributes.h"
 #include "private/attribute_implements/msvc_attributes.h"
 
