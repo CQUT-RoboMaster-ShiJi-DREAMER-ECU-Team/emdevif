@@ -15,8 +15,12 @@ module;
 #include "queue.h"
 #endif
 
+#include "emdevif/fatal_handler.h"
+
 export module emdevif.sys.sysQueue:implements;
 import :interface;
+
+import emdevif.errorHandler;
 
 export namespace emdevif {
 
@@ -82,9 +86,11 @@ void SysQueue<Type, item_size>::destroy(SysQueue& obj)
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode SysQueue<Type, item_size>::pushImpl(const bool in_isr, const Type& data, std::size_t timeout)
+ErrorCode SysQueue<Type, item_size>::pushImpl(const bool in_isr, const Type& data, const SysTick_t timeout_tick)
 {
     if (in_isr) {
+        EMDEVIF_ASSERT(timeout_tick == 0U, "Timeout value should equals to 0 in ISR.");
+
         BaseType_t xHigherPriorityTaskWokenByPost = pdFALSE;
         const auto ret = xQueueSendFromISR(static_cast<QueueHandle_t>(handle_), &data, &xHigherPriorityTaskWokenByPost);
 
@@ -104,7 +110,7 @@ ErrorCode SysQueue<Type, item_size>::pushImpl(const bool in_isr, const Type& dat
         return final_ret;
     }
     else {
-        const auto ret = xQueueSend(static_cast<QueueHandle_t>(handle_), &data, timeout);
+        const auto ret = xQueueSend(static_cast<QueueHandle_t>(handle_), &data, timeout_tick);
         if (ret == pdTRUE) {
             return ErrorCode::Success;
         }
@@ -115,9 +121,34 @@ ErrorCode SysQueue<Type, item_size>::pushImpl(const bool in_isr, const Type& dat
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode SysQueue<Type, item_size>::popImpl(const bool in_isr, Type& data, std::size_t timeout)
+ErrorCode SysQueue<Type, item_size>::forcePushImpl(const bool in_isr, const Type& data)
 {
     if (in_isr) {
+        BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+        auto ret = xQueueOverwriteFromISR(static_cast<QueueHandle_t>(handle_), &data, &xHigherPriorityTaskWoken);
+        EMDEVIF_ASSERT(ret == pdPASS, "Failed to overwrite queue data in ISR context");
+
+        if (xHigherPriorityTaskWoken) {
+            portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+        }
+
+        return ErrorCode::Success;
+    }
+    else {
+        auto ret = xQueueOverwrite(static_cast<QueueHandle_t>(handle_), &data);
+        EMDEVIF_ASSERT(ret == pdPASS, "Failed to overwrite queue data in non-ISR context");
+
+        return ErrorCode::Success;
+    }
+}
+
+template<typename Type, std::size_t item_size>
+ErrorCode SysQueue<Type, item_size>::popImpl(const bool in_isr, Type& data, const SysTick_t timeout_tick)
+{
+    if (in_isr) {
+        EMDEVIF_ASSERT(timeout_tick == 0U, "Timeout value should equals to 0 in ISR.");
+
         BaseType_t xHigherPriorityTaskWokenByPost = pdFALSE;
         const auto ret =
             xQueueReceiveFromISR(static_cast<QueueHandle_t>(handle_), &data, &xHigherPriorityTaskWokenByPost);
@@ -138,7 +169,7 @@ ErrorCode SysQueue<Type, item_size>::popImpl(const bool in_isr, Type& data, std:
         return final_ret;
     }
     else {
-        const auto ret = xQueueReceive(static_cast<QueueHandle_t>(handle_), &data, timeout);
+        const auto ret = xQueueReceive(static_cast<QueueHandle_t>(handle_), &data, timeout_tick);
         if (ret == pdTRUE) {
             return ErrorCode::Success;
         }
@@ -156,9 +187,11 @@ ErrorCode SysQueue<Type, item_size>::popImpl(const bool in_isr)
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode SysQueue<Type, item_size>::peekImpl(const bool in_isr, Type& data, std::size_t timeout)
+ErrorCode SysQueue<Type, item_size>::peekImpl(const bool in_isr, Type& data, const SysTick_t timeout_tick)
 {
     if (in_isr) {
+        EMDEVIF_ASSERT(timeout_tick == 0U, "Timeout value should equals to 0 in ISR.");
+
         const auto ret = xQueuePeekFromISR(static_cast<QueueHandle_t>(handle_), &data);
 
         ErrorCode final_ret;
@@ -173,7 +206,7 @@ ErrorCode SysQueue<Type, item_size>::peekImpl(const bool in_isr, Type& data, std
         return final_ret;
     }
     else {
-        const auto ret = xQueuePeek(static_cast<QueueHandle_t>(handle_), &data, timeout);
+        const auto ret = xQueuePeek(static_cast<QueueHandle_t>(handle_), &data, timeout_tick);
         if (ret == pdTRUE) {
             return ErrorCode::Success;
         }

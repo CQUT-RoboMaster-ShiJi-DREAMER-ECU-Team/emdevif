@@ -5,6 +5,8 @@
 
 module;
 
+#include <cstdint>
+
 #include <type_traits>
 #include <utility>
 
@@ -14,20 +16,27 @@ import emdevif.errorHandler;
 
 export namespace emdevif {
 
+using MessageQueueTimeout_t = std::uint_fast32_t;
+
 template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>
 class MessageQueueInterface
 {
 public:
     using ImplType = Impl<Type, item_size>;
 
-    ErrorCode push(bool in_isr, const Type& data, std::size_t timeout = 0U)
+    ErrorCode push(bool in_isr, const Type& data, MessageQueueTimeout_t timeout_tick = 0U)
     {
-        return static_cast<ImplType*>(this)->pushImpl(in_isr, data, timeout);
+        return static_cast<ImplType*>(this)->pushImpl(in_isr, data, timeout_tick);
     }
 
-    ErrorCode pop(bool in_isr, Type& data, std::size_t timeout = 0U)
+    ErrorCode forcePush(bool in_isr, const Type& data)
     {
-        return static_cast<ImplType*>(this)->popImpl(in_isr, data, timeout);
+        return static_cast<ImplType*>(this)->forcePushImpl(in_isr, data);
+    }
+
+    ErrorCode pop(bool in_isr, Type& data, MessageQueueTimeout_t timeout_tick = 0U)
+    {
+        return static_cast<ImplType*>(this)->popImpl(in_isr, data, timeout_tick);
     }
 
     ErrorCode pop(bool in_isr)
@@ -35,9 +44,9 @@ public:
         return static_cast<ImplType*>(this)->popImpl(in_isr);
     }
 
-    ErrorCode peek(bool in_isr, Type& data, std::size_t timeout = 0U)
+    ErrorCode peek(bool in_isr, Type& data, MessageQueueTimeout_t timeout_tick = 0U)
     {
-        return static_cast<ImplType*>(this)->peekImpl(in_isr, data, timeout);
+        return static_cast<ImplType*>(this)->peekImpl(in_isr, data, timeout_tick);
     }
 
     [[nodiscard]] std::size_t storeCount()
@@ -84,9 +93,10 @@ public:
 
     constexpr MessageQueue() = default;
 
+    // ReSharper disable once CppNonExplicitConvertingConstructor
     template<typename T>
-    constexpr MessageQueue(const T& other) noexcept  // NOLINT(*-explicit-constructor)
-        : Impl<Type, item_size>(other)
+    constexpr MessageQueue(const T& init_attribute) noexcept  // NOLINT(*-explicit-constructor)
+        : Impl<Type, item_size>(init_attribute)
     {
     }
 

@@ -16,6 +16,7 @@ module;
 
 #include <utility>
 #include <type_traits>
+#include <limits>
 
 #include "emdevif/fatal_handler.h"
 
@@ -28,9 +29,14 @@ export module emdevif.sys.thread:implements;
 import :interface;
 
 import emdevif.errorHandler;
+import emdevif.container.messageQueue;
 
 export namespace emdevif {
 
+static_assert(std::is_convertible_v<emdevif::MessageQueueTimeout_t, ::TickType_t>,
+              "emdevif::MessageQueueTimeout_t must be convertible to TickType_t (for FreeRTOS)");
+static_assert(std::numeric_limits<emdevif::MessageQueueTimeout_t>::max() <= portMAX_DELAY,
+              "emdevif::MessageQueueTimeout_t should not be exceed to portMAX_DELAY");
 static_assert(std::is_same_v<SysTick_t, ::TickType_t>, "We need to keep SysTick_t same to TickType_t in FreeRTOS");
 
 template<std::size_t stack_depth>

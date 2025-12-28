@@ -31,7 +31,7 @@ using SysTick_t = uint32_t;
 #elif (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 64)
 using SysTick_t = uint64_t;
 #else
-#error "The value of macro `EMDEVIF_SYS_TICK_TYPE_UINT_BITS' can only choose 16, 32 or 64."
+#error "The value of macro `EMDEVIF_SYS_TICK_TYPE_UINT_BITS' can only equals to 16, 32 or 64."
 #endif
 
 /**

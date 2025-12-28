@@ -12,7 +12,8 @@ module;
 export module emdevif.sys.sysQueue:interface;
 
 export import emdevif.errorHandler;
-export import emdevif.container.messageQueue;
+import emdevif.container.messageQueue;
+import emdevif.sys.thread;
 
 export namespace emdevif {
 
@@ -52,13 +53,15 @@ public:  // todo 等消息队列接口做好了之后再来补注释
         handle_ = nullptr;
     }
 
-    ErrorCode pushImpl(bool in_isr, const Type& data, std::size_t timeout = 0U);
+    ErrorCode pushImpl(bool in_isr, const Type& data, SysTick_t timeout_tick = 0U);
 
-    ErrorCode popImpl(bool in_isr, Type& data, std::size_t timeout = 0U);
+    ErrorCode forcePushImpl(bool in_isr, const Type& data);
+
+    ErrorCode popImpl(bool in_isr, Type& data, SysTick_t timeout_tick = 0U);
 
     ErrorCode popImpl(bool in_isr);
 
-    ErrorCode peekImpl(bool in_isr, Type& data, std::size_t timeout = 0U);
+    ErrorCode peekImpl(bool in_isr, Type& data, SysTick_t timeout_tick = 0U);
 
     [[nodiscard]] std::size_t storeCountImpl() const;
 
