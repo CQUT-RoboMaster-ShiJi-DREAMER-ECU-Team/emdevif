@@ -22,6 +22,8 @@ target_sources(${PROJECT_NAME}
         event_group.cppm
         heap_memory.cppm
 
+        sys_message_slot.cppm
+
     PUBLIC FILE_SET emdevif_thread_interface_modules TYPE CXX_MODULES FILES
         Interface/sys_queue_interface.cppm
         Interface/thread_interface.cppm

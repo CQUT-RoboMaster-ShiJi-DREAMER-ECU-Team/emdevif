@@ -21,6 +21,7 @@ void loggerTest();
 
 void heapTest();
 void sysQueueTest();
+void sysMessageSlotTest();
 void threadAndMutexTest();
 
 #endif  // !EMDEVIF_TEST_MAIN_HPP

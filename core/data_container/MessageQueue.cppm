@@ -49,28 +49,26 @@ public:
         return static_cast<ImplType*>(this)->peekImpl(in_isr, data, timeout_tick);
     }
 
-    [[nodiscard]] std::size_t storeCount()
+    void clear()
     {
-        return static_cast<ImplType*>(this)->storeCountImpl();
+        static_cast<ImplType*>(this)->clearImpl();
     }
+
     [[nodiscard]] std::size_t storeCount() const
     {
         return static_cast<const ImplType*>(this)->storeCountImpl();
     }
 
-    [[nodiscard]] std::size_t remainCount()
-    {
-        return static_cast<ImplType*>(this)->remainCountImpl();
-    }
     [[nodiscard]] std::size_t remainCount() const
     {
         return static_cast<const ImplType*>(this)->remainCountImpl();
     }
 
-    [[nodiscard]] void* getHandle()
+    [[nodiscard]] static constexpr std::size_t maxItemCount()
     {
-        return static_cast<ImplType*>(this)->getHandleImpl();
+        return item_size;
     }
+
     [[nodiscard]] void* getHandle() const
     {
         return static_cast<const ImplType*>(this)->getHandleImpl();

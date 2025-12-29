@@ -26,6 +26,8 @@ template<typename Type, std::size_t item_size>
 class SysQueue : public MessageQueueInterface<SysQueue, Type, item_size>
 {
 public:
+    friend class MessageQueueInterface<SysQueue, Type, item_size>;
+
     using Handle = void*;  ///< 句柄
 
     class StaticInstance;
@@ -53,6 +55,7 @@ public:  // todo 等消息队列接口做好了之后再来补注释
         handle_ = nullptr;
     }
 
+private:
     ErrorCode pushImpl(bool in_isr, const Type& data, SysTick_t timeout_tick = 0U);
 
     ErrorCode forcePushImpl(bool in_isr, const Type& data);
@@ -63,6 +66,8 @@ public:  // todo 等消息队列接口做好了之后再来补注释
 
     ErrorCode peekImpl(bool in_isr, Type& data, SysTick_t timeout_tick = 0U);
 
+    void clearImpl();
+
     [[nodiscard]] std::size_t storeCountImpl() const;
 
     [[nodiscard]] std::size_t remainCountImpl() const;
@@ -72,6 +77,7 @@ public:  // todo 等消息队列接口做好了之后再来补注释
         return handle_;
     }
 
+public:
     SysQueue() : handle_(nullptr) {}
 
     explicit SysQueue(const StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}

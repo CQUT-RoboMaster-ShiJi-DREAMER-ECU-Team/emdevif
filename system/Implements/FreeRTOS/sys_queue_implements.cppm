@@ -216,6 +216,13 @@ ErrorCode SysQueue<Type, item_size>::peekImpl(const bool in_isr, Type& data, con
     }
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
+template<typename Type, std::size_t item_size>
+void SysQueue<Type, item_size>::clearImpl()
+{
+    (void)xQueueReset(static_cast<QueueHandle_t>(handle_));
+}
+
 template<typename Type, std::size_t item_size>
 std::size_t SysQueue<Type, item_size>::storeCountImpl() const
 {

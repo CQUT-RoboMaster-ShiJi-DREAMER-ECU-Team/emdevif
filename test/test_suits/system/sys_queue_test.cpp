@@ -22,6 +22,9 @@ TEST_SUIT(SysQueueBasicTest)
             emdevif::SysQueue<int, 5>::create({.name = "BasicTestQueue"});
         static_assert(std::is_same_v<decltype(queue)::ImplType, emdevif::SysQueue<int, 5>>);
 
+        static_assert(queue.maxItemCount() == 5);
+        UINT_EXPECT_EQ(queue.maxItemCount(), 5);
+
         UINT_EXPECT_EQ(queue.remainCount(), 5);
         UINT_EXPECT_EQ(queue.storeCount(), 0);
 
@@ -45,6 +48,21 @@ TEST_SUIT(SysQueueBasicTest)
 
         UINT_EXPECT_EQ(queue.remainCount(), 5);
         UINT_EXPECT_EQ(queue.storeCount(), 0);
+
+        // 再次peek和pop应该都返回空
+        EXPECT_TRUE(queue.peek(false, ret) == emdevif::ErrorCode::Empty);
+        EXPECT_TRUE(queue.pop(false, ret) == emdevif::ErrorCode::Empty);
+
+        // 再次push数据
+        EXPECT_TRUE(queue.push(false, 123456) == emdevif::ErrorCode::Success);
+        UINT_EXPECT_EQ(queue.remainCount(), 4);
+        UINT_EXPECT_EQ(queue.storeCount(), 1);
+
+        queue.clear();
+        UINT_EXPECT_EQ(queue.remainCount(), 5);
+        UINT_EXPECT_EQ(queue.storeCount(), 0);
+        EXPECT_TRUE(queue.peek(false, ret) == emdevif::ErrorCode::Empty);
+        EXPECT_TRUE(queue.pop(false, ret) == emdevif::ErrorCode::Empty);
     }
     TEST_CASE_END();
 
@@ -53,7 +71,10 @@ TEST_SUIT(SysQueueBasicTest)
         emdevif::MessageQueue<emdevif::SysQueue, int, 5> queue;
         static_assert(std::is_same_v<decltype(queue)::ImplType, emdevif::SysQueue<int, 5>>);
 
-        queue = decltype(queue)::ImplType::create({.name = "BasicTestQueue"});
+        queue = decltype(queue)::create({.name = "BasicTestQueue"});
+
+        static_assert(queue.maxItemCount() == 5);
+        UINT_EXPECT_EQ(queue.maxItemCount(), 5);
 
         UINT_EXPECT_EQ(queue.remainCount(), 5);
         UINT_EXPECT_EQ(queue.storeCount(), 0);
@@ -78,6 +99,21 @@ TEST_SUIT(SysQueueBasicTest)
 
         UINT_EXPECT_EQ(queue.remainCount(), 5);
         UINT_EXPECT_EQ(queue.storeCount(), 0);
+
+        // 再次peek和pop应该都返回空
+        EXPECT_TRUE(queue.peek(false, ret) == emdevif::ErrorCode::Empty);
+        EXPECT_TRUE(queue.pop(false, ret) == emdevif::ErrorCode::Empty);
+
+        // 再次push数据
+        EXPECT_TRUE(queue.push(false, 123456) == emdevif::ErrorCode::Success);
+        UINT_EXPECT_EQ(queue.remainCount(), 4);
+        UINT_EXPECT_EQ(queue.storeCount(), 1);
+
+        queue.clear();
+        UINT_EXPECT_EQ(queue.remainCount(), 5);
+        UINT_EXPECT_EQ(queue.storeCount(), 0);
+        EXPECT_TRUE(queue.peek(false, ret) == emdevif::ErrorCode::Empty);
+        EXPECT_TRUE(queue.pop(false, ret) == emdevif::ErrorCode::Empty);
     }
     TEST_CASE_END();
 

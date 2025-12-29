@@ -1,0 +1,64 @@
+/**
+ * @file MessageSlot.cppm
+ * @brief 消息槽
+ */
+
+module;
+
+#include <cstddef>
+
+export module emdevif.container.messageSlot;
+
+import emdevif.container.messageQueue;
+import emdevif.errorHandler;
+
+export namespace emdevif {
+
+template<template<typename T> class Impl, typename Type>
+class MessageSlotInterface
+{
+public:
+    using ImplType = Impl<Type>;
+
+    ErrorCode forcePush(bool in_isr, const Type& data)
+    {
+        return static_cast<ImplType*>(this)->forcePushImpl(in_isr, data);
+    }
+
+    ErrorCode peek(bool in_isr, Type& data, MessageQueueTimeout_t timeout_tick = 0U)
+    {
+        return static_cast<ImplType*>(this)->peekImpl(in_isr, data, timeout_tick);
+    }
+
+    void clear()
+    {
+        static_cast<ImplType*>(this)->clearImpl();
+    }
+
+    [[nodiscard]] std::size_t storeCount() const
+    {
+        return static_cast<const ImplType*>(this)->storeCountImpl();
+    }
+
+    [[nodiscard]] std::size_t remainCount() const
+    {
+        return static_cast<const ImplType*>(this)->remainCountImpl();
+    }
+
+    [[nodiscard]] static constexpr std::size_t maxItemCount()
+    {
+        return 1;
+    }
+
+    [[nodiscard]] auto getHandle() const
+    {
+        return static_cast<const ImplType*>(this)->getHandleImpl();
+    }
+
+protected:
+    MessageSlotInterface() = default;
+    MessageSlotInterface(const MessageSlotInterface&) = default;
+    ~MessageSlotInterface() = default;
+};
+
+}  // namespace emdevif
