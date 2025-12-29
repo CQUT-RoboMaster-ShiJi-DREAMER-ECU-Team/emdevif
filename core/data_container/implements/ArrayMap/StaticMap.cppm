@@ -107,13 +107,6 @@ public:
      * @param key 待查找的键
      * @return 查找到的键所在位置的迭代器。如果待查找的键不存在，返回 end()。
      */
-    constexpr iterator find(const KeyType& key) noexcept
-    {
-        return this->findInRange_(key, begin(), end());
-    }
-    /**
-     * @overload
-     */
     constexpr const_iterator find(const KeyType& key) const noexcept
     {
         return this->findInRange_(key, cbegin(), cend());

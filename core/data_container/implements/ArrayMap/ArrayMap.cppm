@@ -125,13 +125,6 @@ public:
      * @param key 待查找的键
      * @return 查找到的键所在位置的迭代器。如果待查找的键不存在，返回 end()。
      */
-    [[nodiscard]] constexpr iterator find(const key_type& key) noexcept
-    {
-        return this->findInRange_(key, begin(), end());
-    }
-    /**
-     * @overload
-     */
     [[nodiscard]] constexpr const_iterator find(const key_type& key) const noexcept
     {
         return this->findInRange_(key, cbegin(), cend());
@@ -186,7 +179,7 @@ public:
     }
 
     /// 清除所有元素
-    void constexpr clear() noexcept
+    constexpr void clear() noexcept
     {
         item_count = 0;
     }
@@ -195,9 +188,9 @@ public:
      * 向容器内插入元素（一个键值对）
      * @param v 插入的元素
      */
-    void constexpr insert(const value_type& v) noexcept
+    constexpr void insert(const value_type& v) noexcept
     {
-        auto it = find(v.first);
+        auto it = this->findInRange_(v.first, begin(), end());
         if (it != end()) {
             it->second = v.second;
             return;
@@ -213,9 +206,9 @@ public:
      * 向容器内移动元素（一个键值对）
      * @param v 插入的元素
      */
-    void constexpr insert(value_type&& v) noexcept
+    constexpr void insert(value_type&& v) noexcept
     {
-        auto it = find(v.first);
+        auto it = this->findInRange_(v.first, begin(), end());
         if (it != end()) {
             it->second = v.second;
             return;
@@ -257,7 +250,7 @@ public:
      */
     constexpr size_type erase(const key_type& key) noexcept
     {
-        auto it = find(key);
+        auto it = this->findInRange_(key, begin(), end());
         if (it != end()) {
             erase(it);
             return 1;
