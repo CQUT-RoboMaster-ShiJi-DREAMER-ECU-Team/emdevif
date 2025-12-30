@@ -19,6 +19,8 @@ namespace emdevif {
 export template<typename Type>
 class SysMessageSlot;
 
+namespace detail {
+
 template<typename Type>
 class SysQueueForSlotAdapter : public SysQueue<Type, 1>
 {
@@ -27,7 +29,8 @@ protected:
 
     // ReSharper disable once CppNonExplicitConvertingConstructor
     template<typename T>
-    SysQueueForSlotAdapter(const T& init_param) : QueueImpl_(init_param)  // NOLINT(*-explicit-constructor)
+    SysQueueForSlotAdapter(T&& init_param)  // NOLINT(*-explicit-constructor, *-forwarding-reference-overload)
+        : QueueImpl_(std::forward<T>(init_param))
     {
     }
 
@@ -56,6 +59,8 @@ public:
     friend class SysMessageSlot<Type>;
 };
 
+}  // namespace detail
+
 export template<typename Type>
 class SysMessageSlot : public MessageSlotInterface<SysMessageSlot, Type>
 {
@@ -63,13 +68,13 @@ public:
     friend class MessageSlotInterface<SysMessageSlot, Type>;
 
 private:
-    using QueueAdapter_ = SysQueueForSlotAdapter<Type>;
+    using QueueAdapter_ = detail::SysQueueForSlotAdapter<Type>;
     using QueueImpl_ = QueueAdapter_::QueueImpl_;
 
     QueueAdapter_ queue_impl_{};
 
 public:
-    using Handle = typename QueueImpl_::Handle;  ///< 句柄类型
+    using Handle = QueueImpl_::Handle;  ///< 句柄类型
 
     static auto create(const QueueImpl_::Attribute& attribute)
     {
@@ -122,7 +127,8 @@ public:
 
     // ReSharper disable once CppNonExplicitConvertingConstructor
     template<typename T>
-    SysMessageSlot(const T& init_param) : queue_impl_(init_param)  // NOLINT(*-explicit-constructor)
+    SysMessageSlot(T&& init_param)  // NOLINT(*-explicit-constructor, *-forwarding-reference-overload)
+        : queue_impl_(std::forward<T>(init_param))
     {
     }
 

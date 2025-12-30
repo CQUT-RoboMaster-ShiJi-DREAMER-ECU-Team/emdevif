@@ -8,7 +8,6 @@ module;
 #include <cstdint>
 
 #include <type_traits>
-#include <utility>
 
 export module emdevif.container.messageQueue;
 
@@ -81,31 +80,6 @@ protected:
 };
 
 template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>
-class MessageQueue : public Impl<Type, item_size>
-{
-public:
-    static_assert(std::is_base_of_v<MessageQueueInterface<Impl, Type, item_size>, Impl<Type, item_size>>,
-                  "The template parameter `Impl\' should be derived from `MessageQueueInterface\'.");
-
-    // 以下函数仅用于适配 Impl 的工厂函数（静态的 create 方法）
-
-    constexpr MessageQueue() = default;
-
-    // ReSharper disable once CppNonExplicitConvertingConstructor
-    template<typename T>
-    constexpr MessageQueue(const T& init_attribute) noexcept  // NOLINT(*-explicit-constructor)
-        : Impl<Type, item_size>(init_attribute)
-    {
-    }
-
-    template<typename T>
-    constexpr MessageQueue& operator=(T&& other) noexcept
-    {
-        auto super = static_cast<Impl<Type, item_size>*>(this);
-        super->operator=(std::forward<T>(other));
-
-        return *this;
-    }
-};
+concept IsMessageQueue = std::is_base_of_v<MessageQueueInterface<Impl, Type, item_size>, Impl<Type, item_size>>;
 
 }  // namespace emdevif

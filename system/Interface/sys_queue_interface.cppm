@@ -80,12 +80,14 @@ private:
 public:
     SysQueue() : handle_(nullptr) {}
 
-    explicit SysQueue(const StronglyTypedHandle strongly_handle) : handle_(strongly_handle.value) {}
+    // ReSharper disable once CppNonExplicitConvertingConstructor
+    // NOLINTNEXTLINE(*-explicit-constructor)
+    SysQueue(const StronglyTypedHandle& strongly_handle) : handle_(strongly_handle.value) {}
 
     SysQueue& operator=(const SysQueue&) = delete;
     SysQueue(const SysQueue&) = delete;
 
-    SysQueue& operator=(const StronglyTypedHandle strongly_handle)
+    SysQueue& operator=(const StronglyTypedHandle& strongly_handle)
     {
         if (handle_ != nullptr) {
             EMDEVIF_FATAL_HANDLER("Should not create message queue on non-deleted message queue!");

@@ -16,9 +16,8 @@ TEST_SUIT(SysQueueBasicTest)
 {
     RECORD_MEMORY_INFO();
 
-    auto testImplWithoutCreate = []<typename T, std::size_t sz>(
-                                     emdevif_test_TestCaseContex& contex,
-                                     emdevif::MessageQueue<emdevif::SysQueue, T, sz>& queue) {
+    auto testImplWithoutCreate = []<typename T, std::size_t sz>(emdevif_test_TestCaseContex& contex,
+                                                                emdevif::SysQueue<T, sz>& queue) {
         RUN_TEST_CASE_WITHIN_CONTEX_BEGIN(&contex)
         {
             static_assert(queue.maxItemCount() == 5);
@@ -68,8 +67,7 @@ TEST_SUIT(SysQueueBasicTest)
 
     TEST_CASE_BEGIN(ConstructDirectly)
     {
-        emdevif::MessageQueue<emdevif::SysQueue, int, 5> queue =
-            emdevif::SysQueue<int, 5>::create({.name = "BasicTestQueue"});
+        emdevif::SysQueue<int, 5> queue = emdevif::SysQueue<int, 5>::create({.name = "BasicTestQueue"});
         static_assert(std::is_same_v<decltype(queue)::ImplType, emdevif::SysQueue<int, 5>>);
 
         emdevif_test_TestCaseContex contex = GET_THIS_TEST_CASE_CONTEXT();
@@ -79,7 +77,7 @@ TEST_SUIT(SysQueueBasicTest)
 
     TEST_CASE_BEGIN(FactoryConstruct)
     {
-        emdevif::MessageQueue<emdevif::SysQueue, int, 5> queue;
+        emdevif::SysQueue<int, 5> queue;
         static_assert(std::is_same_v<decltype(queue)::ImplType, emdevif::SysQueue<int, 5>>);
 
         queue = decltype(queue)::create({.name = "BasicTestQueue"});
