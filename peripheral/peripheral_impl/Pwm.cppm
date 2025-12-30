@@ -25,7 +25,7 @@ public:
     explicit constexpr Pwm(const std::string_view name) noexcept
         : instance_(static_cast<PwmModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
-        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "PWM", name);
+        detail::PeripheralErrorHandler::checkInstanceIsExist(instance_, "PWM", name);
     }
 
     void enable() const noexcept

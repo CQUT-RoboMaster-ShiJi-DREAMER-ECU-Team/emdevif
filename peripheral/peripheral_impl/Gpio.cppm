@@ -28,7 +28,7 @@ public:
     explicit constexpr Gpio(const std::string_view name) noexcept
         : instance_(static_cast<GpioModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
-        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "GPIO", name);
+        detail::PeripheralErrorHandler::checkInstanceIsExist(instance_, "GPIO", name);
     }
 
     void write(const PinState pin_state) const noexcept

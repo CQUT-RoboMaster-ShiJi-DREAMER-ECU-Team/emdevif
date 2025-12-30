@@ -16,7 +16,7 @@ import boost.pfr;
 
 namespace emdevif {
 
-namespace internal {
+namespace detail {
 
 /**
  * 判断是否为 std::array 类型
@@ -155,7 +155,7 @@ public:
 template<typename T, typename U>
 constexpr bool is_same_tuple_style_v = is_same_tuple_style<T, U>::value;
 
-}  // namespace internal
+}  // namespace detail
 
 export
 {
@@ -175,7 +175,7 @@ export
      * @tparam T 待判断的类型
      */
     template<typename T>
-    using is_tuple_like = internal::is_tuple_like<T>;
+    using is_tuple_like = detail::is_tuple_like<T>;
 
     /**
      * 判断是否为类似元组（std::tuple 或 std::pair）类型 - 简化表达式
@@ -186,7 +186,7 @@ export
      * @tparam T 待判断的类型
      */
     template<typename T>
-    constexpr bool is_tuple_like_v = internal::is_tuple_like_v<T>;
+    constexpr bool is_tuple_like_v = detail::is_tuple_like_v<T>;
 
     /**
      * 判断是否为元组形式的类型
@@ -201,7 +201,7 @@ export
      * @tparam T 待判断的类型
      */
     template<typename T>
-    using is_tuple_style = internal::is_tuple_style<T>;
+    using is_tuple_style = detail::is_tuple_style<T>;
 
     /**
      * 判断是否为元组形式的类型 - 简化表达式
@@ -210,7 +210,7 @@ export
      * @tparam T 待判断的类型
      */
     template<typename T>
-    constexpr bool is_tuple_style_v = internal::is_tuple_style_v<T>;
+    constexpr bool is_tuple_style_v = detail::is_tuple_style_v<T>;
 
     /**
      * 判断两个元组形式的类型是否是形式相等的
@@ -226,7 +226,7 @@ export
      * @tparam U 待判断的第二个类型
      */
     template<typename T, typename U>
-    using is_same_tuple_style = internal::is_same_tuple_style<T, U>;
+    using is_same_tuple_style = detail::is_same_tuple_style<T, U>;
 
     /**
      * 判断两个元组形式的类型是否是形式相等的 - 简化表达式
@@ -236,10 +236,10 @@ export
      * @tparam U 待判断的第二个类型
      */
     template<typename T, typename U>
-    constexpr bool is_same_tuple_style_v = internal::is_same_tuple_style_v<T, U>;
+    constexpr bool is_same_tuple_style_v = detail::is_same_tuple_style_v<T, U>;
 }
 
-namespace internal {
+namespace detail {
 
 template<typename Agg, typename Tuple, std::size_t... I>
 constexpr Agg tuple_to_agg_impl(Tuple&& t, std::index_sequence<I...>) noexcept
@@ -247,7 +247,7 @@ constexpr Agg tuple_to_agg_impl(Tuple&& t, std::index_sequence<I...>) noexcept
     return Agg{std::get<I>(std::forward<Tuple>(t))...};
 }
 
-}  // namespace internal
+}  // namespace detail
 
 export
 {
@@ -261,11 +261,11 @@ export
      * @return 转化成聚合类型的目标
      */
     template<typename Agg, typename Tuple>
-        requires(std::is_aggregate_v<Agg> && internal::is_tuple_like_v<std::decay_t<Tuple>>)
+        requires(std::is_aggregate_v<Agg> && detail::is_tuple_like_v<std::decay_t<Tuple>>)
     constexpr auto tuple_to_aggregate(Tuple&& t) noexcept
     {
         constexpr std::size_t N = std::tuple_size_v<std::decay_t<Tuple>>;
-        return internal::tuple_to_agg_impl<Agg>(std::forward<Tuple>(t), std::make_index_sequence<N>{});
+        return detail::tuple_to_agg_impl<Agg>(std::forward<Tuple>(t), std::make_index_sequence<N>{});
     }
 
     /**

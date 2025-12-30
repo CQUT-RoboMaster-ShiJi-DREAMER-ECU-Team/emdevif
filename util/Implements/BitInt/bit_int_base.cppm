@@ -18,7 +18,7 @@ export using BitsType_t = uint_fast8_t;
 export template<BitsType_t bits>
 concept ValidBitIntWidth = (bits <= 64U);
 
-namespace internal {
+namespace detail {
 
 template<std::integral T>
 consteval BitsType_t bitsOf() noexcept
@@ -40,6 +40,6 @@ consteval BitsType_t bitsOf() noexcept
     }
 }
 
-}  // namespace internal
+}  // namespace detail
 
 }  // namespace emdevif

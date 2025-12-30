@@ -34,7 +34,7 @@ public:
     explicit constexpr Spi(const std::string_view name) noexcept
         : instance_(static_cast<SpiModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
-        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "SPI", name);
+        detail::PeripheralErrorHandler::checkInstanceIsExist(instance_, "SPI", name);
     }
 
     // NOLINTNEXTLINE

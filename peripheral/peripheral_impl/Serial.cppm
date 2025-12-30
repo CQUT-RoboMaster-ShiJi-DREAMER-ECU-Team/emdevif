@@ -34,7 +34,7 @@ public:
     explicit constexpr Serial(const std::string_view name) noexcept
         : instance_(static_cast<SerialModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
-        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "Serial", name);
+        detail::PeripheralErrorHandler::checkInstanceIsExist(instance_, "Serial", name);
     }
 
     SerialModel::State getStatus(const bool in_isr) const noexcept  // NOLINT(*-use-nodiscard)

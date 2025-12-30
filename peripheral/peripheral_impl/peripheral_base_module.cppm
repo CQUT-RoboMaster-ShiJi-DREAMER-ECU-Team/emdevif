@@ -16,7 +16,7 @@ export module emdevif.peripheral.base;
 
 import emdevif.errorHandler;
 
-namespace emdevif::internal {
+namespace emdevif::detail {
 
 export class PeripheralErrorHandler
 {
@@ -44,12 +44,12 @@ private:
     static void ThisIsACompileTimeMessage_CouldNotFoundHandle() noexcept;
 };
 
-}  // namespace emdevif::internal
+}  // namespace emdevif::detail
 
 // module :private;
 
-namespace emdevif::internal {
+namespace emdevif::detail {
 
 void PeripheralErrorHandler::ThisIsACompileTimeMessage_CouldNotFoundHandle() noexcept {}
 
-}  // namespace emdevif::internal
+}  // namespace emdevif::detail

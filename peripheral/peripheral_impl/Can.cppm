@@ -32,7 +32,7 @@ public:
     explicit constexpr Can(const std::string_view name) noexcept
         : instance_(static_cast<CanModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
-        internal::PeripheralErrorHandler::checkInstanceIsExist(instance_, "CAN", name);
+        detail::PeripheralErrorHandler::checkInstanceIsExist(instance_, "CAN", name);
     }
 
     ErrorCode receiveCallbackEntry(const bool in_isr,

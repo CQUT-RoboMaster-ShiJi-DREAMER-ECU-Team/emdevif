@@ -19,7 +19,7 @@ export module emdevif.endian;
 
 namespace emdevif {
 
-namespace internal {
+namespace detail {
 
 /**
  * 反转任意类型的端序
@@ -104,15 +104,15 @@ constexpr T byteSwap(const T v) noexcept
             /* clang-format on */
 
             auto u = std::bit_cast<ConvertIntegral>(v);
-            u = internal::byteSwapIntegral(u);
+            u = detail::byteSwapIntegral(u);
             return std::bit_cast<T>(u);
         }
         else {
-            return internal::byteSwapIntegral(v);
+            return detail::byteSwapIntegral(v);
         }
     }
 
-    return internal::byteSwapGeneric(v);
+    return detail::byteSwapGeneric(v);
 }
 
 }  // namespace emdevif
