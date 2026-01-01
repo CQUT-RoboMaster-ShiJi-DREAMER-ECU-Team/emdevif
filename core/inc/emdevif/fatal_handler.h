@@ -37,7 +37,7 @@ void emdevif_assert_(emdevif_AssertFuncParam_ param);
 #endif
 
 #ifdef NDEBUG
-#define EMDEVIF_ASSERT(cond, ...) ((void)0)
+#define EMDEVIF_ASSERT(cond, ...) ((void)(cond))
 #else
 #define EMDEVIF_ASSERT(cond, ...)                                       \
     emdevif_assert_((emdevif_AssertFuncParam_){.condition = (cond),     \
@@ -60,7 +60,7 @@ void emdevif_assert_(emdevif_AssertFuncParam_ param);
     ::emdevif::fatalHandler(__FILE__, __LINE__, format __VA_OPT__(, ) __VA_ARGS__)
 
 #ifdef NDEBUG
-#define EMDEVIF_ASSERT(condition, ...) ((void)0)
+#define EMDEVIF_ASSERT(condition, ...) ((void)(condition))
 #else
 #define EMDEVIF_ASSERT(condition, ...) \
     ::emdevif::emdevif_assert((condition), __FILE__, __LINE__, __func__, #condition __VA_OPT__(, ) __VA_ARGS__)
