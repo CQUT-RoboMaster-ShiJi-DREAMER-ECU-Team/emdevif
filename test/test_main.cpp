@@ -32,7 +32,9 @@ extern "C" void emdevif_testEntry(void)
 {
     for (const auto& [test_name, test_func] : emdevif_test_list) {
         if (!inIgnoreNameList(test_name)) {
-            test_func();
+            if (test_func != nullptr) {
+                test_func();
+            }
         }
     }
 }

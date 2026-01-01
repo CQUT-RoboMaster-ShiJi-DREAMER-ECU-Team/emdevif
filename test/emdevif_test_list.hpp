@@ -17,7 +17,7 @@
 
 #define TEST_LIST_ARG(func_name) #func_name, func_name
 
-#ifndef USE_DEFAULT_EMDEVIF_TEST_LIST
+#ifndef USE_GENERATED_EMDEVIF_TEST_LIST
 
 static constexpr auto emdevif_test_list =
     std::to_array<std::pair<std::string_view, void (*)()>>({{TEST_LIST_ARG(cFeatureTest)},
@@ -34,10 +34,10 @@ static constexpr auto emdevif_test_list =
                                                             {TEST_LIST_ARG(threadAndMutexTest)},
                                                             {TEST_LIST_ARG(logSystemHeapUsage)}});
 
-#else  // !USE_DEFAULT_EMDEVIF_TEST_LIST
+#else  // !USE_GENERATED_EMDEVIF_TEST_LIST
 
 #include "emdevif_test_list.generated.hpp"
 
-#endif  // !USE_DEFAULT_EMDEVIF_TEST_LIST
+#endif  // !USE_GENERATED_EMDEVIF_TEST_LIST
 
 #endif  // !EMDEVIF_TEST_LIST_HPP
