@@ -25,6 +25,38 @@ module;
     "emdevif thread requires the max priorities more than or equal to 6. Please change the value of macro `configMAX_PRIORITIES' in FreeRTOSConfig.h."
 #endif
 
+#if (!(defined(INCLUDE_xTaskResumeFromISR) && INCLUDE_xTaskResumeFromISR))
+#error "FreeRTOS Config `INCLUDE_xTaskResumeFromISR\' should be enabled!"
+#endif
+
+#if (!(defined(INCLUDE_vTaskSuspend) && INCLUDE_vTaskSuspend))
+#error "FreeRTOS Config `INCLUDE_vTaskSuspend\' should be enabled!"
+#endif
+
+#if (!(defined(INCLUDE_vTaskDelete) && INCLUDE_vTaskDelete))
+#error "FreeRTOS Config `INCLUDE_vTaskDelete\' should be enabled!"
+#endif
+
+#if (!(defined(configSUPPORT_STATIC_ALLOCATION) && configSUPPORT_STATIC_ALLOCATION))
+#error "FreeRTOS Config `configSUPPORT_STATIC_ALLOCATION\' should be enabled!"
+#endif
+
+#if (!(defined(configSUPPORT_DYNAMIC_ALLOCATION) && configSUPPORT_DYNAMIC_ALLOCATION))
+#error "FreeRTOS Config `configSUPPORT_DYNAMIC_ALLOCATION\' should be enabled!"
+#endif
+
+#if (!(defined(INCLUDE_vTaskDelayUntil) && INCLUDE_vTaskDelayUntil))
+#error "FreeRTOS Config `INCLUDE_vTaskDelayUntil\' should be enabled!"
+#endif
+
+#if (!(defined(INCLUDE_vTaskDelay) && INCLUDE_vTaskDelay))
+#error "FreeRTOS Config `INCLUDE_vTaskDelay\' should be enabled!"
+#endif
+
+#if (!(defined(INCLUDE_eTaskGetState) && INCLUDE_eTaskGetState))
+#error "FreeRTOS Config `INCLUDE_eTaskGetState\' should be enabled!"
+#endif
+
 export module emdevif.sys.thread:implements;
 import :interface;
 
