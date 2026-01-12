@@ -13,11 +13,11 @@ export module emdevif.container.messageQueue;
 
 import emdevif.errorHandler;
 
-export namespace emdevif {
+namespace emdevif {
 
-using MessageQueueTimeout_t = std::uint_fast32_t;
+export using MessageQueueTimeout_t = std::uint_fast32_t;
 
-template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>
+export template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>
 class MessageQueueInterface
 {
 public:
@@ -79,7 +79,30 @@ protected:
     ~MessageQueueInterface() = default;
 };
 
+namespace detail {
+
 template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>
-concept IsMessageQueue = std::is_base_of_v<MessageQueueInterface<Impl, Type, item_size>, Impl<Type, item_size>>;
+class IsMessageQueueHelper
+{
+private:
+    using ImplType_ = Impl<Type, item_size>;
+    using InterfaceType_ = MessageQueueInterface<Impl, Type, item_size>;
+
+public:
+    static constexpr bool value =
+        std::is_base_of_v<InterfaceType_, ImplType_> && std::is_convertible_v<ImplType_*, InterfaceType_*>;
+};
+
+}  // namespace detail
+
+export template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>
+struct IsMessageQueue : public std::bool_constant<detail::IsMessageQueueHelper<Impl, Type, item_size>::value> {
+};
+
+export template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>
+constexpr bool IsMessageQueue_v = IsMessageQueue<Impl, Type, item_size>::value;
+
+export template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>
+concept ValidMessageQueue = IsMessageQueue_v<Impl, Type, item_size>;
 
 }  // namespace emdevif
