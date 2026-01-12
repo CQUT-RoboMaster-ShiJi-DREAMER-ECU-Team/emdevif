@@ -4,12 +4,21 @@ include(cmake/config_compile_options.cmake)
 
 project(emdevif_core C CXX)
 
+option(EMDEVIF_CORE_USE_BUILT_IN_BOOST_PFR_LIB
+    "Enabled it to use built-in Boost.PFR library. If disabled it, you should \
+provide `Boost::pfr\' alias library(Use find_package, FetchContent or built-in \
+Boost.PFR library on another place)."
+    ON
+)
+
 add_library(${PROJECT_NAME} STATIC)
 
 set(BOOST_USE_MODULES ON CACHE BOOL "" FORCE)
-add_subdirectory(depends/boost_pfr)
+if (EMDEVIF_CORE_USE_BUILT_IN_BOOST_PFR_LIB)
+    add_subdirectory(depends/boost_pfr)
+endif ()
 
-target_link_libraries(${PROJECT_NAME} PUBLIC boost_pfr)
+target_link_libraries(${PROJECT_NAME} PUBLIC Boost::pfr)
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC inc/
