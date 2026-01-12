@@ -10,6 +10,7 @@ module;
 #include <concepts>
 #include <compare>
 #include <source_location>
+#include <exception>
 
 export module emdevif.errorHandler:errorCode;
 import :fatalHandlerAndAssert;
@@ -100,5 +101,45 @@ void terminateIfNullptr(Pointer ptr, const std::source_location sl = std::source
         fatalHandler(sl.file_name(), sl.line(), "Null pointer provided.");
     }
 }
+
+/**
+ * 返回错误码异常
+ *
+ * 尽管嵌入式开发一般会关闭异常，但 emdevif 仍然提供一种统一的方式将错误码转化为异常的处理方式以便于启用了异常的情况。
+ * 该异常的构造必须指定错误码，而异常信息可选，这样在捕获异常时可以获得错误码。
+ */
+export class ErrorWithCodeException : public std::exception
+{
+public:
+    ErrorWithCodeException() = delete;
+
+    ~ErrorWithCodeException() noexcept override = default;
+
+private:
+    ErrorCode ec_;           ///< 错误码
+    const char* error_str_;  ///< 错误信息
+
+public:
+    /**
+     * 构造返回错误码异常
+     * @param error_code 错误码
+     * @param message 异常消息，默认为空字符串
+     */
+    explicit ErrorWithCodeException(const ErrorCode error_code, const char* message = "") noexcept
+        : ec_(error_code), error_str_(message)
+    {
+    }
+
+    [[nodiscard]] const char* what() const noexcept override
+    {
+        return error_str_;
+    }
+
+    /// 获取错误码
+    [[nodiscard]] ErrorCode getErrorCode() const noexcept
+    {
+        return ec_;
+    }
+};
 
 }  // namespace emdevif
