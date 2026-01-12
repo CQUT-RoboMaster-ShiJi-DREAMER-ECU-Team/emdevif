@@ -18,6 +18,7 @@
 
 import emdevif.sys.thread;
 import emdevif.sys.mutex;
+import emdevif.lockGuard;
 
 template<typename T>
 class MutexGuard
@@ -101,6 +102,37 @@ TEST_SUIT(MutexTest)
 
         mutex.destroy();
         ASSERT_TRUE(mutex.getHandle() == nullptr, "");
+    }
+    TEST_CASE_END();
+
+    TEST_CASE_BEGIN(LockGuardTest)
+    {
+        using emdevif::Mutex;
+
+        Mutex mutex({.name = "lock guard"});
+        ASSERT_TRUE(mutex.getHandle() != nullptr, "");
+
+        [&] {
+            const emdevif::LockGuard lock{emdevif::lock_guard_do_not_lock_when_init, mutex};
+
+            const auto ret = lock.lock();
+            ASSERT_TRUE(ret == emdevif::ErrorCode::Success, "Failed to lock!");
+
+            // lock 将自动释放 mutex
+        }();
+        ASSERT_TRUE(mutex.try_lock() == emdevif::ErrorCode::Success, "Have not unlock!");
+        mutex.unlock();
+
+        [&] {
+            const emdevif::LockGuard lock{emdevif::lock_guard_do_not_lock_when_init, mutex};
+
+            const auto ret = lock.lock(100);
+            ASSERT_TRUE(ret == emdevif::ErrorCode::Success, "Failed to lock!");
+
+            // lock 将自动释放 mutex
+        }();
+        ASSERT_TRUE(mutex.try_lock() == emdevif::ErrorCode::Success, "Have not unlock!");
+        mutex.unlock();
     }
     TEST_CASE_END();
 

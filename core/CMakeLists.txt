@@ -24,7 +24,7 @@ file(GLOB_RECURSE emdevifCoreModules
 target_sources(${PROJECT_NAME}
     PUBLIC FILE_SET ${PROJECT_NAME}_modules TYPE CXX_MODULES FILES
         ${emdevifCoreModules}
-        endian.cppm concepts.cppm
+        endian.cppm concepts.cppm lock_guard.cppm
 
     PRIVATE
         error_handler/error_handler.cpp

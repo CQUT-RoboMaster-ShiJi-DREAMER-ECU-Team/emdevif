@@ -66,7 +66,6 @@ Mutex::StronglyTypedHandle Mutex::create(const Attribute& attribute) noexcept
 }
 
 void Mutex::destroy(Mutex& obj) noexcept
-// NOLINT
 {
     if (obj.handle_ != nullptr) {
         vSemaphoreDelete(obj.handle_);
