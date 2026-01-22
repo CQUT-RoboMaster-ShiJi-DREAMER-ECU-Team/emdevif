@@ -6,6 +6,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 
+add_subdirectory(check_compile_features)
+
 set(emdevifAllModules "logger;timeline;system;peripheral;util")
 
 option(EMDEVIF_ENABLE_TESTS "Enable the test for emdevif." OFF)
