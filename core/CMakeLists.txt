@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.28...4.0.2)
 
 include(cmake/config_compile_options.cmake)
 
