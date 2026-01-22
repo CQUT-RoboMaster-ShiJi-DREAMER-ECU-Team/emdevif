@@ -7,6 +7,8 @@ module;
 
 #include <cstdint>
 
+#include <type_traits>
+
 #include "emdevif/fatal_handler.h"
 
 export module emdevif.sys.sysQueue:interface;
@@ -121,6 +123,10 @@ public:
 
 private:
     Handle handle_;
+};
+
+template<typename Type, std::size_t item_size>
+struct IsMessageQueue<SysQueue, Type, item_size> : public std::true_type {
 };
 
 }  // namespace emdevif

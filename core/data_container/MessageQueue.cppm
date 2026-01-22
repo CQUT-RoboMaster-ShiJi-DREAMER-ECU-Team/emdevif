@@ -96,7 +96,7 @@ public:
 }  // namespace detail
 
 export template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>
-struct IsMessageQueue : public std::bool_constant<detail::IsMessageQueueHelper<Impl, Type, item_size>::value> {
+struct IsMessageQueue : public std::false_type {
 };
 
 export template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>

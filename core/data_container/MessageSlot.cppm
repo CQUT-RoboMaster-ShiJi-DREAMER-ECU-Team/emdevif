@@ -7,6 +7,8 @@ module;
 
 #include <cstddef>
 
+#include <type_traits>
+
 export module emdevif.container.messageSlot;
 
 import emdevif.container.messageQueue;
@@ -60,5 +62,15 @@ protected:
     MessageSlotInterface(const MessageSlotInterface&) = default;
     ~MessageSlotInterface() = default;
 };
+
+template<template<typename T> class Impl, typename Type>
+struct IsMessageSlot : public std::false_type {
+};
+
+template<template<typename T> class Impl, typename Type>
+constexpr bool IsMessageSlot_v = IsMessageSlot<Impl, Type>::value;
+
+template<template<typename T> class Impl, typename Type>
+concept ValidMessageSlot = IsMessageSlot_v<Impl, Type>;
 
 }  // namespace emdevif

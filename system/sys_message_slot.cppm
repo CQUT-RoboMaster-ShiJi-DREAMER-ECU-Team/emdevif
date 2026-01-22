@@ -6,6 +6,7 @@
 module;
 
 #include <utility>
+#include <type_traits>
 
 export module emdevif.sys.sysMessageSlot;
 
@@ -139,6 +140,10 @@ public:
 
         return *this;
     }
+};
+
+template<typename Type>
+struct IsMessageSlot<SysMessageSlot, Type> : public std::true_type {
 };
 
 }  // namespace emdevif
