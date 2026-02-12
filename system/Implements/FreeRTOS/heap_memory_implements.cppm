@@ -19,7 +19,7 @@ export module emdevif.sys.heap:implements;
 
 import emdevif.concepts;
 
-namespace emdevif::heap::internal {
+namespace emdevif::heap::detail {
 
 void* mallocByte(const std::size_t size_in_bytes) noexcept
 {
@@ -31,7 +31,7 @@ void free(void* block) noexcept
     vPortFree(block);
 }
 
-}  // namespace emdevif::heap::internal
+}  // namespace emdevif::heap::detail
 
 export namespace emdevif::heap {
 
@@ -41,7 +41,7 @@ T* construct(Args&&... args)
     static_assert(!std::is_void_v<T>, "can't create pointer to incomplete type");
     static_assert(sizeof(T) > 0, "can't create pointer to incomplete type");
 
-    auto ret = static_cast<T*>(internal::mallocByte(sizeof(T)));
+    auto ret = static_cast<T*>(detail::mallocByte(sizeof(T)));
     if (ret == nullptr) {
         throw std::bad_alloc();
     }
@@ -50,7 +50,7 @@ T* construct(Args&&... args)
         std::construct_at(ret, std::forward<Args>(args)...);
     }
     catch (...) {
-        internal::free(ret);
+        detail::free(ret);
         throw;
     }
 
@@ -63,7 +63,7 @@ T* construct(std::nothrow_t, Args&&... args) noexcept
     static_assert(!std::is_void_v<T>, "can't create pointer to incomplete type");
     static_assert(sizeof(T) > 0, "can't create pointer to incomplete type");
 
-    auto ret = static_cast<T*>(internal::mallocByte(sizeof(T)));
+    auto ret = static_cast<T*>(detail::mallocByte(sizeof(T)));
     if (ret == nullptr) {
         return nullptr;
     }
@@ -86,7 +86,7 @@ void destruct(T& p) noexcept
 
     std::destroy_at(p);
 
-    internal::free(p);
+    detail::free(p);
 
     p = nullptr;
 }
@@ -124,6 +124,7 @@ unique_ptr<T> make_unique(std::nothrow_t, Args&&... args) noexcept
     return unique_ptr<T>{construct<T>(std::nothrow, std::forward<Args>(args)...)};
 }
 
+// 使用时除了导入模块，还需要引入头文件 <memory>
 template<typename T>
 class Allocator
 {
@@ -151,14 +152,14 @@ public:
     // ReSharper disable once CppMemberFunctionMayBeStatic
     pointer allocate(const size_type n)
     {
-        return static_cast<pointer>(internal::mallocByte(n * sizeof(value_type)));
+        return static_cast<pointer>(detail::mallocByte(n * sizeof(value_type)));
     }
 
     // ReSharper disable once CppMemberFunctionMayBeStatic
     // ReSharper disable once CppParameterMayBeConst
     void deallocate(pointer p, const size_type)
     {
-        internal::free(p);
+        detail::free(p);
     }
 };
 

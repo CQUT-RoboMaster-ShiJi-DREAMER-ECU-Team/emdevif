@@ -7,6 +7,9 @@
 #ifndef EMDEVIF_TEST_HEAP_USAGE_CHECKER_HPP
 #define EMDEVIF_TEST_HEAP_USAGE_CHECKER_HPP
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include "emdevif_test_framework-with_prefix.h"
+
 #include <cstddef>
 
 struct HeapUsageInfo {
