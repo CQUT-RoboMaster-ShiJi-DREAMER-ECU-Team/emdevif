@@ -126,7 +126,7 @@ private:
 };
 
 template<typename Type, std::size_t item_size>
-struct IsMessageQueue<SysQueue, Type, item_size> : public std::true_type {
+struct IsMessageQueue<SysQueue<Type, item_size>> : public std::true_type {
 };
 
 }  // namespace emdevif

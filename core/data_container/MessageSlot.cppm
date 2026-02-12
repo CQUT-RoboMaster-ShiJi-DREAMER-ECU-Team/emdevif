@@ -21,6 +21,9 @@ class MessageSlotInterface
 {
 public:
     using ImplType = Impl<Type>;
+    using ValueType = Type;
+
+    static constexpr std::size_t item_size = 1;
 
     ErrorCode forcePush(bool in_isr, const Type& data)
     {
@@ -63,14 +66,14 @@ protected:
     ~MessageSlotInterface() = default;
 };
 
-template<template<typename T> class Impl, typename Type>
+template<class Impl>
 struct IsMessageSlot : public std::false_type {
 };
 
-template<template<typename T> class Impl, typename Type>
-constexpr bool IsMessageSlot_v = IsMessageSlot<Impl, Type>::value;
+template<class Impl>
+constexpr bool IsMessageSlot_v = IsMessageSlot<Impl>::value;
 
-template<template<typename T> class Impl, typename Type>
-concept ValidMessageSlot = IsMessageSlot_v<Impl, Type>;
+template<class Impl>
+concept ValidMessageSlot = IsMessageSlot_v<Impl>;
 
 }  // namespace emdevif

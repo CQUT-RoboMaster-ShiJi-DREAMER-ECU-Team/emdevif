@@ -17,11 +17,14 @@ namespace emdevif {
 
 export using MessageQueueTimeout_t = std::uint_fast32_t;
 
-export template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>
+export template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size_>
 class MessageQueueInterface
 {
 public:
-    using ImplType = Impl<Type, item_size>;
+    using ImplType = Impl<Type, item_size_>;
+    using ValueType = Type;
+
+    static constexpr std::size_t item_size = item_size_;
 
     ErrorCode push(bool in_isr, const Type& data, MessageQueueTimeout_t timeout_tick = 0U)
     {
@@ -65,7 +68,7 @@ public:
 
     [[nodiscard]] static constexpr std::size_t maxItemCount()
     {
-        return item_size;
+        return item_size_;
     }
 
     [[nodiscard]] void* getHandle() const
@@ -79,30 +82,14 @@ protected:
     ~MessageQueueInterface() = default;
 };
 
-namespace detail {
-
-template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>
-class IsMessageQueueHelper
-{
-private:
-    using ImplType_ = Impl<Type, item_size>;
-    using InterfaceType_ = MessageQueueInterface<Impl, Type, item_size>;
-
-public:
-    static constexpr bool value =
-        std::is_base_of_v<InterfaceType_, ImplType_> && std::is_convertible_v<ImplType_*, InterfaceType_*>;
-};
-
-}  // namespace detail
-
-export template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>
+export template<class Impl>
 struct IsMessageQueue : public std::false_type {
 };
 
-export template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>
-constexpr bool IsMessageQueue_v = IsMessageQueue<Impl, Type, item_size>::value;
+export template<class Impl>
+constexpr bool IsMessageQueue_v = IsMessageQueue<Impl>::value;
 
-export template<template<typename T, std::size_t sz> class Impl, typename Type, std::size_t item_size>
-concept ValidMessageQueue = IsMessageQueue_v<Impl, Type, item_size>;
+export template<class Impl>
+concept ValidMessageQueue = IsMessageQueue_v<Impl>;
 
 }  // namespace emdevif

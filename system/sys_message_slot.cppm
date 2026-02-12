@@ -143,7 +143,7 @@ public:
 };
 
 template<typename Type>
-struct IsMessageSlot<SysMessageSlot, Type> : public std::true_type {
+struct IsMessageSlot<SysMessageSlot<Type>> : public std::true_type {
 };
 
 }  // namespace emdevif
