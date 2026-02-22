@@ -47,7 +47,9 @@
     #define EMDEVIF_FALL_THROUGH __attribute__((fallthrough))
 #endif
 
-#define EMDEVIF_SECTION(section_name) __attribute__((section(#section_name)))
+#define EMDEVIF_DATA_SECTION(section_name) __attribute__((section(section_name)))
+
+#define EMDEVIF_FUNC_SECTION(section_name) __attribute__((section(section_name)))
 
 #define EMDEVIF_FORMAT_CHECK(func, string_index, first_to_check) __attribute__((format(func, string_index, first_to_check)))
 

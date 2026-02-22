@@ -35,7 +35,11 @@
     #define EMDEVIF_FALL_THROUGH
 #endif
 
-#define EMDEVIF_SECTION(section_name) __declspec(allocate(#section_name))
+#define EMDEVIF_DATA_SECTION(section_name) __declspec(allocate(section_name))
+
+#define EMDEVIF_FUNC_SECTION(section_name) __declspec(code_seg(section_name))
+
+#define EMDEVIF_FORMAT_CHECK(func, string_index, first_to_check)
 
 /* clang-format on */
 
