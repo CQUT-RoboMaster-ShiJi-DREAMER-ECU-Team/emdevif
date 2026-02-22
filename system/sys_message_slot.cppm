@@ -12,8 +12,8 @@ export module emdevif.sys.sysMessageSlot;
 
 import emdevif.sys.thread;
 import emdevif.sys.sysQueue;
-import emdevif.container.messageSlot;
-import emdevif.container.messageQueue;
+import emdevif.core.data_container.message_slot;
+import emdevif.core.data_container.message_queue;
 
 namespace emdevif {
 

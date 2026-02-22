@@ -8,13 +8,13 @@ module;
 #include <string_view>
 #include <type_traits>
 
-#include "emdevif/simplify_decl_macros.hpp"
+#include "emdevif/core/simplify_decl_macros.hpp"
 
-#include "emdevif/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
 export module emdevif.peripheral.base;
 
-import emdevif.errorHandler;
+import emdevif.core.error_handler;
 
 namespace emdevif::detail {
 

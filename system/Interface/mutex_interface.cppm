@@ -9,11 +9,11 @@ module;
 
 #include <cstdint>
 
-#include "emdevif/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
 export module emdevif.sys.mutex:interface;
 
-import emdevif.errorHandler;
+import emdevif.core.error_handler;
 import emdevif.sys.thread;
 
 export namespace emdevif {

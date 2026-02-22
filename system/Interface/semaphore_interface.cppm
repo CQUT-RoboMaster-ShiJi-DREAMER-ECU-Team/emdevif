@@ -7,11 +7,11 @@ module;
 
 #include <cstddef>
 
-#include "emdevif/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
 export module emdevif.sys.semaphore:interface;
 
-export import emdevif.errorHandler;
+export import emdevif.core.error_handler;
 export import emdevif.sys.thread;
 
 export namespace emdevif {

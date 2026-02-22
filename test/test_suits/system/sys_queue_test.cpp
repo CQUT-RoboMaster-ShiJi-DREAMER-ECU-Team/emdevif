@@ -9,7 +9,7 @@
 
 #include <type_traits>
 
-import emdevif.container.messageQueue;
+import emdevif.core.data_container.message_queue;
 import emdevif.sys.sysQueue;
 
 TEST_SUIT(SysQueueBasicTest)

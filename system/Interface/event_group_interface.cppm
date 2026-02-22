@@ -7,14 +7,14 @@
 
 module;
 
-#include <cstdint>
+#include "emdevif/core/fatal_handler.h"
 
-#include "emdevif/fatal_handler.h"
+#include <cstdint>
 
 export module emdevif.sys.eventGroup:interface;
 import :definitions;
 
-export import emdevif.errorHandler;
+export import emdevif.core.error_handler;
 export import emdevif.sys.thread;
 export import emdevif.util.bitInt;
 import emdevif.sys.thread;

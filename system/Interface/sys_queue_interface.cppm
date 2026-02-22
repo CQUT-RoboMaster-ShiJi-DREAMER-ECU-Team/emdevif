@@ -9,12 +9,12 @@ module;
 
 #include <type_traits>
 
-#include "emdevif/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
 export module emdevif.sys.sysQueue:interface;
 
-export import emdevif.errorHandler;
-import emdevif.container.messageQueue;
+export import emdevif.core.error_handler;
+import emdevif.core.data_container.message_queue;
 import emdevif.sys.thread;
 
 export namespace emdevif {

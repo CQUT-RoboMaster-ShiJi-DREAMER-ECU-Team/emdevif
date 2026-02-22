@@ -9,12 +9,12 @@ module;
 
 #include <string_view>
 
-#include "emdevif/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
 export module emdevif.peripheral.timer;
 
 import emdevif.peripheralHandleMap;
-import emdevif.errorHandler;
+import emdevif.core.error_handler;
 import emdevif.peripheral.base;
 import emdevif.peripheral.model.timer;
 

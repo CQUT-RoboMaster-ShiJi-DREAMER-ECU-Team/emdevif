@@ -8,13 +8,13 @@ module;
 #include <string_view>
 #include <type_traits>
 
-#include "emdevif/simplify_decl_macros.hpp"
+#include "emdevif/core/simplify_decl_macros.hpp"
 
 export module emdevif.peripheralHandleMap;
 
-import emdevif.typeTraits;
+import emdevif.core.type_traits;
 import emdevif.userDeclares;
-import emdevif.container.arrayMap;
+import emdevif.data_container.array_map;
 
 namespace emdevif {
 

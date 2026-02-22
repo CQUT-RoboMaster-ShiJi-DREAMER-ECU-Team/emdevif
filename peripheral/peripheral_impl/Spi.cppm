@@ -12,11 +12,11 @@ module;
 #include <string_view>
 #include <type_traits>
 
-#include "emdevif/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
 export module emdevif.peripheral.spi;
 
-export import emdevif.errorHandler;
+export import emdevif.core.error_handler;
 import emdevif.peripheralHandleMap;
 import emdevif.peripheral.base;
 import emdevif.peripheral.model.spi;

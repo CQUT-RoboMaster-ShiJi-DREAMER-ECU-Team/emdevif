@@ -11,7 +11,7 @@
 
 #include "emdevif_test_framework.h"
 
-import emdevif.endian;
+import emdevif.core.endian;
 
 TEST_SUIT(EndianTest)
 {

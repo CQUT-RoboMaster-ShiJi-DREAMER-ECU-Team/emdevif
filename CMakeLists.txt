@@ -2,11 +2,21 @@ cmake_minimum_required(VERSION 3.28...4.0.2)
 
 project(emdevif C CXX)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-set(CMAKE_CXX_SCAN_FOR_MODULES ON)
-
 add_subdirectory(check_compile_features)
+
+option(EMDEVIF_USE_CPP_MODULES "Enabled it to use C++ modules." ON)
+
+if (EMDEVIF_USE_CPP_MODULES)
+    if (NOT (EMDEVIF_COMPILER_SUPPORT_CPP20_MODULES))
+        message(FATAL_ERROR "[${PROJECT_NAME}]: EMDEVIF_USE_CPP_MODULES is ON, "
+            "but the compiler \"${CMAKE_CXX_COMPILER}\" does not support C++20 modules."
+        )
+    endif ()
+
+    message(STATUS "[${PROJECT_NAME}]: Will use C++ modules.")
+else ()
+    message(STATUS "[${PROJECT_NAME}]: Will NOT use C++ modules.")
+endif ()
 
 set(emdevifAllModules "logger;timeline;system;peripheral;util")
 

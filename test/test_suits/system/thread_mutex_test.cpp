@@ -18,7 +18,7 @@
 
 import emdevif.sys.thread;
 import emdevif.sys.mutex;
-import emdevif.lockGuard;
+import emdevif.core.lock_guard;
 
 template<typename T>
 class MutexGuard

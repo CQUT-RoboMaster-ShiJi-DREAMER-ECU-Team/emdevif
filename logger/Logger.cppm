@@ -11,9 +11,9 @@ module;
 
 #include <array>
 
-#include "emdevif/attributes_and_useful_macros.h"
-#include "emdevif/fatal_handler.h"
-#include "emdevif/line_separator.h"
+#include "emdevif/core/attributes_and_useful_macros.h"
+#include "emdevif/core/fatal_handler.h"
+#include "emdevif/core/line_separator.h"
 
 #ifndef EMDEVIF_LOGGER_BUFFER_SIZE
 #define EMDEVIF_LOGGER_BUFFER_SIZE 256U
@@ -45,10 +45,10 @@ module;
 export module emdevif.logger;
 
 import emdevif.userDeclares;
-import emdevif.errorHandler;
+import emdevif.core.error_handler;
 
 #if (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_ASYNC)
-import emdevif.container.ringBuffer;
+import emdevif.core.data_container.ring_buffer;
 #endif
 
 #if (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_ASYNC || \

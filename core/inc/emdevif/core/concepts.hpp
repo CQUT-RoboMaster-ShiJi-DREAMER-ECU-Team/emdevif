@@ -1,0 +1,42 @@
+/**
+ * @file concepts.hpp
+ * @brief 概念
+ */
+
+#pragma once
+#ifndef EMDEVIF_CORE_CONCEPTS_HPP
+#define EMDEVIF_CORE_CONCEPTS_HPP
+
+#include "emdevif/core/detail/config.hpp"
+
+#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+#include <type_traits>
+#endif
+
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
+
+/**
+ * 可计算类型概念
+ * @tparam Type 数据类型
+ */
+template<typename Type>
+concept ArithmeticType = std::is_arithmetic_v<Type>;
+
+/**
+ * 浮点类型概念
+ * @tparam Type 数据类型
+ */
+template<typename Type>
+concept FloatingPointType = std::is_floating_point_v<Type>;
+
+/**
+ * 指针类型概念
+ * @tparam Type 类型
+ */
+template<typename Type>
+concept PointerType = std::is_pointer_v<Type>;
+
+}  // namespace emdevif
+
+#endif  // !EMDEVIF_CORE_CONCEPTS_HPP

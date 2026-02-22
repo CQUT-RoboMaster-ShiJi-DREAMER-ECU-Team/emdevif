@@ -10,9 +10,8 @@
 #include <string_view>
 #include <array>
 
-#include "emdevif/integer_suffix.hpp"
-
-import emdevif.container.arrayMap;
+import emdevif.core.integer_suffix;
+import emdevif.data_container.array_map;
 
 namespace emdevif::test::static_map {
 

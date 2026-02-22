@@ -10,12 +10,12 @@ module;
 #include <tuple>
 #include <utility>
 
-#include "emdevif/attributes_and_useful_macros.h"
-#include "emdevif/fatal_handler.h"
+#include "emdevif/core/attributes_and_useful_macros.h"
+#include "emdevif/core/fatal_handler.h"
 
 export module emdevif.sys.thread:interface;
 
-export import emdevif.errorHandler;
+export import emdevif.core.error_handler;
 import emdevif.sys.heap;
 
 export namespace emdevif {

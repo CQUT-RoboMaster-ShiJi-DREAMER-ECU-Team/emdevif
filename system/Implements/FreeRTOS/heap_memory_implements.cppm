@@ -17,7 +17,7 @@ module;
 
 export module emdevif.sys.heap:implements;
 
-import emdevif.concepts;
+import emdevif.core.concepts;
 
 namespace emdevif::heap::detail {
 

@@ -17,12 +17,12 @@ module;
 #include "semphr.h"
 #endif
 
-#include "emdevif/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
 export module emdevif.sys.semaphore:implements;
 import :interface;
 
-export import emdevif.errorHandler;
+export import emdevif.core.error_handler;
 
 // for template<std::ptrdiff_t least_max_value> CountingSemaphore
 export namespace emdevif {

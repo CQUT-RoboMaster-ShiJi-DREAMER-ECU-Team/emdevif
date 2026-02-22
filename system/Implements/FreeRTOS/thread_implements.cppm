@@ -18,7 +18,7 @@ module;
 #include <type_traits>
 #include <limits>
 
-#include "emdevif/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
 #if (configMAX_PRIORITIES < 6)
 #error \
@@ -60,8 +60,8 @@ module;
 export module emdevif.sys.thread:implements;
 import :interface;
 
-import emdevif.errorHandler;
-import emdevif.container.messageQueue;
+import emdevif.core.error_handler;
+import emdevif.core.data_container.message_queue;
 
 export namespace emdevif {
 

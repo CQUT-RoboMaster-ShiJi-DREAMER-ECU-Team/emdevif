@@ -18,7 +18,7 @@ module;
 export module emdevif.util.bitInt:unsigned_partial;
 import :base;
 
-import emdevif.concepts;
+import emdevif.core.concepts;
 
 export namespace emdevif {
 

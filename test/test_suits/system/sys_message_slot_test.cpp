@@ -9,9 +9,9 @@
 
 #include <type_traits>
 
-import emdevif.container.messageSlot;
+import emdevif.core.data_container.message_slot;
 import emdevif.sys.sysMessageSlot;
-import emdevif.errorHandler;
+import emdevif.core.error_handler;
 
 TEST_SUIT(SysMessageSlotBasicTest)
 {

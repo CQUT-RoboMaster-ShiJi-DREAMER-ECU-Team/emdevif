@@ -15,12 +15,12 @@ module;
 #include "queue.h"
 #endif
 
-#include "emdevif/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
 export module emdevif.sys.sysQueue:implements;
 import :interface;
 
-import emdevif.errorHandler;
+import emdevif.core.error_handler;
 
 export namespace emdevif {
 

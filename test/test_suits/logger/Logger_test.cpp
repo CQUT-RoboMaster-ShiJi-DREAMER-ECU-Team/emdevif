@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-#include "emdevif/line_separator.h"
+#include "emdevif/core/line_separator.h"
 #include "emdevif/logger.hpp"
 
 import emdevif.logger;

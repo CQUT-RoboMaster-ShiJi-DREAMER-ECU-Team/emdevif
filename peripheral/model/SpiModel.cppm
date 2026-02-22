@@ -12,7 +12,7 @@ module;
 
 export module emdevif.peripheral.model.spi;
 
-export import emdevif.errorHandler;
+export import emdevif.core.error_handler;
 
 export namespace emdevif {
 
