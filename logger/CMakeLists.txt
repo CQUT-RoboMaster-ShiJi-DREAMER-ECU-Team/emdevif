@@ -9,9 +9,12 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE emdevif_compile_options emdevif_user_declares emdevif_system
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC inc/)
+target_include_directories(${PROJECT_NAME} PUBLIC inc)
 
-target_sources(${PROJECT_NAME} PUBLIC
+target_sources(${PROJECT_NAME}
+    PRIVATE src/logger.cpp
+
+    PUBLIC
     FILE_SET emdevif_logger_modules TYPE CXX_MODULES FILES
         Logger.cppm
 )
