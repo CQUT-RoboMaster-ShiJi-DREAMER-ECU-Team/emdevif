@@ -5,6 +5,10 @@
 
 module;
 
+#ifndef EMDEVIF_USER_DECLARES_PROVIDE_MODULE
+#include "emdevif/user_declares.hpp"
+#endif
+
 #include <cstdint>
 #include <cstdio>
 #include <cstdarg>
@@ -44,7 +48,10 @@ module;
 
 export module emdevif.logger;
 
+#ifdef EMDEVIF_USER_DECLARES_PROVIDE_MODULE
 import emdevif.userDeclares;
+#endif
+
 import emdevif.core.error_handler;
 
 #if (EMDEVIF_LOGGER_MODE == EMDEVIF_LOGGER_MODE_ASYNC)

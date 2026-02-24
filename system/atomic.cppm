@@ -13,17 +13,12 @@ module;
 #include <atomic>
 #endif
 
+#define EMDEVIF_MODULE_INTERFACE_UNIT
+
 export module emdevif.sys.atomic;
 
-export namespace emdevif {
-
-#if (EMDEVIF_USE_STL_ATOMIC)
-
-template<typename T>
-using atomic = std::atomic<T>;
-
-using memory_order = std::memory_order;
-
+#ifdef __clang__
+#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
 #endif
 
-}  // namespace emdevif
+#include "emdevif/system/atomic.hpp"

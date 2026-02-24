@@ -1,39 +1,42 @@
 /**
- * @file heap_memory_implements.cppm
- * @brief 堆内存 - FreeRTOS 实现
+ * @file heap.inl
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_FREERTOS_SYSTEM_IMPL_SYSTEM_HEAP_INL
+#define EMDEVIF_FREERTOS_SYSTEM_IMPL_SYSTEM_HEAP_INL
 
-#include <memory>
-#include <utility>
-#include <type_traits>
-
+#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
 #include "freertos/FreeRTOS.h"
 #else
 #include "FreeRTOS.h"
 #endif
 
-export module emdevif.sys.heap:implements;
+#include "emdevif/core/concepts.hpp"
 
-import emdevif.core.concepts;
+#include <memory>
+#include <utility>
+#include <type_traits>
+#endif
 
 namespace emdevif::heap::detail {
 
-void* mallocByte(const std::size_t size_in_bytes) noexcept
+inline void* mallocByte(const std::size_t size_in_bytes) noexcept
 {
     return pvPortMalloc(size_in_bytes);
 }
 
-void free(void* block) noexcept
+inline void free(void* block) noexcept
 {
     vPortFree(block);
 }
 
 }  // namespace emdevif::heap::detail
 
-export namespace emdevif::heap {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif::heap {
 
 template<typename T, typename... Args>
 T* construct(Args&&... args)
@@ -164,3 +167,5 @@ public:
 };
 
 }  // namespace emdevif::heap
+
+#endif  // !EMDEVIF_FREERTOS_SYSTEM_IMPL_SYSTEM_HEAP_INL

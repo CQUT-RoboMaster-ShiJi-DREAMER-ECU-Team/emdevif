@@ -1,24 +1,29 @@
 /**
- * @file thread_interface.cppm
- * @brief 线程接口
+ * @file thread.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_SYSTEM_THREAD_HPP
+#define EMDEVIF_SYSTEM_THREAD_HPP
+
+#include "emdevif/core/detail/config.hpp"
+
+#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/attributes_and_useful_macros.h"
+#include "emdevif/core/fatal_handler.h"
+
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/system/heap.hpp"
 
 #include <cstdint>
 
 #include <tuple>
 #include <utility>
+#endif
 
-#include "emdevif/core/attributes_and_useful_macros.h"
-#include "emdevif/core/fatal_handler.h"
-
-export module emdevif.sys.thread:interface;
-
-export import emdevif.core.error_handler;
-import emdevif.sys.heap;
-
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 #ifndef EMDEVIF_SYS_TICK_TYPE_UINT_BITS
 #define EMDEVIF_SYS_TICK_TYPE_UINT_BITS 64
@@ -479,3 +484,7 @@ private:
 };
 
 }  // namespace emdevif
+
+#include "emdevif/system_impl/thread.inl"
+
+#endif  // !EMDEVIF_SYSTEM_THREAD_HPP

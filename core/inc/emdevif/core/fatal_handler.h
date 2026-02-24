@@ -11,6 +11,7 @@
 
 #include "emdevif/core/attributes_and_useful_macros.h"
 
+#if (!defined(__cplusplus) || defined(EMDEVIF_CORE_ERROR_HANDLER_IN_C_API_WRAPPER_SRC_))
 /**
  * 供 C 语言调用的断言函数的参数类型
  */
@@ -22,6 +23,7 @@ typedef struct emdevif_AssertFuncParam_ {
     const char* condition_name;  ///< 表达式字符串
     const char* message;         ///< 额外信息
 } emdevif_AssertFuncParam_;
+#endif
 
 #ifndef __cplusplus
 

@@ -9,13 +9,11 @@
 
 #include "emdevif/logger/config.hpp"
 
-#ifndef EMDEVIF_USER_DECLARES_PROVIDE_MODULE
-#include "emdevif/user_declares.hpp"
-#endif
-
 #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #include "emdevif/core/fatal_handler.h"
 #include "emdevif/core/error_handler.hpp"
+
+#include "emdevif/core/detail/include_emdevif_user_declares_in_headers.hpp"
 
 #include <cstdarg>
 #endif

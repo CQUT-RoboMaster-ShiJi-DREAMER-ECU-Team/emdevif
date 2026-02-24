@@ -1,9 +1,15 @@
 /**
- * @file thread_implements.cppm
+ * @file thread.inl
  * @brief FreeRTOS 线程相关常数实现
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_FREERTOS_SYSTEM_IMPL_SYSTEM_THREAD_INL
+#define EMDEVIF_FREERTOS_SYSTEM_IMPL_SYSTEM_THREAD_INL
+
+#include "emdevif/core/fatal_handler.h"
+
+#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
 #include <cassert>
@@ -18,7 +24,7 @@ module;
 #include <type_traits>
 #include <limits>
 
-#include "emdevif/core/fatal_handler.h"
+#endif
 
 #if (configMAX_PRIORITIES < 6)
 #error \
@@ -57,13 +63,11 @@ module;
 #error "FreeRTOS Config `INCLUDE_eTaskGetState\' should be enabled!"
 #endif
 
-export module emdevif.sys.thread:implements;
-import :interface;
-
 import emdevif.core.error_handler;
 import emdevif.core.data_container.message_queue;
 
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 static_assert(std::is_convertible_v<emdevif::MessageQueueTimeout_t, ::TickType_t>,
               "emdevif::MessageQueueTimeout_t must be convertible to TickType_t (for FreeRTOS)");
@@ -182,59 +186,6 @@ inline SysTick_t Thread::msToTick(const SysTick_t ms) noexcept
     return pdMS_TO_TICKS(ms);
 }
 
-Thread::StronglyTypedHandle Thread::create(const Attribute& attribute,
-                                           const ThreadEntry entry,
-                                           void* arguments) noexcept
-{
-    TaskHandle_t handle = nullptr;
-
-    if (attribute.static_instance != nullptr && attribute.stack_size != 0U) {
-        // 由于此处的 Thread::StaticInstance 是指针类型，且它的自定义类型转换过程不涉及这个模板参数，
-        // 因此它的模板参数的取值不影响结果。但不能为 0，因为这样做会构造出零长数组。
-        auto& static_instance = *static_cast<Thread::StaticInstance<1>*>(attribute.static_instance);
-
-        handle = xTaskCreateStatic(entry,
-                                   attribute.name,
-                                   attribute.stack_size,
-                                   arguments,
-                                   priorityMapToSystem(attribute.priority),
-                                   &static_cast<StackType_t&>(static_instance),
-                                   &static_cast<StaticTask_t&>(static_instance));
-    }
-    else {
-        const auto result = xTaskCreate(entry,
-                                        attribute.name,
-                                        attribute.stack_size,
-                                        arguments,
-                                        priorityMapToSystem(attribute.priority),
-                                        &handle);
-        if (result != pdPASS) {
-            handle = nullptr;
-        }
-    }
-
-    return {.value = handle};
-}
-
-ErrorCode Thread::destroy(Thread& obj) noexcept
-{
-    if (obj.getHandle() == nullptr) {
-        return ErrorCode::InvalidArgument;
-    }
-
-    const auto handle_value = static_cast<TaskHandle_t>(obj.getHandle());
-    obj.handle_ = nullptr;
-
-    if (eTaskGetState(handle_value) != eDeleted) {
-        vTaskDelete(handle_value);
-    }
-    else {
-        return ErrorCode::InvalidArgument;
-    }
-
-    return ErrorCode::Success;
-}
-
 inline void Thread::exit() noexcept
 {
     handle_ = nullptr;
@@ -288,18 +239,6 @@ inline void Thread::yield() noexcept
     EMDEVIF_FATAL_HANDLER("FreeRTOS can not join!");
 }
 
-Thread::~Thread() noexcept
-{
-    if (handle_ != nullptr) {
-        destroy(*this);
-        handle_ = nullptr;
-    }
-
-    if (func_wrapper_memory_block_ != nullptr) {
-        // todo 任意参数的函数包装器还是存在缺陷：只能构造，不能正确析构。待修改
-        EMDEVIF_FATAL_HANDLER("Could not delete.");
-        // heap::destruct(func_wrapper_memory_block_);
-    }
-}
-
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_FREERTOS_SYSTEM_IMPL_SYSTEM_THREAD_INL

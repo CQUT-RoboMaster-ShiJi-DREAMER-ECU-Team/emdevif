@@ -5,6 +5,7 @@
 
 #include "emdevif/core/detail/config.hpp"
 
+#define EMDEVIF_CORE_ERROR_HANDLER_IN_C_API_WRAPPER_SRC_
 #include "emdevif/core/fatal_handler.h"
 #include "emdevif/core/attributes_and_useful_macros.h"
 

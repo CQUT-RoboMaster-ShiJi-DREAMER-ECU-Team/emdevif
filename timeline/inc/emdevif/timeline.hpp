@@ -1,19 +1,24 @@
 /**
- * @file Timeline.cppm
+ * @file timeline.hpp
  * @brief 时间戳
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_TIMELINE_HPP
+#define EMDEVIF_TIMELINE_HPP
+
+#include "emdevif/core/detail/config.hpp"
+
+#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/detail/include_emdevif_user_declares_in_headers.hpp"
 
 #include <cstdint>
 
 #include <type_traits>
+#endif
 
-export module emdevif.timeline;
-
-import emdevif.userDeclares;
-
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 /// 时间点类型
 using BaseTimePoint = uint64_t;
@@ -162,3 +167,5 @@ private:
 };
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_TIMELINE_HPP

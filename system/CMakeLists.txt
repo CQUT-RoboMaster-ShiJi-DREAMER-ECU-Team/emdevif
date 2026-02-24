@@ -2,10 +2,18 @@ cmake_minimum_required(VERSION 3.28...4.0.2)
 
 project(emdevif_system C CXX)
 
-set(EMDEVIF_THREAD_SYSTEM "FreeRTOS" CACHE STRING "Select witch system to use. \
-Default value is \"FreeRTOS\"")
+set(EMDEVIF_THREAD_SYSTEM "FreeRTOS"
+    CACHE STRING
+    "Select witch system to use. Default value is \"FreeRTOS\""
+)
+
+if (EMDEVIF_USE_CPP_MODULES)
+
+endif ()
 
 add_library(${PROJECT_NAME} STATIC)
+
+target_include_directories(${PROJECT_NAME} PUBLIC inc)
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC emdevif_core
@@ -15,18 +23,15 @@ target_link_libraries(${PROJECT_NAME}
 target_sources(${PROJECT_NAME}
     PUBLIC FILE_SET emdevif_thread_exported_modules_unit TYPE CXX_MODULES FILES
         sys_queue.cppm
-        thread.cppm
         atomic.cppm
         mutex.cppm
         semaphore.cppm
         event_group.cppm
-        heap_memory.cppm
 
         sys_message_slot.cppm
 
     PUBLIC FILE_SET emdevif_thread_interface_modules TYPE CXX_MODULES FILES
         Interface/sys_queue_interface.cppm
-        Interface/thread_interface.cppm
         Interface/mutex_interface.cppm
         Interface/semaphore_interface.cppm
         Interface/event_group_interface.cppm
@@ -63,16 +68,28 @@ if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
 
     target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_util)
 
-    target_sources(${PROJECT_NAME} PUBLIC
+    target_include_directories(${PROJECT_NAME} PUBLIC Implements/FreeRTOS/inc)
+
+    file(GLOB emdevifSystemFreeRtosImplSrcs "Implements/FreeRTOS/*.cpp")
+    target_sources(${PROJECT_NAME}
+        PUBLIC ${emdevifSystemFreeRtosImplSrcs}
+
+        PUBLIC
         FILE_SET emdevif__freertos_impl_modules TYPE CXX_MODULES FILES
             Implements/FreeRTOS/sys_queue_implements.cppm
-            Implements/FreeRTOS/thread_implements.cppm
             Implements/FreeRTOS/mutex_implements.cppm
             Implements/FreeRTOS/semaphore_implements.cppm
             Implements/FreeRTOS/event_group_implements.cppm
             Implements/FreeRTOS/event_group_definitions.cppm
-            Implements/FreeRTOS/heap_memory_implements.cppm
     )
+
+    if (EMDEVIF_USE_CPP_MODULES)
+        file(GLOB emdevifSystemFreeRtosImplModules "Implements/FreeRTOS/modules/*.cppm")
+        target_sources(${PROJECT_NAME} PUBLIC
+            FILE_SET emdevif_freertos_impl_modules TYPE CXX_MODULES FILES
+                ${emdevifSystemFreeRtosImplModules}
+        )
+    endif ()
 else ()
     if (NOT (TARGET emdevif_system_impl))
         message(FATAL_ERROR "If EMDEVIF_THREAD_SYSTEM not equal to FreeRTOS, it requires \
