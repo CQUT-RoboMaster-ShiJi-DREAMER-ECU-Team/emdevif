@@ -14,7 +14,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC inc)
 target_sources(${PROJECT_NAME}
     PRIVATE src/logger.cpp
 
-    PUBLIC
-    FILE_SET emdevif_logger_modules TYPE CXX_MODULES FILES
-        Logger.cppm
+    PUBLIC FILE_SET emdevif_logger_modules TYPE CXX_MODULES FILES
+        logger.cppm
 )

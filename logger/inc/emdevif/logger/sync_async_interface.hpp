@@ -21,10 +21,9 @@
 EMDEVIF_MODULE_EXPORT
 namespace emdevif::logger {
 
-template<typename... Args>
-emdevif::ErrorCode init(Args&&... args) noexcept
+inline emdevif::ErrorCode init(const detail::VsnprintfImpl vsprintf_impl) noexcept
 {
-    return detail::logInit(std::forward<Args>(args)...);
+    return detail::logInit(vsprintf_impl);
 }
 
 inline void deInit() noexcept
@@ -72,7 +71,7 @@ inline void info(const char* format, ...) noexcept
     if constexpr (constexpr auto level = LoggerLevel::Info; !(level < logger_ignore_level)) {
         std::va_list args;
         va_start(args, format);
-        detail::logger::logImpl(level, format, args);
+        detail::logImpl(level, format, args);
         va_end(args);
     }
 }

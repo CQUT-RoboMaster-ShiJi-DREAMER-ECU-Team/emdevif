@@ -22,20 +22,26 @@ namespace emdevif::logger::detail {
 
 namespace sync {
 
-using VsprintfImpl = int (*)(char* dest, const char* format, std::va_list args);
-
-ErrorCode logInit(VsprintfImpl vsprintf_impl) noexcept;
+ErrorCode logInit(VsnprintfImpl vsprintf_impl) noexcept;
+void logDeInit() noexcept;
+void logImpl(LoggerLevel level, const char* format, std::va_list args) noexcept;
 
 }  // namespace sync
 
-inline ErrorCode logInit(const sync::VsprintfImpl vsprintf_impl) noexcept
+inline ErrorCode logInit(const VsnprintfImpl vsprintf_impl) noexcept
 {
     return sync::logInit(vsprintf_impl);
 }
 
-inline void logDeInit() noexcept {}
+inline void logDeInit() noexcept
+{
+    sync::logDeInit();
+}
 
-inline void logImpl(const LoggerLevel level, const char* format, std::va_list args) noexcept {}
+inline void logImpl(const LoggerLevel level, const char* format, std::va_list args) noexcept
+{
+    sync::logImpl(level, format, args);
+}
 
 }  // namespace emdevif::logger::detail
 
