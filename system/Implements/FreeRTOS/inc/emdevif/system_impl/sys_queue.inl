@@ -1,12 +1,15 @@
 /**
- * @file sys_queue_implements.cppm
- * @brief 系统队列的实现
+ * @file sys_queue.inl
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_FREERTOS_SYSTEM_IMPL_SYS_QUEUE_INL
+#define EMDEVIF_FREERTOS_SYSTEM_IMPL_SYS_QUEUE_INL
 
-#include <cstddef>
+#include "emdevif/core/detail/config.hpp"
 
+#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
@@ -17,12 +20,13 @@ module;
 
 #include "emdevif/core/fatal_handler.h"
 
-export module emdevif.sys.sysQueue:implements;
-import :interface;
+#include "emdevif/core/error_handler.hpp"
 
-import emdevif.core.error_handler;
+#include <cstddef>
+#endif
 
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 template<typename Type, std::size_t item_size>
 class SysQueue<Type, item_size>::StaticInstance
@@ -244,3 +248,5 @@ SysQueue<Type, item_size>::~SysQueue()
 }
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_FREERTOS_SYSTEM_IMPL_SYS_QUEUE_INL

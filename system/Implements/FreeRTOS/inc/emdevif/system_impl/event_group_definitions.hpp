@@ -1,10 +1,15 @@
 /**
- * @file event_group_definitions.cppm
- * @brief 事件组相关常量定义 - FreeRTOS 实现
+ * @file event_group_definitions.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_FREERTOS_SYSTEM_IMPL_EVENT_GROUP_DEFINITIONS_HPP
+#define EMDEVIF_FREERTOS_SYSTEM_IMPL_EVENT_GROUP_DEFINITIONS_HPP
 
+#include "emdevif/core/detail/config.hpp"
+
+#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
@@ -13,9 +18,10 @@ module;
 #include "event_groups.h"
 #endif
 
-export module emdevif.sys.eventGroup:definitions;
+#include "emdevif/util/bit_int.hpp"
 
-import emdevif.util.bitInt;
+#include <cstdint>
+#endif
 
 namespace emdevif::detail {
 
@@ -29,3 +35,5 @@ consteval BitsType_t maxEventBits() noexcept
 }
 
 }  // namespace emdevif::detail
+
+#endif  // !EMDEVIF_FREERTOS_SYSTEM_IMPL_EVENT_GROUP_DEFINITIONS_HPP

@@ -1,19 +1,13 @@
 /**
- * @file event_group_implements.cppm
- * @brief 事件组 FreeRTOS 实现
+ * @file event_group_implements.inl
+ * @brief
  */
 
-// ReSharper disable CppMemberFunctionMayBeConst
+#pragma once
+#ifndef EMDEVIF_FREERTOS_SYSTEM_IMPL_EVENT_GROUP_IMPLEMENTS_INL
+#define EMDEVIF_FREERTOS_SYSTEM_IMPL_EVENT_GROUP_IMPLEMENTS_INL
 
-module;
-
-#include <cstdint>
-
-// ReSharper disable once CppUnusedIncludeDirective
-// 注意，这个头文件必须包含，因为 UBitInt 的构造函数依赖于 std::integral，
-// 如果没有这个头文件，会导致模板推导失败
-#include <concepts>
-
+#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
@@ -22,13 +16,15 @@ module;
 #include "event_groups.h"
 #endif
 
-export module emdevif.sys.eventGroup:implements;
-import :definitions;
-import :interface;
+#include "emdevif/util/bit_int.hpp"
 
-import emdevif.util.bitInt;
+#include <cstdint>
 
-export namespace emdevif {
+#include <concepts>
+#endif
+
+namespace emdevif {
+EMDEVIF_MODULE_EXPORT_BEGIN
 
 class EventGroup::StaticInstance
 {
@@ -43,31 +39,6 @@ public:
 private:
     StaticEventGroup_t static_instance;
 };
-
-EventGroup::StronglyTypedHandle EventGroup::create(const Attribute& attribute)
-{
-    Handle handle;
-
-    if (attribute.static_instance != nullptr) {
-        auto& static_instance = static_cast<StaticEventGroup_t&>(*attribute.static_instance);
-
-        handle = xEventGroupCreateStatic(&static_instance);
-    }
-    else {
-        handle = xEventGroupCreate();
-    }
-
-    return {handle};
-}
-
-void EventGroup::destroy(EventGroup& obj)
-{
-    if (obj.handle_ != nullptr) {
-        vEventGroupDelete(static_cast<EventGroupHandle_t>(obj.handle_));
-
-        obj.handle_ = nullptr;
-    }
-}
 
 inline auto EventGroup::getBits(const bool in_isr) noexcept -> EventGroup::EventBits_t
 {
@@ -163,11 +134,7 @@ inline ErrorCode EventGroup::sync(const EventBits_t bits_to_set,
     return ErrorCode::Timeout;
 }
 
-EventGroup::~EventGroup()
-{
-    if (handle_ != nullptr) {
-        this->destroy();
-    }
-}
-
+EMDEVIF_MODULE_EXPORT_END
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_FREERTOS_SYSTEM_IMPL_EVENT_GROUP_IMPLEMENTS_INL

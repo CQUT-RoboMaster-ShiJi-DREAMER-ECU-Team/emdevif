@@ -1,39 +1,35 @@
 /**
- * @file thread.cppm
- * @brief 线程接口
+ * @file sys_queue.cppm
+ * @brief 系统队列
  */
 
 module;
 
-#include "emdevif/core/attributes_and_useful_macros.h"
-#include "emdevif/core/fatal_handler.h"
-
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-#include <cassert>
 #include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+#include "freertos/queue.h"
 #else
 #include "FreeRTOS.h"
-#include "task.h"
+#include "queue.h"
 #endif
 
-#include <cstdint>
+#include "emdevif/core/fatal_handler.h"
 
-#include <tuple>
-#include <utility>
+#include <cstdint>
+#include <cstddef>
+
 #include <type_traits>
-#include <limits>
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
-export module emdevif.sys.thread;
+export module emdevif.sys.sysQueue;
 
 import emdevif.core.error_handler;
 import emdevif.core.data_container.message_queue;
-import emdevif.sys.heap;
+import emdevif.sys.thread;
 
 #ifdef __clang__
 #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
 #endif
 
-#include "emdevif/system/thread.hpp"
+#include "emdevif/system/sys_queue.hpp"

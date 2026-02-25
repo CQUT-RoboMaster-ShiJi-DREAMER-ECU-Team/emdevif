@@ -1,13 +1,15 @@
 /**
- * @file mutex_implements.cppm
- * @brief 互斥锁 FreeRTOS 实现
+ * @file mutex.cpp
+ * @brief
  */
 
-// ReSharper disable CppMemberFunctionMayBeConst
-
+#if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
 module;
+#else
+#include "emdevif/system/mutex.hpp"
 
-#include <cstddef>
+#include "emdevif/core/error_handler.hpp"
+#endif
 
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
 #include "freertos/FreeRTOS.h"
@@ -19,29 +21,15 @@ module;
 
 #include "emdevif/core/fatal_handler.h"
 
-export module emdevif.sys.mutex:implements;
-import :interface;
+#include <cstddef>
+
+#if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
+module emdevif.sys.mutex;
 
 import emdevif.core.error_handler;
+#endif
 
-export namespace emdevif {
-
-class Mutex::StaticInstance
-{
-public:
-    StaticInstance() noexcept : instance() {}
-
-    friend class Mutex;
-
-private:
-    explicit operator StaticSemaphore_t&() noexcept
-    {
-        return instance;
-    }
-
-private:
-    StaticSemaphore_t instance;
-};
+namespace emdevif {
 
 Mutex::StronglyTypedHandle Mutex::create(const Attribute& attribute) noexcept
 {
@@ -75,25 +63,6 @@ void Mutex::destroy(Mutex& obj) noexcept
 #endif
 
         obj.handle_ = nullptr;
-    }
-}
-
-inline ErrorCode Mutex::lock(const SysTick_t timeout_tick) noexcept
-{
-    const auto ret = xSemaphoreTake(static_cast<SemaphoreHandle_t>(handle_), timeout_tick);
-
-    if (ret == pdTRUE) {
-        return ErrorCode::Success;
-    }
-    else {
-        return ErrorCode::Timeout;
-    }
-}
-
-inline void Mutex::unlock() noexcept
-{
-    if (xSemaphoreGive(handle_) != pdTRUE) {
-        EMDEVIF_FATAL_HANDLER("Failed to Unlock mutex!");
     }
 }
 

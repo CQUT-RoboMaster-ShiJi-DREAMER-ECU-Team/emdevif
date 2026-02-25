@@ -9,6 +9,7 @@
 
 #include <type_traits>
 
+import emdevif.core.error_handler;
 import emdevif.core.data_container.message_queue;
 import emdevif.sys.sysQueue;
 

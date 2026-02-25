@@ -8,34 +8,24 @@ set(EMDEVIF_THREAD_SYSTEM "FreeRTOS"
 )
 
 if (EMDEVIF_USE_CPP_MODULES)
+    add_library(${PROJECT_NAME} STATIC)
 
+    target_include_directories(${PROJECT_NAME} PUBLIC inc)
+    target_link_libraries(${PROJECT_NAME}
+        PUBLIC emdevif_core
+        PRIVATE emdevif_compile_options emdevif_util
+    )
+    target_sources(${PROJECT_NAME}
+        PUBLIC FILE_SET emdevif_thread_modules TYPE CXX_MODULES FILES
+            atomic.cppm sys_message_slot.cppm
+    )
+else ()
+    add_library(${PROJECT_NAME} INTERFACE)
+    target_include_directories(${PROJECT_NAME} INTERFACE inc)
+    target_link_libraries(${PROJECT_NAME}
+        INTERFACE emdevif_core emdevif_compile_options emdevif_util
+    )
 endif ()
-
-add_library(${PROJECT_NAME} STATIC)
-
-target_include_directories(${PROJECT_NAME} PUBLIC inc)
-
-target_link_libraries(${PROJECT_NAME}
-    PUBLIC emdevif_core
-    PRIVATE emdevif_compile_options emdevif_util
-)
-
-target_sources(${PROJECT_NAME}
-    PUBLIC FILE_SET emdevif_thread_exported_modules_unit TYPE CXX_MODULES FILES
-        sys_queue.cppm
-        atomic.cppm
-        mutex.cppm
-        semaphore.cppm
-        event_group.cppm
-
-        sys_message_slot.cppm
-
-    PUBLIC FILE_SET emdevif_thread_interface_modules TYPE CXX_MODULES FILES
-        Interface/sys_queue_interface.cppm
-        Interface/mutex_interface.cppm
-        Interface/semaphore_interface.cppm
-        Interface/event_group_interface.cppm
-)
 
 if (EMDEVIF_USE_ESP_IDF)
     if (NOT (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS"))
@@ -55,39 +45,55 @@ if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
             ESP-IDF(EMDEVIF_USE_ESP_IDF is ON), ignored.")
         endif ()
 
-        target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_esp_idf_support)
+        if (EMDEVIF_USE_CPP_MODULES)
+            target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_esp_idf_support)
+        else ()
+            target_link_libraries(${PROJECT_NAME} INTERFACE emdevif_esp_idf_support)
+        endif ()
     elseif (EMDEVIF_FREERTOS_USE_STM32CUBEMX)
         if (NOT EMDEVIF_USE_STM32CUBEMX)
             message(FATAL_ERROR "Let FreeRTOS to use stm32cubemx requires to set EMDEVIF_USE_STM32CUBEMX equal to ON")
         endif ()
 
-        target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_stm32cubemx_support)
+        if (EMDEVIF_USE_CPP_MODULES)
+            target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_stm32cubemx_support)
+        else ()
+            target_link_libraries(${PROJECT_NAME} INTERFACE emdevif_stm32cubemx_support)
+        endif ()
     else ()
-        target_link_libraries(${PROJECT_NAME} PUBLIC freertos_kernel)
+        if (EMDEVIF_USE_CPP_MODULES)
+            target_link_libraries(${PROJECT_NAME} PUBLIC freertos_kernel)
+        else ()
+            target_link_libraries(${PROJECT_NAME} INTERFACE freertos_kernel)
+        endif ()
     endif ()
 
-    target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_util)
-
-    target_include_directories(${PROJECT_NAME} PUBLIC Implements/FreeRTOS/inc)
-
     file(GLOB emdevifSystemFreeRtosImplSrcs "Implements/FreeRTOS/*.cpp")
-    target_sources(${PROJECT_NAME}
-        PUBLIC ${emdevifSystemFreeRtosImplSrcs}
-
-        PUBLIC
-        FILE_SET emdevif__freertos_impl_modules TYPE CXX_MODULES FILES
-            Implements/FreeRTOS/sys_queue_implements.cppm
-            Implements/FreeRTOS/mutex_implements.cppm
-            Implements/FreeRTOS/semaphore_implements.cppm
-            Implements/FreeRTOS/event_group_implements.cppm
-            Implements/FreeRTOS/event_group_definitions.cppm
-    )
-
     if (EMDEVIF_USE_CPP_MODULES)
+        target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_util)
+
+        target_include_directories(${PROJECT_NAME} PUBLIC Implements/FreeRTOS/inc)
+
+        target_sources(${PROJECT_NAME} PRIVATE ${emdevifSystemFreeRtosImplSrcs})
+
         file(GLOB emdevifSystemFreeRtosImplModules "Implements/FreeRTOS/modules/*.cppm")
         target_sources(${PROJECT_NAME} PUBLIC
             FILE_SET emdevif_freertos_impl_modules TYPE CXX_MODULES FILES
                 ${emdevifSystemFreeRtosImplModules}
+        )
+    else ()
+        target_include_directories(${PROJECT_NAME} INTERFACE Implements/FreeRTOS/inc)
+
+        add_library(emdevif_system_freertos_impl_ OBJECT)
+        target_sources(emdevif_system_freertos_impl_ PRIVATE ${emdevifSystemFreeRtosImplSrcs})
+        target_link_libraries(emdevif_system_freertos_impl_
+            PUBLIC emdevif_util emdevif_core
+            PRIVATE emdevif_compile_options emdevif_system
+        )
+
+        target_link_libraries(${PROJECT_NAME} INTERFACE
+            $<TARGET_OBJECTS:emdevif_system_freertos_impl_>
+            emdevif_util
         )
     endif ()
 else ()

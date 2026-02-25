@@ -1,14 +1,15 @@
 /**
- * @file semaphore_implements.cppm
- * @brief 信号量 FreeRTOS 实现
+ * @file semaphore.inl
+ * @brief
  */
 
-// ReSharper disable CppMemberFunctionMayBeConst
+#pragma once
+#ifndef EMDEVIF_FREERTOS_SYSTEM_IMPL_SEMAPHORE_INL
+#define EMDEVIF_FREERTOS_SYSTEM_IMPL_SEMAPHORE_INL
 
-module;
+#include "emdevif/core/detail/config.hpp"
 
-#include <cstddef>
-
+#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
@@ -17,15 +18,16 @@ module;
 #include "semphr.h"
 #endif
 
+#include "emdevif/core/error_handler.hpp"
+
 #include "emdevif/core/fatal_handler.h"
 
-export module emdevif.sys.semaphore:implements;
-import :interface;
-
-export import emdevif.core.error_handler;
+#include <cstddef>
+#endif
 
 // for template<std::ptrdiff_t least_max_value> CountingSemaphore
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 template<std::ptrdiff_t least_max_value>
 class CountingSemaphore<least_max_value>::StaticInstance
@@ -118,7 +120,8 @@ CountingSemaphore<least_max_value>::~CountingSemaphore() noexcept
 }  // namespace emdevif
 
 // for template<> CountingSemaphore<1>
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 template<>
 class CountingSemaphore<1>
@@ -230,36 +233,6 @@ private:
     StaticSemaphore_t instance;
 };
 
-CountingSemaphore<1>::StronglyTypedHandle CountingSemaphore<1>::create(const Attribute& attribute) noexcept
-{
-    Handle handle = nullptr;
-
-    if (attribute.static_instance != nullptr) {
-        auto& static_instance = *static_cast<CountingSemaphore<1>::StaticInstance*>(attribute.static_instance);
-
-        handle = xSemaphoreCreateBinaryStatic(&static_cast<StaticSemaphore_t&>(static_instance));
-    }
-    else {
-        handle = xSemaphoreCreateBinary();
-    }
-
-#if (configQUEUE_REGISTRY_SIZE > 0)
-    if (handle != nullptr) {
-        vQueueAddToRegistry(static_cast<QueueHandle_t>(handle), attribute.name);
-    }
-#endif
-
-    return {handle};
-}
-
-void CountingSemaphore<1>::destroy(CountingSemaphore<1>& obj) noexcept
-{
-    if (obj.handle_ != nullptr) {
-        vSemaphoreDelete(obj.handle_);
-        obj.handle_ = nullptr;
-    }
-}
-
 inline void CountingSemaphore<1>::release(bool in_isr) noexcept
 {
     if (in_isr) {
@@ -292,11 +265,6 @@ inline ErrorCode CountingSemaphore<1>::acquire(bool in_isr, SysTick_t timeout_ti
     }
 }
 
-CountingSemaphore<1>::~CountingSemaphore() noexcept
-{
-    if (handle_ != nullptr) {
-        this->destroy();
-    }
-}
-
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_FREERTOS_SYSTEM_IMPL_SEMAPHORE_INL

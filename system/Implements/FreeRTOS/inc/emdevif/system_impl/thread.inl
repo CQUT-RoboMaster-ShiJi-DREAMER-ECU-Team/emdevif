@@ -20,6 +20,8 @@
 #include "task.h"
 #endif
 
+#include "emdevif/core/data_container/message_queue.hpp"
+
 #include <utility>
 #include <type_traits>
 #include <limits>
@@ -62,9 +64,6 @@
 #if (!(defined(INCLUDE_eTaskGetState) && INCLUDE_eTaskGetState))
 #error "FreeRTOS Config `INCLUDE_eTaskGetState\' should be enabled!"
 #endif
-
-import emdevif.core.error_handler;
-import emdevif.core.data_container.message_queue;
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {

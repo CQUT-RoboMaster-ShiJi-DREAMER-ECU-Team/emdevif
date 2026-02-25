@@ -26,6 +26,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 )
 
 target_link_libraries(${PROJECT_NAME}
+    PUBLIC emdevif_core
     PRIVATE emdevif emdevif_test_framework emdevif_compile_options
             emdevif_test_heap_checker emdevif_user_declares
 )

@@ -3,6 +3,10 @@
  * @brief
  */
 
+// 开发者提示: 该头文件通常应该在
+//     #ifndef EMDEVIF_MODULE_INTERFACE_UNIT ... #endif
+// 块中被包含。如果发现不是这样的，极有可能设计有误。
+
 #pragma once
 #ifndef EMDEVIF_CORE_INCLUDE_EMDEVIF_USER_DECLARES_IN_HEADERS_HPP
 #define EMDEVIF_CORE_INCLUDE_EMDEVIF_USER_DECLARES_IN_HEADERS_HPP

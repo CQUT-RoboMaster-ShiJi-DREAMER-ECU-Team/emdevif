@@ -1,22 +1,25 @@
 /**
- * @file mutex_interface.cppm
- * @brief 互斥锁接口
+ * @file mutex.hpp
+ * @brief
  */
 
-// ReSharper disable CppDoxygenUnresolvedReference
+#pragma once
+#ifndef EMDEVIF_SYSTEM_MUTEX_HPP
+#define EMDEVIF_SYSTEM_MUTEX_HPP
 
-module;
+#include "emdevif/core/detail/config.hpp"
 
-#include <cstdint>
-
+#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #include "emdevif/core/fatal_handler.h"
 
-export module emdevif.sys.mutex:interface;
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/system/thread.hpp"
 
-import emdevif.core.error_handler;
-import emdevif.sys.thread;
+#include <cstdint>
+#endif
 
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 /**
  * 互斥锁
@@ -144,3 +147,7 @@ private:
 };
 
 }  // namespace emdevif
+
+#include "emdevif/system_impl/mutex.inl"
+
+#endif  // !EMDEVIF_SYSTEM_MUTEX_HPP

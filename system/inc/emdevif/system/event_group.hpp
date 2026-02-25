@@ -1,25 +1,28 @@
 /**
- * @file event_group_interface.cppm
- * @brief 事件组接口
+ * @file event_group.hpp
+ * @brief
  */
 
-// ReSharper disable CppDoxygenUnresolvedReference
+#pragma once
+#ifndef EMDEVIF_SYSTEM_EVENT_GROUP_HPP
+#define EMDEVIF_SYSTEM_EVENT_GROUP_HPP
 
-module;
+#include "emdevif/core/detail/config.hpp"
 
+#include "emdevif/system_impl/event_group_definitions.hpp"
+
+#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #include "emdevif/core/fatal_handler.h"
 
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/system/thread.hpp"
+#include "emdevif/util/bit_int.hpp"
+
 #include <cstdint>
+#endif
 
-export module emdevif.sys.eventGroup:interface;
-import :definitions;
-
-export import emdevif.core.error_handler;
-export import emdevif.sys.thread;
-export import emdevif.util.bitInt;
-import emdevif.sys.thread;
-
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 class EventGroup
 {
@@ -182,3 +185,7 @@ private:
 };
 
 }  // namespace emdevif
+
+#include "emdevif/system_impl/event_group_implements.inl"
+
+#endif  // !EMDEVIF_SYSTEM_EVENT_GROUP_HPP

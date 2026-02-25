@@ -1,23 +1,28 @@
 /**
- * @file sys_queue_interface.cppm
- * @brief 系统队列接口
+ * @file sys_queue.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_SYSTEM_SYS_QUEUE_HPP
+#define EMDEVIF_SYSTEM_SYS_QUEUE_HPP
+
+#include "emdevif/core/detail/config.hpp"
+
+#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/fatal_handler.h"
+
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/core/data_container/message_queue.hpp"
+#include "emdevif/system/thread.hpp"
 
 #include <cstdint>
 
 #include <type_traits>
+#endif
 
-#include "emdevif/core/fatal_handler.h"
-
-export module emdevif.sys.sysQueue:interface;
-
-export import emdevif.core.error_handler;
-import emdevif.core.data_container.message_queue;
-import emdevif.sys.thread;
-
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 /**
  * 系统队列
@@ -130,3 +135,7 @@ struct IsMessageQueue<SysQueue<Type, item_size>> : public std::true_type {
 };
 
 }  // namespace emdevif
+
+#include "emdevif/system_impl/sys_queue.inl"
+
+#endif  // !EMDEVIF_SYSTEM_SYS_QUEUE_HPP
