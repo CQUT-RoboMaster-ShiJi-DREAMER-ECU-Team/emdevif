@@ -18,7 +18,7 @@
 
 import emdevif.sys.thread;
 import emdevif.sys.mutex;
-import emdevif.core.lock_guard;
+import emdevif.core.resource_guard.lock_guard;
 import emdevif.core.error_handler;
 
 template<typename T>

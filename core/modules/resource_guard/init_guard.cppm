@@ -1,6 +1,6 @@
 /**
- * @file lock_guard.cppm
- * @brief 互斥锁封装器
+ * @file init_guard.cppm
+ * @brief RAII 风格的 init/deInit 自动管理
  */
 
 module;
@@ -10,7 +10,7 @@ module;
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
-export module emdevif.core.lock_guard;
+export module emdevif.core.resource_guard.init_guard;
 
 import emdevif.core.error_handler;
 
@@ -18,4 +18,4 @@ import emdevif.core.error_handler;
 #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
 #endif
 
-#include "emdevif/core/lock_guard.hpp"
+#include "emdevif/core/resource_guard/init_guard.hpp"

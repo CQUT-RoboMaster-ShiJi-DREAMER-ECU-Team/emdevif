@@ -4,8 +4,8 @@
  */
 
 #pragma once
-#ifndef EMDEVIF_CORE_LOCK_GUARD_HPP
-#define EMDEVIF_CORE_LOCK_GUARD_HPP
+#ifndef EMDEVIF_CORE_RESOURCE_GUARD_LOCK_GUARD_HPP
+#define EMDEVIF_CORE_RESOURCE_GUARD_LOCK_GUARD_HPP
 
 #include "emdevif/core/detail/config.hpp"
 
@@ -77,4 +77,4 @@ public:
 
 }  // namespace emdevif
 
-#endif  // !EMDEVIF_CORE_LOCK_GUARD_HPP
+#endif  // !EMDEVIF_CORE_RESOURCE_GUARD_LOCK_GUARD_HPP
