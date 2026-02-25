@@ -3,10 +3,19 @@
  * @brief
  */
 
+#include "emdevif/logger/config.hpp"
+
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
 module;
 #else
 #include "emdevif/logger.hpp"
+
+#if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
+#include "emdevif/system/mutex.hpp"
+#include "emdevif/core/resource_guard/lock_guard.hpp"
+#include "emdevif/core/error_handler.hpp"
+#endif
+
 #endif
 
 #ifndef EMDEVIF_USER_DECLARES_PROVIDE_MODULE
@@ -14,6 +23,8 @@ module;
 #endif
 
 #include "emdevif/core/line_separator.h"
+#include "emdevif/core/fatal_handler.h"
+#include "emdevif/core/attributes_and_useful_macros.h"
 
 #include <cstdarg>
 
@@ -21,10 +32,17 @@ module;
 
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
 module emdevif.logger;
+
+import emdevif.core.error_handler;
 #endif
 
 #ifdef EMDEVIF_USER_DECLARES_PROVIDE_MODULE
 import emdevif.userDeclares;
+#endif
+
+#if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
+import emdevif.sys.mutex;
+import emdevif.core.resource_guard.lock_guard;
 #endif
 
 namespace emdevif::logger::detail {

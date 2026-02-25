@@ -8,6 +8,7 @@
 #define EMDEVIF_LOGGER_HPP
 
 #include "emdevif/logger/config.hpp"
+#include "emdevif/logger/config_values.hpp"
 
 #if (EMDEVIF_LOGGER_MODE == 0)
 namespace emdevif::logger::detail {
