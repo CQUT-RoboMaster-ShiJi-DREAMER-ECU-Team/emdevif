@@ -8,18 +8,27 @@
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
 module;
 #else
-#include "emdevif/logger.hpp"
+    #include "emdevif/logger.hpp"
+    #include "emdevif/core/error_handler.hpp"
 
-#if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
-#include "emdevif/system/mutex.hpp"
-#include "emdevif/core/resource_guard/lock_guard.hpp"
-#include "emdevif/core/error_handler.hpp"
-#endif
-
+    #if (EMDEVIF_LOGGER_MODE == 0)
+        // Sync
+        #if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
+            #include "emdevif/system/mutex.hpp"
+            #include "emdevif/core/resource_guard/lock_guard.hpp"
+        #endif
+    #else
+        // Async
+        #include "emdevif/system/thread.hpp"
+        #include "emdevif/system/mutex.hpp"
+        #include "emdevif/system/semaphore.hpp"
+        #include "emdevif/core/data_container/ring_buffer.hpp"
+        #include "emdevif/core/resource_guard/lock_guard.hpp"
+    #endif
 #endif
 
 #ifndef EMDEVIF_USER_DECLARES_PROVIDE_MODULE
-#include "emdevif/user_declares.hpp"
+    #include "emdevif/user_declares.hpp"
 #endif
 
 #include "emdevif/core/line_separator.h"
@@ -27,6 +36,7 @@ module;
 #include "emdevif/core/attributes_and_useful_macros.h"
 
 #include <cstdarg>
+#include <cstdint>
 
 #include <iterator>
 
@@ -40,21 +50,25 @@ import emdevif.core.error_handler;
 import emdevif.userDeclares;
 #endif
 
-#if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
+#if (EMDEVIF_LOGGER_MODE == 0)
+    // Sync
+    #if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
 import emdevif.sys.mutex;
+import emdevif.core.resource_guard.lock_guard;
+    #endif
+#else
+// Async
+import emdevif.sys.thread;
+import emdevif.sys.mutex;
+import emdevif.sys.semaphore;
+import emdevif.core.data_container.ring_buffer;
 import emdevif.core.resource_guard.lock_guard;
 #endif
 
+#if (EMDEVIF_LOGGER_MODE != 2)  // 不是 ExternalImpl 模式的情况
 namespace emdevif::logger::detail {
 
 static VsnprintfImpl vsnprintf_impl_ = nullptr;
-
-static char log_msg_buffer_[logger_buffer_count][logger_buffer_size];
-
-static constexpr std::size_t logMsgBufferLength() noexcept
-{
-    return logger_buffer_count * logger_buffer_size;
-}
 
 static int snprintf_(char* dest, const std::size_t buffer_size, const char* format, ...) noexcept
 {
@@ -66,11 +80,12 @@ static int snprintf_(char* dest, const std::size_t buffer_size, const char* form
 }
 
 }  // namespace emdevif::logger::detail
+#endif  // (EMDEVIF_LOGGER_MODE != 2)
 
 #if (EMDEVIF_LOGGER_MODE == 0)
-#include "./sync.hpp"
+    #include "./sync.hpp"
 #elif (EMDEVIF_LOGGER_MODE == 1)
-
+    #include "./async.hpp"
 #elif (EMDEVIF_LOGGER_MODE == 2)
 // Nothing to include, the implementation is provided by user.
 #endif

@@ -6,19 +6,15 @@
 
 ## 配置选项
 
-| 宏                                      | 默认值                         | 含义                                                                                                                                                                                                                                       |
-|----------------------------------------|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| EMDEVIF_LOGGER_BUFFER_SIZE             | `256U`                      | 一个日志缓冲区大小                                                                                                                                                                                                                                |
-| EMDEVIF_LOGGER_BUFFER_COUNT            | `4`                         | 日志缓冲区数量                                                                                                                                                                                                                                  |
-| EMDEVIF_LOGGER_MODE                    | `EMDEVIF_LOGGER_MODE_ASYNC` | 日志模式，支持同步和异步两种模式。可选值：<br> - `EMDEVIF_LOGGER_MODE_SYNC`：同步模式<br> - `EMDEVIF_LOGGER_MODE_ASYNC`：异步模式                                                                                                                                       |
-| EMDEVIF_LOGGER_SYNC_USE_LOCK           | `true`                      | 在同步模式下（异步模式下无效），是否使用锁来保护日志输出。设置为 `true` 将启用锁，`false` 则不启用锁。                                                                                                                                                                              |
-| EMDEVIF_LOGGER_ASYNC_THREAD_STACK_SIZE | `128`                       | 异步模式下（同步模式下无效）的日志线程栈大小。                                                                                                                                                                                                                  |
-| EMDEVIF_LOGGER_IGNORE_LEVEL            | `LogLevel::Debug`           | 忽略的日志等级。<br>日志等级由低到高依次为：`LogLevel::Debug`, `LogLevel::Info`, `LogLevel::Warning`, `LogLevel::Error`, `LogLevel::Fatal`。<br>如果日志等级低于这个忽略等级，那么该日志将会被忽略掉。例如设置的忽略等级是 `LogLevel::Warning`，那么 `LogLevel::Debug`和`LogLevel::Info` 会被忽略，其他的会被输出。 |
-
-例如：
+参考 [emdevif_logger_config_example.hpp](./emdevif_logger_config_example.hpp)
+文件，您可以将这个文件拷贝到您的工程中，并根据需要修改配置选项。然后在 CMakeLists.txt 中定义
+`EMDEVIF_LOGGER_CONFIG_FILE` 宏来指定配置文件：
 
 ```CMake
-target_compile_definitions(emdevif_logger PUBLIC EMDEVIF_LOGGER_BUFFER_SIZE=128)
+target_compile_definitions(emdevif_logger PUBLIC
+    EMDEVIF_LOGGER_CONFIG_FILE="path/to/your/emdevif_logger_config.hpp"
+    # 注意：请确保宏定义的值被双引号包裹，从而让它被正确地解析为字符串字面量
+)
 ```
 
 ## 依赖关系
@@ -34,8 +30,8 @@ target_compile_definitions(emdevif_logger PUBLIC EMDEVIF_LOGGER_BUFFER_SIZE=128)
 该模块需要用户在 emdevif_user_declares 中声明 `getTimeLine`、`printLogMessage` 函数：
 
 ```C++
-#include <cstddef>            // for std::size_t
-import emdevif.errorHandler;  // for emdevif::ErrorCode
+#include <cstddef>                  // for std::size_t
+import emdevif.core.error_handler;  // for emdevif::ErrorCode
 
 export namespace emdevif::user_declares {
 
@@ -66,20 +62,19 @@ ErrorCode printLogMessage(const char* message)
 
 ```C++
 #include <cstdio>
-#include "emdevif/logger.hpp"
 
 import emdevif.logger;
 
 int main()
 {
-    emdevif::Logger::init();
-    emdevif::Logger::registerVSPrintfFunction(std::vsprintf);  // 如果不调用这个函数，默认使用 std::vsprintf
+    emdevif::logger::init(std::vsnprintf);  // 需要提供一个 vsnprintf 风格的格式化函数
 
     while (true) {
-        EMDEVIF_LOG(emdevif::LogLevel::Info, "Hello, emdevif Logger!");  // 不需要换行符，会自动添加
-        EMDEVIF_LOG(emdevif::LogLevel::Info, "Support printf-style %s!", "format");
+        using namespace emdevif;
 
-        EMDEVIF_DLOG(emdevif::LogLevel::Warning, "This is a debug log: %d", 42);  // 调试日志，仅在调试模式下（未定义 NDEBUG 宏时）输出
+        logger::info("Hello, emdevif Logger!");  // 不需要换行符，会自动添加
+        logger::info("Support printf-style %s!", "format");
+        logger::debug(emdevif::LogLevel::Warning, "This is a debug log: %d", 42);
         // ...
     }
 }

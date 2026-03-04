@@ -5,13 +5,13 @@
 
 #pragma once
 #ifndef EMDEVIF_LOGGER_CONFIG_VALUES_HPP
-#define EMDEVIF_LOGGER_CONFIG_VALUES_HPP
+    #define EMDEVIF_LOGGER_CONFIG_VALUES_HPP
 
-#include "emdevif/logger/config.hpp"
+    #include "emdevif/logger/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#include <cstdint>
-#endif
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include <cstdint>
+    #endif
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif::logger {
@@ -60,11 +60,13 @@ constexpr const char* toCString(const LoggerLevel logger_level) noexcept
     }
 }
 
+    #if (EMDEVIF_LOGGER_MODE == 0 || EMDEVIF_LOGGER_MODE == 1)
 // ReSharper disable once CppRedundantCastExpression
 constexpr auto logger_buffer_size = static_cast<std::size_t>(EMDEVIF_LOGGER_BUFFER_SIZE);
 
 // ReSharper disable once CppRedundantCastExpression
 constexpr auto logger_buffer_count = static_cast<std::size_t>(EMDEVIF_LOGGER_BUFFER_COUNT);
+    #endif
 
 }  // namespace emdevif::logger
 

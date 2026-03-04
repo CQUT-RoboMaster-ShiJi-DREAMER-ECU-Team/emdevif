@@ -14,7 +14,7 @@ import emdevif.userDeclares;
 import emdevif.sys.thread;
 import emdevif.core.integer_suffix;
 
-#define EMDEVIF_LOGGER_TEST_DEVELOPER_CHECK_MODE
+// #define EMDEVIF_LOGGER_TEST_DEVELOPER_CHECK_MODE
 
 TEST_SUIT(LoggerTest)
 {
@@ -34,7 +34,13 @@ TEST_SUIT(LoggerTest)
 #ifdef EMDEVIF_LOGGER_TEST_DEVELOPER_CHECK_MODE
         TEST_LOG("%s", emdevif::user_declares::logger::getBuffer());
 #else
-        constexpr auto expect_log_out = "";
+        constexpr auto expect_log_out =
+            "0             Info Hello, emdevif_logger! This is an Info Message." EMDEVIF_LINE_SEPARATOR
+            "1             Info Hi, emdevif_logger lib!" EMDEVIF_LINE_SEPARATOR
+            "2          Warning An Warning Message with integer num 1919810." EMDEVIF_LINE_SEPARATOR
+            "3            Error An Error Message with a ptrdiff_t value -1437." EMDEVIF_LINE_SEPARATOR
+            "4             Info gaoo; thiqwf%hfiwl" EMDEVIF_LINE_SEPARATOR
+            "hffsegnnivb35673ihiiiu" EMDEVIF_LINE_SEPARATOR;
         EXPECT_STREQ(::emdevif::user_declares::logger::getBuffer(), expect_log_out);
 #endif
     }
@@ -43,5 +49,5 @@ TEST_SUIT(LoggerTest)
 
 void loggerTest()
 {
-    // RUN_SUIT(LoggerTest);
+    RUN_SUIT(LoggerTest);
 }

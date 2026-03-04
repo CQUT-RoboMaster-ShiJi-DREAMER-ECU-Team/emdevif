@@ -20,9 +20,10 @@ module;
 export module emdevif.logger;
 
 import emdevif.core.error_handler;
+import emdevif.userDeclares;
 
 #ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
+    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
 #endif
 
 #include "emdevif/logger.hpp"
