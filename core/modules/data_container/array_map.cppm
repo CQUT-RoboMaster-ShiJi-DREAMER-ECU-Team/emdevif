@@ -19,12 +19,12 @@ module;
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
-export module emdevif.data_container.array_map;
+export module emdevif.core.data_container.array_map;
 
 import emdevif.core.error_handler;
 
 #ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
+    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
 #endif
 
 #include "emdevif/core/data_container/array_map.hpp"

@@ -1,17 +1,22 @@
 /**
- * @file GpioModel.cppm
- * @brief GPIO 模型
+ * @file gpio.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_PERIPHERAL_MODEL_GPIO_HPP
+    #define EMDEVIF_PERIPHERAL_MODEL_GPIO_HPP
 
-#include <cstdint>
+    #include "emdevif/core/detail/config.hpp"
 
-#include <type_traits>
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include <cstdint>
 
-export module emdevif.peripheral.model.gpio;
+        #include <type_traits>
+    #endif
 
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 class GpioModel
 {
@@ -37,3 +42,5 @@ public:
 static_assert(std::is_standard_layout_v<GpioModel::Instance>);
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_PERIPHERAL_MODEL_GPIO_HPP

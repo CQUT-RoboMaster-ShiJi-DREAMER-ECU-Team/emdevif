@@ -1,17 +1,23 @@
 /**
- * @file TimerModel.cppm
- * @brief 定时器模型
+ * @file timer.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_PERIPHERAL_MODEL_TIMER_HPP
+    #define EMDEVIF_PERIPHERAL_MODEL_TIMER_HPP
 
-#include <cstdint>
+    #include "emdevif/core/detail/config.hpp"
 
-#include <type_traits>
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include <cstdint>
 
-export module emdevif.peripheral.model.timer;
+        #include <span>
+        #include <type_traits>
+    #endif
 
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 class TimerModel
 {
@@ -46,3 +52,5 @@ public:
 static_assert(std::is_standard_layout_v<TimerModel::Instance>);
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_PERIPHERAL_MODEL_TIMER_HPP

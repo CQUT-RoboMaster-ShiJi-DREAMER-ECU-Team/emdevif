@@ -1,20 +1,30 @@
 /**
- * @file Pwm.cppm
- * @brief PWM
+ * @file pwm.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_PERIPHERAL_PWM_HPP
+    #define EMDEVIF_PERIPHERAL_PWM_HPP
 
-#include <cstdint>
-#include <string_view>
+    #include "emdevif/core/detail/config.hpp"
+    #include "emdevif/peripheral/detail/peripheral_error_handler.hpp"
 
-export module emdevif.peripheral.pwm;
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/peripheral/peripheral_handle_map.hpp"
+        #include "emdevif/peripheral/model/pwm.hpp"
+        #include "emdevif/core/error_handler.hpp"
 
-import emdevif.peripheralHandleMap;
-import emdevif.peripheral.base;
-import emdevif.peripheral.model.pwm;
+        #include <cstdint>
 
-export namespace emdevif {
+        #include <span>
+        #include <string_view>
+
+        #include "emdevif/core/fatal_handler.h"
+    #endif
+
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 class Pwm : public PwmModel
 {
@@ -45,3 +55,5 @@ public:
 };
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_PERIPHERAL_PWM_HPP

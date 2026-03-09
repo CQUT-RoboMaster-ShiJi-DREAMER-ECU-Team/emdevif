@@ -10,38 +10,16 @@ module;
 
 #include "emdevif/core/simplify_decl_macros.hpp"
 
-export module emdevif.peripheralHandleMap;
+#define EMDEVIF_MODULE_INTERFACE_UNIT
+
+export module emdevif.peripheral.peripheral_handle_map;
 
 import emdevif.core.type_traits;
 import emdevif.userDeclares;
-import emdevif.data_container.array_map;
+import emdevif.core.data_container.array_map;
 
-namespace emdevif {
+#ifdef __clang__
+    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
+#endif
 
-static_assert(emdevif::is_consteval([] { return user_declares::peripheral_handle_map; }),
-              "Variable `peripheral_handle_map\' should be a constant expression.");
-static_assert(
-    std::is_same_v<decltype(user_declares::peripheral_handle_map)::value_type, std::pair<std::string_view, void*>>,
-    "Variable `peripheral_handle_map\' should be declared as `constexpr auto peripheral_handle_map = "
-    "makeStaticMap<std::string_view, void*>\'.");
-
-export class PeripheralHandleMap
-{
-public:
-    PeripheralHandleMap() = delete;
-    ~PeripheralHandleMap() = delete;
-    EMDEVIF_DELETE_COPY_AND_MOVE(PeripheralHandleMap);
-
-    static constexpr void* findHandle(const std::string_view name) noexcept
-    {
-        const auto handle = user_declares::peripheral_handle_map.at(name);
-
-        if (handle == nullptr) {
-            return nullptr;
-        }
-
-        return *handle;
-    }
-};
-
-}  // namespace emdevif
+#include "emdevif/peripheral/peripheral_handle_map.hpp"

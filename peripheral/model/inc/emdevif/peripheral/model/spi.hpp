@@ -1,20 +1,25 @@
 /**
- * @file SpiModel.cppm
- * @brief SPI 通信模型
+ * @file spi.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_PERIPHERAL_MODEL_SPI_HPP
+    #define EMDEVIF_PERIPHERAL_MODEL_SPI_HPP
 
-#include <cstdint>
+#include "emdevif/core/detail/config.hpp"
 
-#include <span>
-#include <type_traits>
+#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+    #include "emdevif/core/error_handler.hpp"
 
-export module emdevif.peripheral.model.spi;
+    #include <cstdint>
 
-export import emdevif.core.error_handler;
+    #include <span>
+    #include <type_traits>
+#endif
 
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 class SpiModel
 {
@@ -35,3 +40,6 @@ public:
 static_assert(std::is_standard_layout_v<SpiModel::Instance>);
 
 }  // namespace emdevif
+
+
+#endif  // !EMDEVIF_PERIPHERAL_MODEL_SPI_HPP

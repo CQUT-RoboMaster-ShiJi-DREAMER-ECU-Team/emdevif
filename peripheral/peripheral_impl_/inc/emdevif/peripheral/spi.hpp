@@ -1,27 +1,32 @@
 /**
- * @file Spi.cppm
- * @brief SPI 通信
+ * @file spi.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_PERIPHERAL_SPI_HPP
+    #define EMDEVIF_PERIPHERAL_SPI_HPP
 
-#include <cstdint>
+    #include "emdevif/core/detail/config.hpp"
+    #include "emdevif/peripheral/detail/peripheral_error_handler.hpp"
 
-#include <limits>
-#include <span>
-#include <string_view>
-#include <type_traits>
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/peripheral/peripheral_handle_map.hpp"
+        #include "emdevif/peripheral/model/spi.hpp"
+        #include "emdevif/core/error_handler.hpp"
 
-#include "emdevif/core/fatal_handler.h"
+        #include <cstdint>
 
-export module emdevif.peripheral.spi;
+        #include <limits>
+        #include <span>
+        #include <string_view>
+        #include <type_traits>
 
-export import emdevif.core.error_handler;
-import emdevif.peripheralHandleMap;
-import emdevif.peripheral.base;
-import emdevif.peripheral.model.spi;
+        #include "emdevif/core/fatal_handler.h"
+    #endif
 
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 class Spi : public SpiModel
 {
@@ -54,3 +59,5 @@ public:
 };
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_PERIPHERAL_SPI_HPP

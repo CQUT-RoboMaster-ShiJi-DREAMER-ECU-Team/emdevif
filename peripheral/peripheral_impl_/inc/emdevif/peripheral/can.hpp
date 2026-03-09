@@ -1,25 +1,30 @@
 /**
- * @file Can.cppm
- * @brief CAN 通信
+ * @file can.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_PERIPHERAL_CAN_HPP
+    #define EMDEVIF_PERIPHERAL_CAN_HPP
 
-#include <cstdint>
+    #include "emdevif/core/detail/config.hpp"
+    #include "emdevif/peripheral/detail/peripheral_error_handler.hpp"
 
-#include <span>
-#include <string_view>
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/peripheral/peripheral_handle_map.hpp"
+        #include "emdevif/peripheral/model/can.hpp"
+        #include "emdevif/core/error_handler.hpp"
 
-#include "emdevif/core/fatal_handler.h"
+        #include <cstdint>
 
-export module emdevif.peripheral.can;
+        #include <span>
+        #include <string_view>
 
-export import emdevif.core.error_handler;
-import emdevif.peripheralHandleMap;
-import emdevif.peripheral.base;
-import emdevif.peripheral.model.can;
+        #include "emdevif/core/fatal_handler.h"
+    #endif
 
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 class Can : public CanModel
 {
@@ -53,3 +58,5 @@ public:
 };
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_PERIPHERAL_CAN_HPP

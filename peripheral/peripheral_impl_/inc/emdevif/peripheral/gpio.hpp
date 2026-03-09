@@ -1,23 +1,30 @@
 /**
- * @file Gpio.cppm
- * @brief GPIO
+ * @file gpio.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_PERIPHERAL_GPIO_HPP
+    #define EMDEVIF_PERIPHERAL_GPIO_HPP
 
-#include <cstdint>
-#include <string_view>
+    #include "emdevif/core/detail/config.hpp"
+    #include "emdevif/peripheral/detail/peripheral_error_handler.hpp"
 
-#include "emdevif/core/fatal_handler.h"
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/peripheral/peripheral_handle_map.hpp"
+        #include "emdevif/peripheral/model/gpio.hpp"
+        #include "emdevif/core/error_handler.hpp"
 
-export module emdevif.peripheral.gpio;
+        #include <cstdint>
 
-import emdevif.core.error_handler;
-import emdevif.peripheralHandleMap;
-import emdevif.peripheral.base;
-import emdevif.peripheral.model.gpio;
+        #include <span>
+        #include <string_view>
 
-export namespace emdevif {
+        #include "emdevif/core/fatal_handler.h"
+    #endif
+
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 class Gpio : public GpioModel
 {
@@ -51,3 +58,5 @@ public:
 };
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_PERIPHERAL_GPIO_HPP

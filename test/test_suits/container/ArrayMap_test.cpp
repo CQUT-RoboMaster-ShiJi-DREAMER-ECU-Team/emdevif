@@ -11,7 +11,7 @@
 #include <array>
 
 import emdevif.core.integer_suffix;
-import emdevif.data_container.array_map;
+import emdevif.core.data_container.array_map;
 
 namespace emdevif::test::static_map {
 

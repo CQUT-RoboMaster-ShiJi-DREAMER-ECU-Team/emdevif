@@ -4,7 +4,7 @@ project(emdevif_peripheral CXX)
 
 add_subdirectory(model)
 add_subdirectory(peripheral_handle_map)
-add_subdirectory(peripheral_impl)
+add_subdirectory(peripheral_impl_)
 
 add_library(${PROJECT_NAME} INTERFACE)
 

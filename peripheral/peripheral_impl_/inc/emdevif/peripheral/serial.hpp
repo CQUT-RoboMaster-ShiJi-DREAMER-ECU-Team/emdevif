@@ -1,27 +1,32 @@
 /**
- * @file Serial.cppm
- * @brief 串口通信
+ * @file serial.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_PERIPHERAL_SERIAL_HPP
+    #define EMDEVIF_PERIPHERAL_SERIAL_HPP
 
-#include <cstdint>
+    #include "emdevif/core/detail/config.hpp"
+    #include "emdevif/peripheral/detail/peripheral_error_handler.hpp"
 
-#include <limits>
-#include <string_view>
-#include <span>
-#include <type_traits>
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/peripheral/peripheral_handle_map.hpp"
+        #include "emdevif/peripheral/model/serial.hpp"
+        #include "emdevif/core/error_handler.hpp"
 
-#include "emdevif/core/fatal_handler.h"
+        #include <cstdint>
 
-export module emdevif.peripheral.serial;
+        #include <limits>
+        #include <string_view>
+        #include <span>
+        #include <type_traits>
 
-export import emdevif.core.error_handler;
-import emdevif.peripheralHandleMap;
-import emdevif.peripheral.base;
-import emdevif.peripheral.model.serial;
+        #include "emdevif/core/fatal_handler.h"
+    #endif
 
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 class Serial : public SerialModel
 {
@@ -72,3 +77,5 @@ public:
 };
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_PERIPHERAL_SERIAL_HPP

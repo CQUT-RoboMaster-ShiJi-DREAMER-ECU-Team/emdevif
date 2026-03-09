@@ -1,17 +1,22 @@
 /**
- * @file PwmModel.cppm
- * @brief PWM 模型
+ * @file pwm.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_PERIPHERAL_MODEL_PWM_HPP
+    #define EMDEVIF_PERIPHERAL_MODEL_PWM_HPP
 
-#include <cstdint>
+    #include "emdevif/core/detail/config.hpp"
 
-#include <type_traits>
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include <cstdint>
 
-export module emdevif.peripheral.model.pwm;
+        #include <type_traits>
+    #endif
 
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 class PwmModel
 {
@@ -33,3 +38,5 @@ public:
 static_assert(std::is_standard_layout_v<PwmModel::Instance>);
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_PERIPHERAL_MODEL_PWM_HPP

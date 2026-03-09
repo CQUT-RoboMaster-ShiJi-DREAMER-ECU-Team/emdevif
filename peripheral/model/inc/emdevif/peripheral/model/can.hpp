@@ -1,20 +1,25 @@
 /**
- * @file CanModel.cppm
- * @brief CAN 通信模型
+ * @file can.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_PERIPHERAL_MODEL_CAN_HPP
+    #define EMDEVIF_PERIPHERAL_MODEL_CAN_HPP
 
-#include <cstdint>
+    #include "emdevif/core/detail/config.hpp"
 
-#include <span>
-#include <type_traits>
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/error_handler.hpp"
 
-export module emdevif.peripheral.model.can;
+        #include <cstdint>
 
-export import emdevif.core.error_handler;
+        #include <span>
+        #include <type_traits>
+    #endif
 
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 class CanModel
 {
@@ -61,3 +66,5 @@ public:
 static_assert(std::is_standard_layout_v<CanModel::Instance>);
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_PERIPHERAL_MODEL_CAN_HPP

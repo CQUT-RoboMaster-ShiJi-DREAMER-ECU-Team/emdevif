@@ -1,24 +1,25 @@
 /**
- * @file peripheral_base_module.cppm
- * @brief 外设模型类的错误处理
+ * @file peripheral_error_handler.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_PERIPHERAL_DETAIL_PERIPHERAL_ERROR_HANDLER_HPP
+    #define EMDEVIF_PERIPHERAL_DETAIL_PERIPHERAL_ERROR_HANDLER_HPP
 
-#include <string_view>
-#include <type_traits>
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include <string_view>
+        #include <type_traits>
 
-#include "emdevif/core/simplify_decl_macros.hpp"
+        #include "emdevif/core/simplify_decl_macros.hpp"
+        #include "emdevif/core/error_handler.hpp"
 
-#include "emdevif/core/fatal_handler.h"
-
-export module emdevif.peripheral.base;
-
-import emdevif.core.error_handler;
+        #include "emdevif/core/fatal_handler.h"
+    #endif
 
 namespace emdevif::detail {
 
-export class PeripheralErrorHandler
+class PeripheralErrorHandler
 {
 public:
     EMDEVIF_DECLARE_ZERO_INSTANCE(PeripheralErrorHandler);
@@ -41,15 +42,9 @@ public:
     }
 
 private:
-    static void ThisIsACompileTimeMessage_CouldNotFoundHandle() noexcept;
+    static void ThisIsACompileTimeMessage_CouldNotFoundHandle() noexcept {}
 };
 
 }  // namespace emdevif::detail
 
-// module :private;
-
-namespace emdevif::detail {
-
-void PeripheralErrorHandler::ThisIsACompileTimeMessage_CouldNotFoundHandle() noexcept {}
-
-}  // namespace emdevif::detail
+#endif  // !EMDEVIF_PERIPHERAL_DETAIL_PERIPHERAL_ERROR_HANDLER_HPP

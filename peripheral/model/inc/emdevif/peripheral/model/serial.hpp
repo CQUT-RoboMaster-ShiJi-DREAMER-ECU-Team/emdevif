@@ -1,20 +1,25 @@
 /**
- * @file SerialModel.cppm
- * @brief 串口模型
+ * @file serial.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_PERIPHERAL_MODEL_SERIAL_HPP
+    #define EMDEVIF_PERIPHERAL_MODEL_SERIAL_HPP
 
-#include <cstdint>
+    #include "emdevif/core/detail/config.hpp"
 
-#include <type_traits>
-#include <span>
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/error_handler.hpp"
 
-export module emdevif.peripheral.model.serial;
+        #include <cstdint>
 
-export import emdevif.core.error_handler;
+        #include <span>
+        #include <type_traits>
+    #endif
 
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 class SerialModel
 {
@@ -53,3 +58,5 @@ public:
 static_assert(std::is_standard_layout_v<SerialModel::Instance>);
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_PERIPHERAL_MODEL_SERIAL_HPP
