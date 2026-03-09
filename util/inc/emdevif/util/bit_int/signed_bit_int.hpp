@@ -1,28 +1,29 @@
 /**
- * @file signed_bit_int.cppm
- * @brief 有符号指定宽度整型
+ * @file signed_bit_int.hpp
+ * @brief
  */
 
-// ReSharper disable CppNonExplicitConversionOperator
-// ReSharper disable CppNonExplicitConvertingConstructor
+#pragma once
+#ifndef EMDEVIF_UTIL_BIT_INT_SIGNED_BIT_INT_HPP
+    #define EMDEVIF_UTIL_BIT_INT_SIGNED_BIT_INT_HPP
 
-module;
+    #include "emdevif/core/detail/config.hpp"
+    #include "emdevif/util/bit_int/basic_config.hpp"
 
-#include <cstdint>
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/concepts.hpp"
+        #include "emdevif/util/bit_int/detail/exception_config.hpp"
 
-#include <bit>
-#include <numeric>
-#include <concepts>
-#include <iostream>
+        #include <cstdint>
 
-#include "BitInt_exception_config.hpp"
+        #include <bit>
+        #include <numeric>
+        #include <concepts>
+        #include <iostream>
+    #endif
 
-export module emdevif.util.bitInt:signed_partial;
-import :base;
-
-import emdevif.core.concepts;
-
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 template<BitsType_t bits>
     requires ValidBitIntWidth<bits>
@@ -214,11 +215,11 @@ public:
     {
         const auto other_signed = static_cast<SignedType>(other);
 
-#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (other_signed == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-#endif
+    #endif
 
         return (transToSigned(this->value) / other_signed);
     }
@@ -228,11 +229,11 @@ public:
     {
         const auto rhs_signed = transToSigned(rhs.value);
 
-#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (rhs_signed == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-#endif
+    #endif
 
         return (static_cast<SignedType>(lhs) / rhs_signed);
     }
@@ -244,11 +245,11 @@ public:
     {
         const auto other_signed = static_cast<SignedType>(other);
 
-#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (other_signed == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-#endif
+    #endif
 
         return (transToSigned(this->value) % other_signed);
     }
@@ -258,11 +259,11 @@ public:
     {
         const auto rhs_signed = transToSigned(rhs.value);
 
-#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (rhs_signed == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-#endif
+    #endif
 
         return (static_cast<SignedType>(lhs) % rhs_signed);
     }
@@ -371,11 +372,11 @@ public:
     {
         const auto other_signed = static_cast<SignedType>(other);
 
-#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (other_signed == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-#endif
+    #endif
 
         return *this = *this / other_signed;
     }
@@ -387,11 +388,11 @@ public:
     {
         const auto other_signed = static_cast<SignedType>(other);
 
-#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (other_signed == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-#endif
+    #endif
 
         return *this = *this % other_signed;
     }
@@ -616,3 +617,5 @@ private:
 };
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_UTIL_BIT_INT_SIGNED_BIT_INT_HPP

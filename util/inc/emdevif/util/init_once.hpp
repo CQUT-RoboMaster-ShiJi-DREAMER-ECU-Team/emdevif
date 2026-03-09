@@ -1,18 +1,23 @@
 /**
- * @file InitOnce.cppm
- * @brief 单次初始化类
+ * @file init_once.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_UTIL_INIT_ONCE_HPP
+    #define EMDEVIF_UTIL_INIT_ONCE_HPP
 
-#include <type_traits>
-#include <utility>
+    #include "emdevif/core/detail/config.hpp"
 
-export module emdevif.util.initOnce;
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/error_handler.hpp"
 
-export import emdevif.core.error_handler;
+        #include <type_traits>
+        #include <utility>
+    #endif
 
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 /**
  * 单次初始化类
@@ -148,3 +153,5 @@ private:
 };
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_UTIL_INIT_ONCE_HPP

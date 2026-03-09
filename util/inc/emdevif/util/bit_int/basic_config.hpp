@@ -1,21 +1,26 @@
 /**
- * @file bit_int_base.cppm
- * @brief 指定宽度整型公共函数
+ * @file basic_config.hpp
+ * @brief
  */
 
-module;
+#pragma once
+#ifndef EMDEVIF_UTIL_BIT_INT_BASIC_CONFIG_HPP
+    #define EMDEVIF_UTIL_BIT_INT_BASIC_CONFIG_HPP
 
-#include <cstdint>
-#include <type_traits>
-#include <concepts>
+    #include "emdevif/core/detail/config.hpp"
 
-export module emdevif.util.bitInt:base;
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include <cstdint>
+        #include <type_traits>
+        #include <concepts>
+    #endif
 
 namespace emdevif {
 
-export using BitsType_t = uint_fast8_t;
+EMDEVIF_MODULE_EXPORT using BitsType_t = uint_fast8_t;
 
-export template<BitsType_t bits>
+EMDEVIF_MODULE_EXPORT
+template<BitsType_t bits>
 concept ValidBitIntWidth = (bits <= 64U);
 
 namespace detail {
@@ -43,3 +48,5 @@ consteval BitsType_t bitsOf() noexcept
 }  // namespace detail
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_UTIL_BIT_INT_BASIC_CONFIG_HPP

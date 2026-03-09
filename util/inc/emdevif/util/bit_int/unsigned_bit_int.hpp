@@ -1,26 +1,27 @@
 /**
- * @file unsigned_bit_int.cppm
- * @brief 无符号指定宽度整型
+ * @file unsigned_bit_int.hpp
+ * @brief
  */
 
-// ReSharper disable CppNonExplicitConversionOperator
-// ReSharper disable CppNonExplicitConvertingConstructor
+#pragma once
+#ifndef EMDEVIF_UTIL_BIT_INT_UNSIGNED_BIT_INT_HPP
+    #define EMDEVIF_UTIL_BIT_INT_UNSIGNED_BIT_INT_HPP
 
-module;
+    #include "emdevif/core/detail/config.hpp"
+    #include "emdevif/util/bit_int/basic_config.hpp"
 
-#include <cstdint>
-#include <type_traits>
-#include <concepts>
-#include <iostream>
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/concepts.hpp"
+        #include "emdevif/util/bit_int/detail/exception_config.hpp"
 
-#include "BitInt_exception_config.hpp"
+        #include <cstdint>
+        #include <type_traits>
+        #include <concepts>
+        #include <iostream>
+    #endif
 
-export module emdevif.util.bitInt:unsigned_partial;
-import :base;
-
-import emdevif.core.concepts;
-
-export namespace emdevif {
+EMDEVIF_MODULE_EXPORT
+namespace emdevif {
 
 template<BitsType_t bits>
     requires ValidBitIntWidth<bits>
@@ -174,11 +175,11 @@ public:
     {
         const auto other_val = static_cast<RealType>(other);
 
-#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (other_val == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-#endif
+    #endif
 
         return overflowCast(this->value / other_val);
     }
@@ -188,11 +189,11 @@ public:
     {
         const auto rhs_val = static_cast<RealType>(rhs.value);
 
-#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (rhs_val == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-#endif
+    #endif
 
         return overflowCast(static_cast<RealType>(lhs) / rhs_val);
     }
@@ -204,11 +205,11 @@ public:
     {
         const auto other_val = static_cast<RealType>(other);
 
-#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (other_val == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-#endif
+    #endif
 
         return overflowCast(this->value % other_val);
     }
@@ -218,11 +219,11 @@ public:
     {
         const auto rhs_val = static_cast<RealType>(rhs.value);
 
-#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (rhs_val == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-#endif
+    #endif
 
         return overflowCast(static_cast<RealType>(lhs) % rhs_val);
     }
@@ -329,7 +330,7 @@ public:
     template<typename OtherType>
     constexpr UBitInt& operator/=(const OtherType& other) EMDEVIF_UTIL_BITINT_NOEXCEPT
     {
-#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         RealType res;
 
         try {
@@ -340,9 +341,9 @@ public:
         }
 
         return *this = res;
-#else
+    #else
         return *this = *this / other;
-#endif
+    #endif
     }
 
     // =========================== %=
@@ -350,7 +351,7 @@ public:
     template<typename OtherType>
     constexpr UBitInt& operator%=(const OtherType& other) EMDEVIF_UTIL_BITINT_NOEXCEPT
     {
-#if (defined(EMDEVIF_ENABLE_EXCEPTIONS) && EMDEVIF_ENABLE_EXCEPTIONS)
+    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         RealType res;
 
         try {
@@ -361,9 +362,9 @@ public:
         }
 
         return *this = res;
-#else
+    #else
         return *this = *this % other;
-#endif
+    #endif
     }
 
     // =========================== &=
@@ -586,3 +587,5 @@ private:
 };
 
 }  // namespace emdevif
+
+#endif  // !EMDEVIF_UTIL_BIT_INT_UNSIGNED_BIT_INT_HPP

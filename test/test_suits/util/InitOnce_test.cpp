@@ -7,7 +7,8 @@
 
 #include "emdevif_test_framework.h"
 
-import emdevif.util.initOnce;
+import emdevif.util.init_once;
+import emdevif.core.error_handler;
 
 static TEST_SUIT(InitOnceBasicTest)
 {

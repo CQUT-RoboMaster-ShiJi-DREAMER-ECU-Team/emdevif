@@ -9,7 +9,7 @@
 示例：
 
 ```C++
-import emdevif.util.bitInt;
+import emdevif.util.bit_int;
 
 int main()
 {
@@ -34,7 +34,8 @@ int main()
 #include <string>
 #include <cassert>
 
-import emdevif.util.initOnce;
+import emdevif.util.init_once;
+import emdevif.core.error_handler;
 
 int main()
 {

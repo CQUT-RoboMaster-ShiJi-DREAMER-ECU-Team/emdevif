@@ -23,7 +23,7 @@ export module emdevif.sys.eventGroup;
 
 import emdevif.core.error_handler;
 import emdevif.sys.thread;
-import emdevif.util.bitInt;
+import emdevif.util.bit_int;
 
 #ifdef __clang__
 #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
