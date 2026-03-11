@@ -12,14 +12,21 @@
 #include <functional>
 #include <string>
 
-#include "printf.h"
-
 #include "heap_usage_checker.hpp"
 
-import emdevif.sys.thread;
-import emdevif.sys.mutex;
+#ifdef EMDEVIF_USE_MODULES
+import emdevif.system.thread;
+import emdevif.system.mutex;
 import emdevif.core.resource_guard.lock_guard;
 import emdevif.core.error_handler;
+#else
+    #include "emdevif/system/thread.hpp"
+    #include "emdevif/system/mutex.hpp"
+    #include "emdevif/core/resource_guard/lock_guard.hpp"
+    #include "emdevif/core/error_handler.hpp"
+#endif
+
+#include "printf.h"
 
 template<typename T>
 class MutexGuard

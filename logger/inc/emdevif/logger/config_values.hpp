@@ -11,6 +11,7 @@
 
     #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include <cstdint>
+        #include <cstdarg>
     #endif
 
 EMDEVIF_MODULE_EXPORT

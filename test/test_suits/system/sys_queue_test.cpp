@@ -9,9 +9,15 @@
 
 #include <type_traits>
 
+#ifdef EMDEVIF_USE_MODULES
 import emdevif.core.error_handler;
 import emdevif.core.data_container.message_queue;
-import emdevif.sys.sysQueue;
+import emdevif.system.sys_queue;
+#else
+    #include "emdevif/core/error_handler.hpp"
+    #include "emdevif/core/data_container/message_queue.hpp"
+    #include "emdevif/system/sys_queue.hpp"
+#endif
 
 TEST_SUIT(SysQueueBasicTest)
 {

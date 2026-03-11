@@ -7,7 +7,11 @@
 
 #include <array>
 
+#ifdef EMDEVIF_USE_MODULES
 import emdevif.core.data_container.ring_buffer;
+#else
+    #include "emdevif/core/data_container/ring_buffer.hpp"
+#endif
 
 TEST_SUIT(RingBufferTest)
 {

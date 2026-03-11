@@ -24,7 +24,7 @@ module;
 #include <cstddef>
 
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
-module emdevif.sys.mutex;
+module emdevif.system.mutex;
 
 import emdevif.core.error_handler;
 #endif

@@ -11,9 +11,10 @@ target_link_libraries(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME} PUBLIC inc)
 
-target_sources(${PROJECT_NAME}
-    PRIVATE src/logger.cpp
+target_sources(${PROJECT_NAME} PRIVATE src/logger.cpp)
 
-    PUBLIC FILE_SET emdevif_logger_modules TYPE CXX_MODULES FILES
-        logger.cppm
-)
+if (EMDEVIF_USE_CPP_MODULES)
+    target_sources(${PROJECT_NAME} PUBLIC FILE_SET emdevif_logger_modules TYPE CXX_MODULES
+        FILES logger.cppm
+    )
+endif ()

@@ -10,10 +10,10 @@ module;
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
-export module emdevif.sys.sysMessageSlot;
+export module emdevif.system.sys_message_slot;
 
-import emdevif.sys.thread;
-import emdevif.sys.sysQueue;
+import emdevif.system.thread;
+import emdevif.system.sys_queue;
 import emdevif.core.data_container.message_slot;
 import emdevif.core.data_container.message_queue;
 import emdevif.core.error_handler;

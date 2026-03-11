@@ -19,10 +19,10 @@ module;
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
-export module emdevif.sys.semaphore;
+export module emdevif.system.semaphore;
 
 import emdevif.core.error_handler;
-import emdevif.sys.thread;
+import emdevif.system.thread;
 
 #ifdef __clang__
 #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"

@@ -22,7 +22,7 @@ module;
 #include <cstddef>
 
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
-module emdevif.sys.eventGroup;
+module emdevif.system.event_group;
 
 import emdevif.core.error_handler;
 #endif

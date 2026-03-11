@@ -9,10 +9,17 @@
 
 #include "emdevif/core/line_separator.h"
 
+#ifdef EMDEVIF_USE_MODULES
 import emdevif.logger;
 import emdevif.userDeclares;
-import emdevif.sys.thread;
+import emdevif.system.thread;
 import emdevif.core.integer_suffix;
+#else
+    #include "emdevif/logger.hpp"
+    #include "emdevif/user_declares.hpp"
+    #include "emdevif/system/thread.hpp"
+    #include "emdevif/core/integer_suffix.hpp"
+#endif
 
 // #define EMDEVIF_LOGGER_TEST_DEVELOPER_CHECK_MODE
 

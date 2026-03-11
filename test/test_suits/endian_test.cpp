@@ -11,7 +11,11 @@
 
 #include "emdevif_test_framework.h"
 
+#ifdef EMDEVIF_USE_MODULES
 import emdevif.core.endian;
+#else
+    #include "emdevif/core/endian.hpp"
+#endif
 
 TEST_SUIT(EndianTest)
 {

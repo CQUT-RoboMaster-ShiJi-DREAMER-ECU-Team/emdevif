@@ -23,7 +23,7 @@ module;
 #endif
 
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
-module emdevif.sys.thread;
+module emdevif.system.thread;
 
 import emdevif.core.error_handler;
 #endif

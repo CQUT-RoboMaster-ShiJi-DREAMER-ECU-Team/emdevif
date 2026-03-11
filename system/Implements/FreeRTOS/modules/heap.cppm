@@ -17,7 +17,7 @@ module;
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
-export module emdevif.sys.heap;
+export module emdevif.system.heap;
 
 import emdevif.core.concepts;
 

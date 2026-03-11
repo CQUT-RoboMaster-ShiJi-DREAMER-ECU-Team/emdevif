@@ -9,7 +9,11 @@
 
 #include "emdevif_test_framework.h"
 
+#ifdef EMDEVIF_USE_MODULES
 import emdevif.core.type_traits;
+#else
+    #include "emdevif/core/type_traits.hpp"
+#endif
 
 namespace emdevif::static_assert_test::is_consteval_test {
 

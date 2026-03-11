@@ -7,8 +7,13 @@
 
 #include "emdevif_test_framework.h"
 
+#ifdef EMDEVIF_USE_MODULES
 import emdevif.util.init_once;
 import emdevif.core.error_handler;
+#else
+    #include "emdevif/util/init_once.hpp"
+    #include "emdevif/core/error_handler.hpp"
+#endif
 
 static TEST_SUIT(InitOnceBasicTest)
 {

@@ -13,7 +13,11 @@
 
 #include "heap_usage_checker.hpp"
 
-import emdevif.sys.heap;
+#ifdef EMDEVIF_USE_MODULES
+import emdevif.system.heap;
+#else
+    #include "emdevif/system/heap.hpp"
+#endif
 
 using namespace emdevif;
 

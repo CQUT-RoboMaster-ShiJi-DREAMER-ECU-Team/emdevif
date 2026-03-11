@@ -19,10 +19,10 @@ module;
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
-export module emdevif.sys.eventGroup;
+export module emdevif.system.event_group;
 
 import emdevif.core.error_handler;
-import emdevif.sys.thread;
+import emdevif.system.thread;
 import emdevif.util.bit_int;
 
 #ifdef __clang__

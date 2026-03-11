@@ -26,11 +26,11 @@ module;
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
-export module emdevif.sys.thread;
+export module emdevif.system.thread;
 
 import emdevif.core.error_handler;
 import emdevif.core.data_container.message_queue;
-import emdevif.sys.heap;
+import emdevif.system.heap;
 
 #ifdef __clang__
 #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"

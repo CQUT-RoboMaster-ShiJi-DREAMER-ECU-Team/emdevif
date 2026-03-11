@@ -53,16 +53,29 @@ import emdevif.userDeclares;
 #if (EMDEVIF_LOGGER_MODE == 0)
     // Sync
     #if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
-import emdevif.sys.mutex;
+        #if EMDEVIF_USE_MODULES
+import emdevif.system.mutex;
 import emdevif.core.resource_guard.lock_guard;
+        #else
+            #include "emdevif/system/mutex.hpp"
+            #include "emdevif/core/resource_guard/lock_guard.hpp"
+        #endif
     #endif
 #else
-// Async
-import emdevif.sys.thread;
-import emdevif.sys.mutex;
-import emdevif.sys.semaphore;
+    // Async
+    #if EMDEVIF_USE_MODULES
+import emdevif.system.thread;
+import emdevif.system.mutex;
+import emdevif.system.semaphore;
 import emdevif.core.data_container.ring_buffer;
 import emdevif.core.resource_guard.lock_guard;
+    #else
+        #include "emdevif/system/thread.hpp"
+        #include "emdevif/system/mutex.hpp"
+        #include "emdevif/system/semaphore.hpp"
+        #include "emdevif/core/data_container/ring_buffer.hpp"
+        #include "emdevif/core/resource_guard/lock_guard.hpp"
+    #endif
 #endif
 
 #if (EMDEVIF_LOGGER_MODE != 2)  // 不是 ExternalImpl 模式的情况

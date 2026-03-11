@@ -51,7 +51,7 @@
 
 #define EMDEVIF_FUNC_SECTION(section_name) __attribute__((section(section_name)))
 
-#define EMDEVIF_FORMAT_CHECK(func, string_index, first_to_check) __attribute__((format(func, string_index, first_to_check)))
+#define EMDEVIF_FORMAT_CHECK(function, string_index, first_to_check) __attribute__((format(function, string_index, first_to_check)))
 
 /* clang-format on */
 
