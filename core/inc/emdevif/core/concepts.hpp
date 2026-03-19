@@ -30,10 +30,6 @@ concept ArithmeticType = requires(Type lhs, Type rhs) {
     lhs * rhs;
     /* clang-format on */
     lhs / rhs;
-    ++lhs;
-    lhs++;
-    --lhs;
-    lhs--;
     lhs = rhs;
     lhs <=> rhs;
 };
