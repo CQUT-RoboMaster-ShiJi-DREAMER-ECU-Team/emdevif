@@ -20,6 +20,7 @@
         #include <numeric>
         #include <concepts>
         #include <iostream>
+        #include <compare>
     #endif
 
 EMDEVIF_MODULE_EXPORT
@@ -169,24 +170,13 @@ public:
     // =========================== +
 
     template<typename OtherType>
-    constexpr SignedType operator+(const OtherType& other) const noexcept
-    {
-        return transToSigned(this->value) + static_cast<SignedType>(other);
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, SignedType>)
     friend constexpr SignedType operator+(const OtherType& lhs, const BitInt& rhs) noexcept
     {
         return static_cast<SignedType>(lhs) + transToSigned(rhs.value);
     }
 
     // =========================== -
-
-    template<typename OtherType>
-    constexpr SignedType operator-(const OtherType& other) const noexcept
-    {
-        return transToSigned(this->value) - static_cast<SignedType>(other);
-    }
 
     template<ArithmeticType OtherType>
     friend constexpr SignedType operator-(const OtherType& lhs, const BitInt& rhs) noexcept
@@ -197,12 +187,7 @@ public:
     // =========================== *
 
     template<typename OtherType>
-    constexpr SignedType operator*(const OtherType& other) const noexcept
-    {
-        return (transToSigned(this->value) * static_cast<SignedType>(other));
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, SignedType>)
     friend constexpr SignedType operator*(const OtherType& lhs, const BitInt& rhs) noexcept
     {
         return (static_cast<SignedType>(lhs) * transToSigned(rhs.value));
@@ -211,20 +196,7 @@ public:
     // =========================== /
 
     template<typename OtherType>
-    constexpr SignedType operator/(const OtherType& other) const EMDEVIF_UTIL_BITINT_NOEXCEPT
-    {
-        const auto other_signed = static_cast<SignedType>(other);
-
-    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
-        if (other_signed == 0) {
-            throw std::invalid_argument("Division by zero is not allowed.");
-        }
-    #endif
-
-        return (transToSigned(this->value) / other_signed);
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, SignedType>)
     friend constexpr SignedType operator/(const OtherType& lhs, const BitInt& rhs) EMDEVIF_UTIL_BITINT_NOEXCEPT
     {
         const auto rhs_signed = transToSigned(rhs.value);
@@ -241,20 +213,7 @@ public:
     // =========================== %
 
     template<typename OtherType>
-    constexpr SignedType operator%(const OtherType& other) const EMDEVIF_UTIL_BITINT_NOEXCEPT
-    {
-        const auto other_signed = static_cast<SignedType>(other);
-
-    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
-        if (other_signed == 0) {
-            throw std::invalid_argument("Division by zero is not allowed.");
-        }
-    #endif
-
-        return (transToSigned(this->value) % other_signed);
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, SignedType>)
     friend constexpr SignedType operator%(const OtherType& lhs, const BitInt& rhs) EMDEVIF_UTIL_BITINT_NOEXCEPT
     {
         const auto rhs_signed = transToSigned(rhs.value);
@@ -271,12 +230,7 @@ public:
     // =========================== &
 
     template<typename OtherType>
-    constexpr SignedType operator&(const OtherType& other) const noexcept
-    {
-        return (transToSigned(this->value) & static_cast<SignedType>(other));
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, SignedType>)
     friend constexpr SignedType operator&(const OtherType& lhs, const BitInt& rhs) noexcept
     {
         return (static_cast<SignedType>(lhs) & transToSigned(rhs.value));
@@ -285,12 +239,7 @@ public:
     // =========================== |
 
     template<typename OtherType>
-    constexpr SignedType operator|(const OtherType& other) const noexcept
-    {
-        return (transToSigned(this->value) | static_cast<SignedType>(other));
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, SignedType>)
     friend constexpr SignedType operator|(const OtherType& lhs, const BitInt& rhs) noexcept
     {
         return (static_cast<SignedType>(lhs) | transToSigned(rhs.value));
@@ -299,12 +248,7 @@ public:
     // =========================== ^
 
     template<typename OtherType>
-    constexpr SignedType operator^(const OtherType& other) const noexcept
-    {
-        return (transToSigned(this->value) ^ static_cast<SignedType>(other));
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, SignedType>)
     friend constexpr SignedType operator^(const OtherType& lhs, const BitInt& rhs) noexcept
     {
         return (static_cast<SignedType>(lhs) ^ transToSigned(rhs.value));
@@ -479,88 +423,19 @@ public:
     }
 
     // ---------------------------- 比较 ----------------------------
-    // =========================== ==
 
     template<typename OtherType>
-    constexpr bool operator==(const OtherType& other) const noexcept
-    {
-        return (transToSigned(value) == static_cast<SignedType>(other));
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, SignedType>)
     friend constexpr bool operator==(const OtherType& lhs, const BitInt& rhs) noexcept
     {
         return (static_cast<SignedType>(lhs) == transToSigned(rhs.value));
     }
 
-    // =========================== !=
-
     template<typename OtherType>
-    constexpr bool operator!=(const OtherType& other) const noexcept
+        requires(std::is_convertible_v<OtherType, SignedType>)
+    friend constexpr std::strong_ordering operator<=>(const OtherType& lhs, const BitInt& rhs) noexcept
     {
-        return (transToSigned(value) != static_cast<SignedType>(other));
-    }
-
-    template<ArithmeticType OtherType>
-    friend constexpr bool operator!=(const OtherType& lhs, const BitInt& rhs) noexcept
-    {
-        return (static_cast<SignedType>(lhs) != transToSigned(rhs.value));
-    }
-
-    // =========================== >
-
-    template<typename OtherType>
-    constexpr bool operator>(const OtherType& other) const noexcept
-    {
-        return (transToSigned(value) > static_cast<SignedType>(other));
-    }
-
-    template<ArithmeticType OtherType>
-    friend constexpr bool operator>(const OtherType& lhs, const BitInt& rhs) noexcept
-    {
-        return (static_cast<SignedType>(lhs) > transToSigned(rhs.value));
-    }
-
-    // =========================== <
-
-    template<typename OtherType>
-    constexpr bool operator<(const OtherType& other) const noexcept
-    {
-        return (transToSigned(value) < static_cast<SignedType>(other));
-    }
-
-    template<ArithmeticType OtherType>
-    friend constexpr bool operator<(const OtherType& lhs, const BitInt& rhs) noexcept
-    {
-        return (static_cast<SignedType>(lhs) < transToSigned(rhs.value));
-    }
-
-    // =========================== >=
-
-    template<typename OtherType>
-    constexpr bool operator>=(const OtherType& other) const noexcept
-    {
-        return (transToSigned(value) >= static_cast<SignedType>(other));
-    }
-
-    template<ArithmeticType OtherType>
-    friend constexpr bool operator>=(const OtherType& lhs, const BitInt& rhs) noexcept
-    {
-        return (static_cast<SignedType>(lhs) >= transToSigned(rhs.value));
-    }
-
-    // =========================== <=
-
-    template<typename OtherType>
-    constexpr bool operator<=(const OtherType& other) const noexcept
-    {
-        return (transToSigned(value) <= static_cast<SignedType>(other));
-    }
-
-    template<ArithmeticType OtherType>
-    friend constexpr bool operator<=(const OtherType& lhs, const BitInt& rhs) noexcept
-    {
-        return (static_cast<SignedType>(lhs) <= transToSigned(rhs.value));
+        return static_cast<SignedType>(lhs) - transToSigned(rhs.value);
     }
 
     // --------------------------- stream ------------------------------

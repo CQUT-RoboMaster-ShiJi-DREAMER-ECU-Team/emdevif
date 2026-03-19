@@ -12,6 +12,7 @@ module;
 #include <bit>
 #include <numeric>
 #include <iostream>
+#include <compare>
 
 #include "emdevif/util/bit_int/detail/exception_config.hpp"
 

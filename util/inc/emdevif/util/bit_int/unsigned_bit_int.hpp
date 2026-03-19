@@ -18,6 +18,7 @@
         #include <type_traits>
         #include <concepts>
         #include <iostream>
+        #include <compare>
     #endif
 
 EMDEVIF_MODULE_EXPORT
@@ -129,12 +130,7 @@ public:
     // =========================== +
 
     template<typename OtherType>
-    constexpr RealType operator+(const OtherType& other) const noexcept
-    {
-        return overflowCast(this->value + static_cast<RealType>(other));
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, RealType>)
     friend constexpr RealType operator+(const OtherType& lhs, const UBitInt& rhs) noexcept
     {
         return overflowCast(static_cast<RealType>(lhs) + rhs.value);
@@ -143,12 +139,7 @@ public:
     // =========================== -
 
     template<typename OtherType>
-    constexpr RealType operator-(const OtherType& other) const noexcept
-    {
-        return overflowCast(this->value - static_cast<RealType>(other));
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, RealType>)
     friend constexpr RealType operator-(const OtherType& lhs, const UBitInt& rhs) noexcept
     {
         return overflowCast(static_cast<RealType>(lhs) - rhs.value);
@@ -157,12 +148,7 @@ public:
     // =========================== *
 
     template<typename OtherType>
-    constexpr RealType operator*(const OtherType& other) const noexcept
-    {
-        return overflowCast(this->value * static_cast<RealType>(other));
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, RealType>)
     friend constexpr RealType operator*(const OtherType& lhs, const UBitInt& rhs) noexcept
     {
         return overflowCast(static_cast<RealType>(lhs) * rhs.value);
@@ -171,20 +157,7 @@ public:
     // =========================== /
 
     template<typename OtherType>
-    constexpr RealType operator/(const OtherType& other) const EMDEVIF_UTIL_BITINT_NOEXCEPT
-    {
-        const auto other_val = static_cast<RealType>(other);
-
-    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
-        if (other_val == 0) {
-            throw std::invalid_argument("Division by zero is not allowed.");
-        }
-    #endif
-
-        return overflowCast(this->value / other_val);
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, RealType>)
     friend constexpr RealType operator/(const OtherType& lhs, const UBitInt& rhs) EMDEVIF_UTIL_BITINT_NOEXCEPT
     {
         const auto rhs_val = static_cast<RealType>(rhs.value);
@@ -201,20 +174,7 @@ public:
     // =========================== %
 
     template<typename OtherType>
-    constexpr RealType operator%(const OtherType& other) const EMDEVIF_UTIL_BITINT_NOEXCEPT
-    {
-        const auto other_val = static_cast<RealType>(other);
-
-    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
-        if (other_val == 0) {
-            throw std::invalid_argument("Division by zero is not allowed.");
-        }
-    #endif
-
-        return overflowCast(this->value % other_val);
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, RealType>)
     friend constexpr RealType operator%(const OtherType& lhs, const UBitInt& rhs) EMDEVIF_UTIL_BITINT_NOEXCEPT
     {
         const auto rhs_val = static_cast<RealType>(rhs.value);
@@ -231,12 +191,7 @@ public:
     // =========================== &
 
     template<typename OtherType>
-    constexpr RealType operator&(const OtherType& other) const noexcept
-    {
-        return overflowCast(this->value & static_cast<RealType>(other));
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, RealType>)
     friend constexpr RealType operator&(const OtherType& lhs, const UBitInt& rhs) noexcept
     {
         return overflowCast(static_cast<RealType>(lhs) & rhs.value);
@@ -245,12 +200,7 @@ public:
     // =========================== |
 
     template<typename OtherType>
-    constexpr RealType operator|(const OtherType& other) const noexcept
-    {
-        return overflowCast(this->value | static_cast<RealType>(other));
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, RealType>)
     friend constexpr RealType operator|(const OtherType& lhs, const UBitInt& rhs) noexcept
     {
         return overflowCast(static_cast<RealType>(lhs) | rhs.value);
@@ -259,12 +209,7 @@ public:
     // =========================== ^
 
     template<typename OtherType>
-    constexpr RealType operator^(const OtherType& other) const noexcept
-    {
-        return overflowCast(this->value ^ static_cast<RealType>(other));
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, RealType>)
     friend constexpr RealType operator^(const OtherType& lhs, const UBitInt& rhs) noexcept
     {
         return overflowCast(static_cast<RealType>(lhs) ^ rhs.value);
@@ -449,88 +394,28 @@ public:
     }
 
     // ---------------------------- 比较 ----------------------------
-    // =========================== ==
 
     template<typename OtherType>
-    constexpr bool operator==(const OtherType& other) const noexcept
-    {
-        return (value == static_cast<RealType>(other));
-    }
-
-    template<ArithmeticType OtherType>
+        requires(std::is_convertible_v<OtherType, RealType>)
     friend constexpr bool operator==(const OtherType& lhs, const UBitInt& rhs) noexcept
     {
         return (static_cast<RealType>(lhs) == rhs.value);
     }
 
-    // =========================== !=
-
     template<typename OtherType>
-    constexpr bool operator!=(const OtherType& other) const noexcept
+        requires(std::is_convertible_v<OtherType, RealType>)
+    friend constexpr std::strong_ordering operator<=>(const OtherType& lhs, const UBitInt& rhs) noexcept
     {
-        return (value != static_cast<RealType>(other));
-    }
+        const auto l_value = static_cast<RealType>(lhs);
+        const auto r_value = rhs.value;
 
-    template<ArithmeticType OtherType>
-    friend constexpr bool operator!=(const OtherType& lhs, const UBitInt& rhs) noexcept
-    {
-        return (static_cast<RealType>(lhs) != rhs.value);
-    }
-
-    // =========================== >
-
-    template<typename OtherType>
-    constexpr bool operator>(const OtherType& other) const noexcept
-    {
-        return (value > static_cast<RealType>(other));
-    }
-
-    template<ArithmeticType OtherType>
-    friend constexpr bool operator>(const OtherType& lhs, const UBitInt& rhs) noexcept
-    {
-        return (static_cast<RealType>(lhs) > rhs.value);
-    }
-
-    // =========================== <
-
-    template<typename OtherType>
-    constexpr bool operator<(const OtherType& other) const noexcept
-    {
-        return (value < static_cast<RealType>(other));
-    }
-
-    template<ArithmeticType OtherType>
-    friend constexpr bool operator<(const OtherType& lhs, const UBitInt& rhs) noexcept
-    {
-        return (static_cast<RealType>(lhs) < rhs.value);
-    }
-
-    // =========================== >=
-
-    template<typename OtherType>
-    constexpr bool operator>=(const OtherType& other) const noexcept
-    {
-        return (value >= static_cast<RealType>(other));
-    }
-
-    template<ArithmeticType OtherType>
-    friend constexpr bool operator>=(const OtherType& lhs, const UBitInt& rhs) noexcept
-    {
-        return (static_cast<RealType>(lhs) >= rhs.value);
-    }
-
-    // =========================== <=
-
-    template<typename OtherType>
-    constexpr bool operator<=(const OtherType& other) const noexcept
-    {
-        return (value <= static_cast<RealType>(other));
-    }
-
-    template<ArithmeticType OtherType>
-    friend constexpr bool operator<=(const OtherType& lhs, const UBitInt& rhs) noexcept
-    {
-        return (static_cast<RealType>(lhs) <= rhs.value);
+        if (l_value < r_value) {
+            return std::strong_ordering::less;
+        }
+        if (l_value > r_value) {
+            return std::strong_ordering::greater;
+        }
+        return std::strong_ordering::equal;
     }
 
     // --------------------------- stream ------------------------------
