@@ -24,17 +24,17 @@ namespace emdevif {
 class CanModel
 {
 public:
+    // IDE
     enum class DataIdentifier : uint_fast8_t {
         StandardId = 0,
         ExtendedId
     };
-    using Ide = DataIdentifier;
 
+    // RTR
     enum class RemoteTransmissionRequest : uint_fast8_t {
         DataFrame = 0,
         RemoteFrame
     };
-    using Rtr = RemoteTransmissionRequest;
 
     using DataLength = uint_fast8_t;
 

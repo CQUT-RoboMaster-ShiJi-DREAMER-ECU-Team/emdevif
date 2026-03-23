@@ -5,18 +5,18 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_SLOT_HPP
-#define EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_SLOT_HPP
+    #define EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_SLOT_HPP
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#include "emdevif/core/error_handler.hpp"
-#include "emdevif/core/data_container/message_queue.hpp"
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/error_handler.hpp"
+        #include "emdevif/core/data_container/message_queue.hpp"
 
-#include <cstddef>
+        #include <cstddef>
 
-#include <type_traits>
-#endif
+        #include <type_traits>
+    #endif
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {

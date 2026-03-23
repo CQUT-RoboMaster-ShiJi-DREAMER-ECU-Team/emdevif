@@ -5,20 +5,20 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_DATA_CONTAINER_ARRAY_MAP_BASIC_ARRAY_MAP_HPP
-#define EMDEVIF_CORE_DATA_CONTAINER_ARRAY_MAP_BASIC_ARRAY_MAP_HPP
+    #define EMDEVIF_CORE_DATA_CONTAINER_ARRAY_MAP_BASIC_ARRAY_MAP_HPP
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#include "emdevif/core/fatal_handler.h"
-#include "emdevif/core/error_handler.hpp"
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/fatal_handler.h"
+        #include "emdevif/core/error_handler.hpp"
 
-#include <utility>
-#include <array>
-#include <algorithm>
-#include <iterator>
-#include <functional>
-#endif
+        #include <utility>
+        #include <array>
+        #include <algorithm>
+        #include <iterator>
+        #include <functional>
+    #endif
 
 namespace emdevif {
 
@@ -49,7 +49,7 @@ public:
 
 protected:
     std::array<value_type, max_size> store_array_;  ///< 内部存储所用的数组
-    KeyEqual key_equal_{};                          ///< 用于比较键是否相等的函数
+    [[no_unique_address]] KeyEqual key_equal_{};    ///< 用于比较键是否相等的函数
 
 public:
     constexpr BasicArrayMap() noexcept = default;

@@ -5,20 +5,20 @@
 
 #pragma once
 #ifndef EMDEVIF_SYSTEM_SYS_MESSAGE_SLOT_HPP
-#define EMDEVIF_SYSTEM_SYS_MESSAGE_SLOT_HPP
+    #define EMDEVIF_SYSTEM_SYS_MESSAGE_SLOT_HPP
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#include "emdevif/core/error_handler.hpp"
-#include "emdevif/core/data_container/message_queue.hpp"
-#include "emdevif/core/data_container/message_slot.hpp"
-#include "emdevif/system/thread.hpp"
-#include "emdevif/system/sys_queue.hpp"
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/error_handler.hpp"
+        #include "emdevif/core/data_container/message_queue.hpp"
+        #include "emdevif/core/data_container/message_slot.hpp"
+        #include "emdevif/system/thread.hpp"
+        #include "emdevif/system/sys_queue.hpp"
 
-#include <utility>
-#include <type_traits>
-#endif
+        #include <utility>
+        #include <type_traits>
+    #endif
 
 namespace emdevif {
 
@@ -68,7 +68,8 @@ public:
 
 }  // namespace detail
 
-EMDEVIF_MODULE_EXPORT
+EMDEVIF_MODULE_EXPORT_BEGIN
+
 template<typename Type>
 class SysMessageSlot : public MessageSlotInterface<SysMessageSlot, Type>
 {
@@ -149,10 +150,11 @@ public:
     }
 };
 
-EMDEVIF_MODULE_EXPORT
 template<typename Type>
 struct IsMessageSlot<SysMessageSlot<Type>> : public std::true_type {
 };
+
+EMDEVIF_MODULE_EXPORT_END
 
 }  // namespace emdevif
 
