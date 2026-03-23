@@ -8,6 +8,7 @@ module;
 #include <type_traits>
 #include <concepts>
 #include <compare>
+#include <limits>
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 

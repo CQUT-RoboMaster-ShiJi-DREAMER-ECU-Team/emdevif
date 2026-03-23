@@ -13,10 +13,29 @@
         #include <type_traits>
         #include <concepts>
         #include <compare>
+        #include <limits>
     #endif
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
+
+/**
+ * 有界的类型概念
+ */
+template<typename T>
+concept HaveLimitType = requires {
+    std::numeric_limits<T>::max();
+    std::numeric_limits<T>::min();
+} || requires {
+    T::max();
+    T::min();
+} || requires(T v, const T cv) {
+    v.max();
+    v.min();
+
+    cv.max();
+    cv.min();
+};
 
 /**
  * 可计算类型概念
