@@ -14,9 +14,11 @@ endfunction()
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
-message(STATUS "[${PROJECT_NAME}]: Checking C++20 modules support...")
-try_compile(EMDEVIF_COMPILER_SUPPORT_CPP20_MODULES
-    SOURCES ${CMAKE_CURRENT_LIST_DIR}/cpp_modules_check.cpp
-    LOG_DESCRIPTION "emdevif check C++20 modules support"
-)
-emdevif_messageCompileFeature_("C++20 modules" "${EMDEVIF_COMPILER_SUPPORT_CPP20_MODULES}")
+if (EMDEVIF_USE_CPP_MODULES)
+    message(STATUS "[${PROJECT_NAME}]: Checking C++20 modules support...")
+    try_compile(EMDEVIF_COMPILER_SUPPORT_CPP20_MODULES
+        SOURCES ${CMAKE_CURRENT_LIST_DIR}/cpp_modules_check.cpp
+        LOG_DESCRIPTION "emdevif check C++20 modules support"
+    )
+    emdevif_messageCompileFeature_("C++20 modules" "${EMDEVIF_COMPILER_SUPPORT_CPP20_MODULES}")
+endif ()
