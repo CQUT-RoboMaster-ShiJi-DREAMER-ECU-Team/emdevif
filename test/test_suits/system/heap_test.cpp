@@ -8,6 +8,7 @@
 #include <array>
 #include <vector>
 #include <algorithm>
+#include <numeric>
 
 #include "emdevif_test_framework.h"
 
@@ -51,8 +52,10 @@ TEST_SUIT(HeapTest)
         ASSERT_TRUE(a == nullptr, "");
         heap::destruct(a);  // 可以安全的删除 nullptr（会直接返回，不会非法内存访问）
 
-        a = heap::construct<int[5]>(std::nothrow, 1, 2, 3, 4, 5);
+        a = heap::construct<int[5]>(std::nothrow);
         ASSERT_TRUE(a != nullptr, "");
+        std::iota(std::begin(*a), std::end(*a), 1);
+
         auto is_pass = true;
         for (const auto i : {1, 2, 3, 4, 5}) {
             if ((*a)[i - 1] != i) {
@@ -194,8 +197,10 @@ TEST_SUIT(HeapTest)
         } while (false);
 
         do {
-            auto v = heap::make_unique<int[6]>(std::nothrow, 1, 2, 3, 4, 5, 6);
+            auto v = heap::make_unique<int[6]>(std::nothrow);
             ASSERT_TRUE(v != nullptr, "");
+            std::iota(std::begin(*v), std::end(*v), 1);
+
             bool pass = true;
             for (const auto i : {1, 2, 3, 4, 5, 6}) {
                 if ((*v)[i - 1] != i) {
