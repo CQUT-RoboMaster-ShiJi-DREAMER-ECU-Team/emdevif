@@ -39,10 +39,12 @@ concept HaveLimitType = requires {
 
 /**
  * 可计算类型概念
+ * @attention 满足 emdevif::ArithmeticType 概念的类型区别于满足于 std::is_arithmetic 类型特征的类型，
+ * 前者表示满足于算术运算的类型，可以是用户自定义的类型（如复数、矩阵等）；后者只能是内置的类型（整型与浮点）。
  * @tparam Type 数据类型
  */
 template<typename Type>
-concept ArithmeticType = requires(Type lhs, Type rhs) {
+concept ArithmeticType = HaveLimitType<Type> && requires(Type lhs, Type rhs) {
     lhs + rhs;
     lhs - rhs;
     /* clang-format off */
