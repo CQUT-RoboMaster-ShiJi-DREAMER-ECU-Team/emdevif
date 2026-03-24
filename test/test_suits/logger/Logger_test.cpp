@@ -11,7 +11,7 @@
 
 #ifdef EMDEVIF_USE_MODULES
 import emdevif.logger;
-import emdevif.userDeclares;
+import emdevif.user_declares;
 import emdevif.system.thread;
 import emdevif.core.integer_suffix;
 #else

@@ -37,5 +37,3 @@ constexpr auto peripheral_handle_map =
 
 }  // namespace emdevif::user_declares
 ```
-
-todo 待写使用方法

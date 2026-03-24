@@ -35,5 +35,5 @@ int main()
 
 CMake 缓存变量：
 
-* `EMDEVIF_TEST_IGNORE_NAME_LIST`: 要忽略的测试列表，用分号间隔开。要忽略的测试名称的取值见 [test_main.cpp](test_main.cpp)
-  中 `emdevif_test_list` 变量的定义。
+* `EMDEVIF_TEST_IGNORE_NAME_LIST`: 要忽略的测试列表，用分号间隔开。要忽略的测试名称的取值见
+  [emdevif_test_list.hpp](emdevif_test_list.hpp) 中 `emdevif_test_list` 变量的定义。

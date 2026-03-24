@@ -24,12 +24,12 @@ namespace emdevif::logger {
 template<typename... Args>
 emdevif::ErrorCode init(Args&&... args) noexcept
 {
-    return ::emdevif::user_declares::logger::logInit(std::forward<Args>(args)...);
+    return ::emdevif::user_declares::logger::logInitImpl(std::forward<Args>(args)...);
 }
 
 inline void deInit() noexcept
 {
-    ::emdevif::user_declares::logger::logDeInit();
+    ::emdevif::user_declares::logger::logDeInitImpl();
 }
 
 inline void log(const LoggerLevel level, const char* format, ...) noexcept
@@ -50,7 +50,7 @@ inline void verbose(const char* format, ...) noexcept
     if constexpr (constexpr auto level = LoggerLevel::Verbose; !(level < logger_ignore_level)) {
         std::va_list args;
         va_start(args, format);
-        ::emdevif::user_declares::logger::logVerboseImpl(static_cast<int>(level), format, args);
+        ::emdevif::user_declares::logger::logVerboseImpl(format, args);
         va_end(args);
     }
 }
@@ -61,7 +61,7 @@ inline void debug(const char* format, ...) noexcept
     if constexpr (constexpr auto level = LoggerLevel::Debug; !(level < logger_ignore_level)) {
         std::va_list args;
         va_start(args, format);
-        ::emdevif::user_declares::logger::logDebugImpl(static_cast<int>(level), format, args);
+        ::emdevif::user_declares::logger::logDebugImpl(format, args);
         va_end(args);
     }
 }
@@ -72,7 +72,7 @@ inline void info(const char* format, ...) noexcept
     if constexpr (constexpr auto level = LoggerLevel::Info; !(level < logger_ignore_level)) {
         std::va_list args;
         va_start(args, format);
-        ::emdevif::user_declares::logger::logInfoImpl(static_cast<int>(level), format, args);
+        ::emdevif::user_declares::logger::logInfoImpl(format, args);
         va_end(args);
     }
 }
@@ -83,7 +83,7 @@ inline void warning(const char* format, ...) noexcept
     if constexpr (constexpr auto level = LoggerLevel::Warning; !(level < logger_ignore_level)) {
         std::va_list args;
         va_start(args, format);
-        ::emdevif::user_declares::logger::logWarningImpl(static_cast<int>(level), format, args);
+        ::emdevif::user_declares::logger::logWarningImpl(format, args);
         va_end(args);
     }
 }
@@ -94,7 +94,7 @@ inline void error(const char* format, ...) noexcept
     if constexpr (constexpr auto level = LoggerLevel::Error; !(level < logger_ignore_level)) {
         std::va_list args;
         va_start(args, format);
-        ::emdevif::user_declares::logger::logErrorImpl(static_cast<int>(level), format, args);
+        ::emdevif::user_declares::logger::logErrorImpl(format, args);
         va_end(args);
     }
 }
@@ -105,7 +105,7 @@ inline void fatal(const char* format, ...) noexcept
     if constexpr (constexpr auto level = LoggerLevel::Fatal; !(level < logger_ignore_level)) {
         std::va_list args;
         va_start(args, format);
-        ::emdevif::user_declares::logger::logFatalImpl(static_cast<int>(level), format, args);
+        ::emdevif::user_declares::logger::logFatalImpl(format, args);
         va_end(args);
 
         EMDEVIF_FATAL_HANDLER("Fatal log message outputted, terminating program");

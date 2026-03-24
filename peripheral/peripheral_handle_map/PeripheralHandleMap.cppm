@@ -15,7 +15,7 @@ module;
 export module emdevif.peripheral.peripheral_handle_map;
 
 import emdevif.core.type_traits;
-import emdevif.userDeclares;
+import emdevif.user_declares;
 import emdevif.core.data_container.array_map;
 
 #ifdef __clang__

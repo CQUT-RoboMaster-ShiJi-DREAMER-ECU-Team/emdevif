@@ -18,7 +18,7 @@ module;
 export module emdevif.timeline;
 
 #ifdef EMDEVIF_USER_DECLARES_PROVIDE_MODULE
-import emdevif.userDeclares;
+import emdevif.user_declares;
 #endif
 
 #ifdef __clang__

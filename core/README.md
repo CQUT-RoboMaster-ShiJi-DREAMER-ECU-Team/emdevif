@@ -10,17 +10,19 @@
 
 ### 概览
 
-* 基本头文件：提供基础的数据类型定义和宏定义。
-    * [attributes_and_useful_macros.h](inc/emdevif/attributes_and_useful_macros.h): 提供常用的属性和宏定义。
-    * [line_separator.h](inc/emdevif/line_separator.h): 提供统一的换行符的定义。
-    * [integer_suffix.hpp](inc/emdevif/integer_suffix.hpp): 提供固定宽度整型、size_t、ptrdiff_t 的自定义字面量。
-    * [simplify_decl_macros.hpp](inc/emdevif/simplify_decl_macros.hpp): 提供简化声明的宏。
-* [错误处理模块](./error_handler): 提供错误码定义和错误处理函数。
-* [数据容器](./data_container): 提供常用的数据容器实现（如环形缓冲区）。
+* 基本头文件（这些功能仅提供头文件，没有模块）：提供基础的数据类型定义和宏定义。
+    * [attributes_and_useful_macros.h](inc/emdevif/core/attributes_and_useful_macros.h): 提供常用的属性和宏定义。
+    * [line_separator.h](inc/emdevif/core/line_separator.h): 提供统一的换行符的定义。
+    * [simplify_decl_macros.hpp](inc/emdevif/core/simplify_decl_macros.hpp): 提供简化声明的宏。
+  若头文件的后缀名是 `.h`，则表示它们在 C 和 C++ 中都可以使用；若后缀名是 `.hpp`，则表示它们只能在 C++ 中使用。
+* [错误处理模块](modules/error_handler.cppm): 提供错误码定义和错误处理函数。
+* [数据容器](modules/data_container): 提供常用的数据容器实现（如环形缓冲区）。
+* [integer_suffix.cppm](modules/integer_suffix.cppm): 提供固定宽度整型、size_t、ptrdiff_t 的自定义字面量。
 * STL 库的扩展：
-    * [类型特征](./type_traits): 提供一些类型特征的实现。
-    * [概念库](./concepts.cppm): 提供一些常用概念的实现。
-    * [端序](./endian.cppm): 提供端序转换相关的功能。
+    * [类型特征](modules/type_traits.cppm): 提供部分类型特征的实现。
+    * [概念库](modules/concepts.cppm): 提供一些常用概念的实现。
+    * [端序](modules/endian.cppm): 提供端序转换相关的功能。
+    * [资源保护](modules/resource_guard.cppm): 实现安全释放资源的机制（如 LockGuard、轻量级 try-finally）。
 
 ### 详细功能说明
 
@@ -28,8 +30,8 @@
 
 #### CMake 的 emdevif_compile_options 接口库
 
-这个库目前只有一个功能：编译时启用所有警告。emdevif 的所有子模块都会链接它（以 PRIVATE 的方式），并且能够保证无警告。
-但考虑到用户或第三方库的源文件不一定能确保无警告，因此将开启所有警告的选项打包成接口库，用户可以自行决定是否链接它以开启所有警告。
+这个库目前只有一个功能：编译时启用所有警告。emdevif 的所有子模块都会链接它（以 PRIVATE 的方式）。所有 emdevif 的内部实现都能够确保无警告。
+但考虑到用户或第三方库的代码不一定能确保无警告，因此将开启所有警告的选项打包成接口库，用户可以自行决定是否链接它以开启所有警告。
 
 #### line_separator.h
 
@@ -77,5 +79,7 @@ int main(void)
   `emdevif::registerAssertFailedHandler`
   函数以注册自定义的断言失败处理函数。被注册的函数可以返回，因为执行了用户注册的函数后会调用 `emdevif::terminate` 函数。
 
-使用错误处理函数时，需要导入 `emdevif.errorHandler` 模块。若需要使用宏，还需要导入头文件 `emdevif/fatal_handler.h`。
+`EMDEVIF_ASSERT` 与 `EMDEVIF_FATAL_HANDLER` 的区别是：前者允许通过设置宏 `NDEBUG` 来禁用断言检查，而后者则始终有效。
+
+使用错误处理函数时，需要导入 `emdevif.core.error_handler` 模块。若需要使用宏，还需要导入头文件 `emdevif/fatal_handler.h`。
 特别地，在 C 语言中使用宏，只需要导入头文件 `emdevif/fatal_handler.h` 即可。
