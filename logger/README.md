@@ -1,10 +1,12 @@
 # emdevif_logger
 
-日志库，提供同步和异步两种模式。
+日志模块，支持同步/异步/外部实现等模式。
 
-这个库依赖 emdevif_user_declares。
+## 依赖
 
-## 配置选项
+- `emdevif_core`
+- `emdevif_user_declares`
+- `emdevif_system`（异步模式或同步+锁时）
 
 参考 [emdevif_logger_config_example.hpp](./emdevif_logger_config_example.hpp)
 文件，您可以将这个文件拷贝到您的工程中，并根据需要修改配置选项。然后在 CMakeLists.txt 中定义
