@@ -5,17 +5,22 @@
 
 #pragma once
 #ifndef EMDEVIF_TIMELINE_HPP
-#define EMDEVIF_TIMELINE_HPP
+    #define EMDEVIF_TIMELINE_HPP
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#include "emdevif/core/detail/include_emdevif_user_declares_in_headers.hpp"
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/detail/include_emdevif_user_declares_in_headers.hpp"
+        #include "emdevif/core/simplify_decl_macros.hpp"
 
-#include <cstdint>
+        #include <cstdint>
 
-#include <type_traits>
-#endif
+        #include <type_traits>
+    #endif
+
+    #ifndef EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS
+        #define EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS false
+    #endif
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
@@ -30,24 +35,63 @@ class Timeline
 {
 public:
     /**
+     * 时间线提供的最高精度
+     */
+    enum class BasicAccuracy : uint_fast8_t {
+        Microseconds = 0,  ///< 微秒
+        Milliseconds       ///< 毫秒
+    };
+
+    /// 当前时间线能够提供的最高精度
+    static constexpr auto basic_accuracy =
+        (EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS ? BasicAccuracy::Milliseconds : BasicAccuracy::Microseconds);
+
+    /**
      * 获取从初始化完成到当前的时间（以微秒为单位）
      * @return 当前时间
      */
     static BaseTimePoint getMicroseconds() noexcept
+    #if (!EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS)
     {
         return ::emdevif::user_declares::timeline::getMicroseconds();
     }
+    #else
+        = EMDEVIF_REASON_DELETE(
+            "Macro `EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS` was true, so this function deleted. Please usage "
+            "`getMilliseconds` instead");
+    #endif
+
+    /**
+     * 获取从初始化完成到当前的时间（以毫秒为单位）
+     * @return 当前时间
+     */
+    static BaseTimePoint getMilliseconds() noexcept
+    #if (EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS)
+    {
+        return ::emdevif::user_declares::timeline::getMilliseconds();
+    }
+    #else
+        = EMDEVIF_REASON_DELETE(
+            "Macro `EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS` was false, so this function deleted. Please usage "
+            "`getMicroseconds` instead");
+    #endif
 
     /**
      * 阻塞式延时一段时间
      * @param delay_time_us 要延时的时间（以微秒为单位）
      */
     static void pauseDelayUs(const BaseTimePoint delay_time_us) noexcept
+    #if (!EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS)
     {
-        const volatile auto begin = getMicroseconds();
-        while (getMicroseconds() - begin < delay_time_us) {
+        const volatile auto begin_time = getMicroseconds();
+        while (getMicroseconds() - begin_time < delay_time_us) {
         }
     }
+    #else
+        = EMDEVIF_REASON_DELETE(
+            "Macro `EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS` was true, the accuracy of time source could not support "
+            "delay in microseconds. So this function deleted, please usage `pauseDelayMs` instead");
+    #endif
 
     /**
      * 阻塞式延时一段时间
@@ -55,7 +99,13 @@ public:
      */
     static void pauseDelayMs(const BaseTimePoint delay_time_ms) noexcept
     {
+    #if (!EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS)
         pauseDelayUs(delay_time_ms * 1000U);
+    #else
+        const volatile auto begin_time = getMilliseconds();
+        while (getMilliseconds() - begin_time < delay_time_ms) {
+        }
+    #endif
     }
 
 public:
@@ -75,7 +125,12 @@ public:
      */
     void update() noexcept
     {
-        store_timeline_ = getMicroseconds();
+        store_timeline_ =
+    #if (EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS)
+            getMilliseconds();
+    #else
+            getMicroseconds();
+    #endif
     }
 
     /**
@@ -106,6 +161,8 @@ template<typename ConvertType = float>
 class Duration
 {
 public:
+    static constexpr auto basic_accuracy = Timeline::basic_accuracy;  ///< 时间线的最高精度
+
     constexpr Duration() noexcept = default;
     constexpr Duration(const Duration&) noexcept = default;
 
@@ -120,12 +177,17 @@ public:
      * @return 间隔时间
      */
     ConvertType getMicroDuration() noexcept
+    #if (!EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS)
     {
         const auto now = Timeline::getMicroseconds();
         const auto ret = now - last_time_point_();
         last_time_point_ = now;
         return ret;
     }
+    #else
+        = EMDEVIF_REASON_DELETE("Macro `EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS` was true, the accuracy of time source could not support ")
+            "duration in microseconds. So this function deleted, please usage `getMilliDuration` instead");
+    #endif
 
     /**
      * 获取间隔时间（以毫秒为单位）
@@ -133,7 +195,14 @@ public:
      */
     ConvertType getMilliDuration() noexcept
     {
+    #if (!EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS)
         return getMicroDuration() / static_cast<ConvertType>(1000);
+    #else
+        const auto now = Timeline::getMilliseconds();
+        const auto ret = now - last_time_point_();
+        last_time_point_ = now;
+        return ret;
+    #endif
     }
 
     /**

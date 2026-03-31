@@ -4,6 +4,10 @@
 
 这个库依赖 emdevif_user_declares。
 
+## 配置
+
+* 宏 `EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS`: 如果定义为 true，则 `Timeline` 最高精度为毫秒。默认为 false。
+
 ## emdevif_user_declares 的需求
 
 **不可链接 `emdevif_timeline` 库，否则导致循环依赖！**<br>
@@ -24,6 +28,12 @@ uint64_t getMicroseconds()  // 可选 inline、noexcept 修饰符
 {
     // 返回以微秒为单位的时间戳
 }
+
+// 如果 EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS 定义为 true，则应该改为提供 getMilliseconds 函数，返回以毫秒为单位的时间戳
+// uint64_t getMilliseconds()
+// {
+//     // 返回以毫秒为单位的时间戳
+// }
 
 }  // namespace timeline
 

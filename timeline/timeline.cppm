@@ -6,8 +6,10 @@
 module;
 
 #ifndef EMDEVIF_USER_DECLARES_PROVIDE_MODULE
-#include "emdevif/user_declares.hpp"
+    #include "emdevif/user_declares.hpp"
 #endif
+
+#include "emdevif/core/simplify_decl_macros.hpp"
 
 #include <cstdint>
 
@@ -22,7 +24,7 @@ import emdevif.user_declares;
 #endif
 
 #ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
+    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
 #endif
 
 #include "emdevif/timeline.hpp"
