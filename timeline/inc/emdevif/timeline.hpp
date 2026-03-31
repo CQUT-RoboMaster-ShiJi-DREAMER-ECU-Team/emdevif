@@ -185,7 +185,8 @@ public:
         return ret;
     }
     #else
-        = EMDEVIF_REASON_DELETE("Macro `EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS` was true, the accuracy of time source could not support ")
+        = EMDEVIF_REASON_DELETE(
+            "Macro `EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS` was true, the accuracy of time source could not support "
             "duration in microseconds. So this function deleted, please usage `getMilliDuration` instead");
     #endif
 

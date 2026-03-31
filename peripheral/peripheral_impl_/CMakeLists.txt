@@ -6,7 +6,7 @@ if (EMDEVIF_USE_CPP_MODULES)
     add_library(${PROJECT_NAME} STATIC)
 
     target_link_libraries(${PROJECT_NAME}
-        PUBLIC emdevif_core emdevif_util emdevif_peripheral_handle_map_ emdevif_peripheral_model
+        PUBLIC emdevif_core emdevif_peripheral_handle_map_ emdevif_peripheral_model
         PRIVATE emdevif_compile_options
     )
 
@@ -17,7 +17,7 @@ if (EMDEVIF_USE_CPP_MODULES)
     )
 else ()
     add_library(${PROJECT_NAME} INTERFACE)
-    target_link_libraries(${PROJECT_NAME} INTERFACE emdevif_core emdevif_util
+    target_link_libraries(${PROJECT_NAME} INTERFACE emdevif_core
         emdevif_peripheral_handle_map_ emdevif_peripheral_model
         emdevif_compile_options
     )

@@ -6,7 +6,7 @@ if (EMDEVIF_USE_CPP_MODULES)
     add_library(${PROJECT_NAME} STATIC)
 
     target_link_libraries(${PROJECT_NAME}
-        PUBLIC emdevif_core emdevif_util
+        PUBLIC emdevif_core
         PRIVATE emdevif_compile_options
     )
 
@@ -19,7 +19,7 @@ if (EMDEVIF_USE_CPP_MODULES)
     )
 else ()
     add_library(${PROJECT_NAME} INTERFACE)
-    target_link_libraries(${PROJECT_NAME} INTERFACE emdevif_core emdevif_util
+    target_link_libraries(${PROJECT_NAME} INTERFACE emdevif_core
         emdevif_compile_options
     )
     target_include_directories(${PROJECT_NAME} INTERFACE inc)

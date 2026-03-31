@@ -23,6 +23,7 @@ target_compile_definitions(emdevif_logger PUBLIC
 
 异步模式时，依赖 `emdevif_system` 子模块。
 同步模式时，如果启用了锁，则依赖 `emdevif_system` 子模块。
+如果依赖了子模块 `emdevif_system`，则需要设置 CMake 变量 `EMDEVIF_LOGGER_LINK_SYSTEM_LIB` 为 `ON`。
 
 ## emdevif_user_declares 的需求
 
