@@ -37,13 +37,11 @@ static constinit TerminateFunction terminateFunction = defaultTerminateFunction;
  * 致命错误回调函数（编译期初始化为默认的回调函数）
  */
 static constinit FatalHandlerCallBack fatalHandlerCallback = nullptr;
-// 默认为 nullptr，表示不进行额外处理，直接调用 terminate
+// ^-- 默认为 nullptr，表示不进行额外处理，直接调用 terminate
 
 namespace detail {
 
 constinit AssertFailedHandler assertFailedHandler = nullptr;
-
-void illFormatedCodeToAssertFailed() noexcept {}
 
 }  // namespace detail
 

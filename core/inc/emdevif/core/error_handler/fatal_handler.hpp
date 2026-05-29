@@ -84,18 +84,18 @@ namespace detail {
 
 /**
  * 断言失败处理函数指针（编译期初始化为默认的断言失败处理函数）
+ *
+ * @attention 如果编译器报错提示 'emdevif::detail::assertFailedHandler@@emdevif.core.error_handler' was not declared 'constexpr'，
+ * 这不是框架的设计错误，而是某处的断言在常量求值上下文中失败了，需要用户检查函数传入的参数是否符合断言条件。
  */
 extern AssertFailedHandler assertFailedHandler;
-
-/// 用于在编译期触发断言失败的函数，详见 @ref emdevif_assert 函数内部的注释
-void illFormatedCodeToAssertFailed() noexcept;
 
 }  // namespace detail
 
 /**
  * 断言入口
  * @attention 不应直接调用这个函数，应当使用宏 @ref EMDEVIF_ASSERT，可以自动填充文件名、行号、函数名与表达式名称，
- * 但需要引入头文件 @ref emdevif/core/fatal_handler.hpp
+ * 但需要引入头文件 @ref emdevif/core/fatal_handler.h
  * @note 为了避免与 <cassert> 中的 assert 冲突，故将此函数命名为 emdevif_assert
  *
  * @param condition 待断言的表达式
@@ -112,24 +112,35 @@ EMDEVIF_MODULE_EXPORT constexpr void emdevif_assert(const bool condition,
                                                     const char* condition_name,
                                                     const char* message = "") noexcept
 {
-    // 把这个函数设置为 constexpr 是为了在常量表达式函数里使用（运行时也可以断言）
+    // 把这个函数设置为 constexpr 是为了在常量求值上下文中也能够使用
 
-    if (!condition) {
-        if (std::is_constant_evaluated()) {
-            // 在常量表达式求值上下文中，用 illFormatedCodeToAssertFailed 函数触发编译错误表示断言失败。
-            //
-            // 如果在编译时提示“在常量求值上下文调用了非 constexpr 的 illFormatedCodeToAssertFailed 函数”，
-            // 说明是触发了断言失败，您可以查看编译错误信息提示的调用栈查看触发断言的位置。
-            detail::illFormatedCodeToAssertFailed();
-            return;
-        }
+    // clang-format off
 
-        if (detail::assertFailedHandler != nullptr) {
-            detail::assertFailedHandler(file, line, func_name, condition_name, message);
-        }
+    // 以下的写法可能令人困惑，这是为了确保该函数在常量求值上下文中也能够正常使用而设计的（参考了标准库 cassert 中 assert 宏的实现）
+    (void)(
+        condition ||  // 利用了内置的 || 运算符的“短路求值”特性，如果 condition 是 true，则直接忽略 || 后续的判断，
+                       // 这样，在常量求值上下文中就不会对 detail::assertFailedHandler 进行访问，从而避免了在常量
+                       // 求值上下文中访问非常量表达式的变量导致的编译错误。
 
-        terminate();
-    }
+                       // 相应地，如果 condition 为 false，就会访问非常量表达式 detail::assertFailedHandler，
+                       // 从而触发编译错误，提示用户在常量求值上下文中存在断言失败。
+
+                       // 也就是说，如果编译器报错提示“此处使用了非常量表达式变量 detail::assertFailedHandler”，
+                       // 这不是框架的设计错误，而是某处的断言在常量求值上下文中失败了，需要用户检查函数传入的参数是否符合规定。
+        (detail::assertFailedHandler != nullptr ?
+            (detail::assertFailedHandler(file, line, func_name, condition_name, message), false) :
+            false
+        ) ||
+        (terminate(), false)
+    );
+    // 上述代码块的结构大致可以看作 `(void)(condition || B || C)`
+    // 其中 B 块是一个始终返回 false 的表达式（? : 中间的表达式用到了逗号运算符，取的是最后一个表达式 false 的值），
+    // 从而确保最终调用 C 块的 terminate
+
+    // 至于为什么要使用逗号运算符，这是因为 detail::assertFailedHandler 和 terminate 调用后返回的是 void，而
+    // || 运算符两侧都必须是布尔类型的，因此使用逗号运算符后面接一个 false 来满足 || 运算符的类型要求，同时又不影响函数的逻辑。
+
+    // clang-format on
 }
 
 /**

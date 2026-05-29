@@ -14,7 +14,7 @@ description: 被指示遵循 emdevif-coding-style 时，应用工程约束并强
 
 代码风格与命名的规范主文档为：
 
-- `emdevif/documents/emdevif-coding-style.md`
+- `emdevif/docs/emdevif-coding-style.md`
 
 在涉及格式、命名、C/C++ 边界、C++20 模块时，必须以该文档为准。
 
@@ -47,7 +47,7 @@ description: 被指示遵循 emdevif-coding-style 时，应用工程约束并强
 
 ## Execution checklist
 
-- [ ] 已读取并遵循 `emdevif/documents/emdevif-coding-style.md`
+- [ ] 已读取并遵循 `emdevif/docs/emdevif-coding-style.md`
 - [ ] 未引入关键静态检查告警
 - [ ] 未破坏模块边界与接口稳定性
 - [ ] 必要测试与文档已同步
