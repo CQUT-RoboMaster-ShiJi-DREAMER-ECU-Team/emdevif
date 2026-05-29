@@ -5,26 +5,30 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_RESOURCE_GUARD_TRY_FINALLY_HPP
-#define EMDEVIF_CORE_RESOURCE_GUARD_TRY_FINALLY_HPP
+    #define EMDEVIF_CORE_RESOURCE_GUARD_TRY_FINALLY_HPP
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
+
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include <utility>
+        #include <concepts>
+        #include <functional>
+    #endif
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
-template<typename R, typename TryBlock, typename FinallyBlock>
-constexpr R tryFinally(const TryBlock& try_block, const FinallyBlock& finally_block) noexcept
-{
-    R result{try_block()};
-    finally_block();
-    return result;
-}
+template<typename Func>
+concept ValidTryFunction = std::is_invocable_v<Func>;
 
-template<typename TryBlock, typename FinallyBlock>
-constexpr void tryFinally(const TryBlock& try_block, const FinallyBlock& finally_block) noexcept
+template<typename Func>
+concept ValidFinallyFunction = std::is_nothrow_invocable_r_v<void, Func>;
+
+template<ValidTryFunction TryFunc, ValidFinallyFunction FinallyFunc>
+constexpr auto tryFinally(TryFunc&& try_block, FinallyFunc&& finally) -> std::invoke_result_t<TryFunc>
 {
-    try_block();
-    finally_block();
+    [[maybe_unused]] Defer _{[&] noexcept { std::invoke(std::forward<FinallyFunc>(finally)); }};
+    return std::invoke(std::forward<TryFunc>(try_block));
 }
 
 }  // namespace emdevif

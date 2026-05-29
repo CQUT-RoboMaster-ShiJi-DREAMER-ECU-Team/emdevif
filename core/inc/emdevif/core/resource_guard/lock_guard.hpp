@@ -33,8 +33,7 @@ concept ValidLock = requires(LockType lock_instance) {
     { lock_instance.unlock() } -> std::same_as<void>;
 };
 
-template<typename LockType>
-    requires ValidLock<LockType>
+template<ValidLock LockType>
 class LockGuard final
 {
 public:
