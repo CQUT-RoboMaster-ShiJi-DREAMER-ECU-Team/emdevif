@@ -183,7 +183,6 @@ public:
 
 private:
     Handle handle_;  ///< 底层实现的句柄
-    Handle handle_;
 };
 
 template<typename Type, std::size_t item_size>

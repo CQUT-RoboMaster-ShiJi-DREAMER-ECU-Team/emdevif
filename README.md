@@ -19,9 +19,8 @@ emdevif: embedded developing interface 嵌入式开发接口。
 
 ## 相关文档
 
-[命名约定](.)  (todo)
-
-[rmdev](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev.git)
+- [编码规范](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev_developing_or_testing_environment/blob/main/docs/emdevif-coding-style.md)
+- [rmdev](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev.git)
 
 ## 模块与头文件说明
 
