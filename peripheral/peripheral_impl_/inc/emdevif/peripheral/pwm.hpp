@@ -1,6 +1,6 @@
 /**
  * @file pwm.hpp
- * @brief
+ * @brief PWM 外设封装类
  */
 
 #pragma once
@@ -26,28 +26,35 @@
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
+/// @brief PWM 外设封装类，通过句柄映射访问底层 PWM 外设并封装启停及占空比设置操作
 class Pwm : public PwmModel
 {
 private:
     PwmModel::Instance* instance_;
 
 public:
+    /// @brief 根据句柄名构造 PWM 实例
+    /// @param name PWM 外设句柄名称
     explicit constexpr Pwm(const std::string_view name) noexcept
         : instance_(static_cast<PwmModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
         detail::PeripheralErrorHandler::checkInstanceIsExist(instance_, "PWM", name);
     }
 
+    /// @brief 启用 PWM 输出
     void enable() const noexcept
     {
         instance_->enable(instance_->handle);
     }
 
+    /// @brief 禁用 PWM 输出
     void disable() const noexcept
     {
         instance_->disable(instance_->handle);
     }
 
+    /// @brief 设置 PWM 占空比
+    /// @param ratio 占空比百分值，范围 0~100
     void setRatio(const uint8_t ratio) const noexcept
     {
         instance_->setRatio(instance_->handle, ratio);

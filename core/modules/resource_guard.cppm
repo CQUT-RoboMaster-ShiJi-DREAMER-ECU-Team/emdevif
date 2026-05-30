@@ -1,6 +1,6 @@
 /**
  * @file resource_guard.cppm
- * @brief
+ * @brief RAII 资源管理
  */
 
 module;

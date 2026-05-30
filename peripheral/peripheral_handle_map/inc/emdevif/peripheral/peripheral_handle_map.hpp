@@ -1,6 +1,6 @@
 /**
  * @file peripheral_handle_map.hpp
- * @brief
+ * @brief 外设句柄映射查找工具，提供编译期外设句柄查表功能
  */
 
 #pragma once
@@ -30,6 +30,7 @@ static_assert(
     "Variable `peripheral_handle_map\' should be declared as `constexpr auto peripheral_handle_map = "
     "makeStaticMap<std::string_view, void*>\'.");
 
+/// @brief 外设句柄映射查找工具类，通过编译期静态映射表根据名称查找外设句柄
 EMDEVIF_MODULE_EXPORT class PeripheralHandleMap
 {
 public:
@@ -37,6 +38,11 @@ public:
     ~PeripheralHandleMap() = delete;
     EMDEVIF_DELETE_COPY_AND_MOVE(PeripheralHandleMap);
 
+    /**
+     * @brief 根据名称查找外设句柄
+     * @param name 外设句柄名称
+     * @return 外设句柄指针，未找到时返回 nullptr
+     */
     static constexpr void* findHandle(const std::string_view name) noexcept
     {
         const auto handle = user_declares::peripheral_handle_map.at(name);

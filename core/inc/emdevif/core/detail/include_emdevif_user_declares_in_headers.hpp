@@ -1,6 +1,6 @@
 /**
  * @file include_emdevif_user_declares_in_headers.hpp
- * @brief
+ * @brief 在非模块路径中包含用户声明头文件
  */
 
 // 开发者提示: 该头文件通常应该在

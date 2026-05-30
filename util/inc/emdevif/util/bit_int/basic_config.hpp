@@ -17,14 +17,25 @@
 
 namespace emdevif {
 
+/**
+ * @brief 位宽类型，用于表示整数的位数
+ */
 EMDEVIF_MODULE_EXPORT using BitsType_t = uint_fast8_t;
 
+/**
+ * @brief 有效的 BitInt 位宽概念，限制位宽不超过 64
+ */
 EMDEVIF_MODULE_EXPORT
 template<BitsType_t bits>
 concept ValidBitIntWidth = (bits <= 64U);
 
 namespace detail {
 
+/**
+ * @brief 获取整数类型对应的位宽
+ * @tparam T 整数类型
+ * @return 对应的位宽值（8/16/32/64），不支持的返回 0
+ */
 template<std::integral T>
 consteval BitsType_t bitsOf() noexcept
 {

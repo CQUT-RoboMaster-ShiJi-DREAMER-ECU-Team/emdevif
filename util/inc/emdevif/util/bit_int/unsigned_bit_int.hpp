@@ -24,6 +24,10 @@
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
+/**
+ * @brief 无符号指定位宽整数类
+ * @tparam bits 位宽，必须满足 ValidBitIntWidth 概念
+ */
 template<BitsType_t bits>
     requires ValidBitIntWidth<bits>
 class UBitInt
@@ -31,6 +35,9 @@ class UBitInt
 protected:  // for testing
     /* clang-format off */
 
+    /**
+     * @brief 底层存储的无符号整数类型，根据位宽自动选择 uint8/16/32/64
+     */
     using RealType =
         std::conditional_t<(bits <= 8U), uint8_t,
             std::conditional_t<(bits > 8U && bits <= 16U), uint16_t,
@@ -44,6 +51,11 @@ protected:  // for testing
 
     static_assert(detail::bitsOf<RealType>() != 0);
 
+    /**
+     * @brief 将值截断到指定位宽，处理溢出
+     * @param value 输入值
+     * @return 截断后的值
+     */
     static constexpr RealType overflowCast(const RealType value) noexcept
     {
         if constexpr (bits == detail::bitsOf<RealType>()) {
@@ -440,6 +452,9 @@ private:
     RealType value;
 };
 
+/**
+ * @brief UBitInt<0> 的特化版本，始终为零值
+ */
 template<>
 class UBitInt<0>
 {

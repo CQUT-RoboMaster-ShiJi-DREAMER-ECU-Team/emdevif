@@ -24,9 +24,16 @@
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
+/**
+ * @brief STL std::atomic 的类型别名
+ * @tparam T 原子操作的类型
+ */
 template<typename T>
 using atomic = std::atomic<T>;
 
+/**
+ * @brief STL std::memory_order 的类型别名，用于指定原子操作的内存序
+ */
 using memory_order = std::memory_order;
 
 }  // namespace emdevif

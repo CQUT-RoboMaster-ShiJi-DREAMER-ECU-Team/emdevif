@@ -31,6 +31,11 @@ import emdevif.core.error_handler;
 
 namespace emdevif {
 
+/**
+ * @brief 创建信号量（FreeRTOS 实现，二值信号量）
+ * @param attribute 属性，包含名称和可选的静态实例
+ * @return 强类型句柄
+ */
 CountingSemaphore<1>::StronglyTypedHandle CountingSemaphore<1>::create(const Attribute& attribute) noexcept
 {
     Handle handle = nullptr;
@@ -53,6 +58,10 @@ CountingSemaphore<1>::StronglyTypedHandle CountingSemaphore<1>::create(const Att
     return {handle};
 }
 
+/**
+ * @brief 销毁信号量并释放底层 FreeRTOS 信号量资源
+ * @param obj 待销毁的信号量
+ */
 void CountingSemaphore<1>::destroy(CountingSemaphore<1>& obj) noexcept
 {
     if (obj.handle_ != nullptr) {
@@ -61,6 +70,9 @@ void CountingSemaphore<1>::destroy(CountingSemaphore<1>& obj) noexcept
     }
 }
 
+/**
+ * @brief 析构函数，自动销毁信号量
+ */
 CountingSemaphore<1>::~CountingSemaphore() noexcept
 {
     if (handle_ != nullptr) {

@@ -1,6 +1,6 @@
 /**
  * @file logger.cppm
- * @brief
+ * @brief C++20 模块接口文件，重导出 emdevif.logger 模块的所有声明。
  */
 
 module;

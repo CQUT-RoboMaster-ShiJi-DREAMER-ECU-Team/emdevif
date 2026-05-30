@@ -1,6 +1,6 @@
 /**
  * @file try_finally.cppm
- * @brief
+ * @brief try-finally 模式
  */
 
 module;

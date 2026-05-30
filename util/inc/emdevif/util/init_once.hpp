@@ -141,6 +141,10 @@ public:
         return v;
     }
 
+    /**
+     * @brief 隐式转换为存储的类型
+     * @return 存储的值
+     */
     constexpr operator Type() const  // NOLINT(google-explicit-constructor): 允许隐式转换成为自身类型
     {
         return v;

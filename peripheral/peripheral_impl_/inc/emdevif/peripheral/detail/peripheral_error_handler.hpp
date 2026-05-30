@@ -1,6 +1,6 @@
 /**
  * @file peripheral_error_handler.hpp
- * @brief
+ * @brief 外设错误处理工具类，提供外设实例校验功能
  */
 
 #pragma once
@@ -19,11 +19,18 @@
 
 namespace emdevif::detail {
 
+/// @brief 外设错误处理工具类，提供外设实例是否存在等校验功能
 class PeripheralErrorHandler
 {
 public:
     EMDEVIF_DECLARE_ZERO_INSTANCE(PeripheralErrorHandler);
 
+    /**
+     * @brief 检查外设实例句柄是否存在，不存在则触发错误处理
+     * @param handle 外设实例句柄指针
+     * @param peripheral_name 外设类型名称（如 "CAN"、"GPIO"）
+     * @param handle_name 外设句柄名称
+     */
     static constexpr void checkInstanceIsExist(const void* handle,
                                                const std::string_view peripheral_name,
                                                const std::string_view handle_name) noexcept

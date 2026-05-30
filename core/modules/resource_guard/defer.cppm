@@ -1,6 +1,6 @@
 /**
  * @file defer.cppm
- * @brief 
+ * @brief 延迟执行守卫
  */
 
 module;

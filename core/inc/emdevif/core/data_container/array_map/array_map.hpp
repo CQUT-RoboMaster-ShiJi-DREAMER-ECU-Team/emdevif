@@ -336,6 +336,11 @@ namespace emdevif {
 
 namespace detail {
 
+/**
+ * @brief 有效的 ArrayMap erase_if 谓词概念
+ * @tparam Callable 可调用对象类型
+ * @tparam Arg 参数类型
+ */
 template<typename Callable, typename Arg>
 concept ValidArrayMapEraseIfPred = requires(Callable callable, const Arg& arg) {
     { callable(arg) } -> std::same_as<bool>;
@@ -343,6 +348,17 @@ concept ValidArrayMapEraseIfPred = requires(Callable callable, const Arg& arg) {
 
 }  // namespace detail
 
+/**
+ * 移除满足谓词条件的元素
+ * @tparam KeyType 键的类型
+ * @tparam ValueType 值的类型
+ * @tparam max_size 键值对最大数量
+ * @tparam KeyEqual 用于比较键是否相等的函数类型
+ * @tparam Pred 谓词类型
+ * @param c 待操作的 ArrayMap
+ * @param pred 谓词函数
+ * @return 移除的元素个数
+ */
 EMDEVIF_MODULE_EXPORT template<typename KeyType,
                                typename ValueType,
                                std::size_t max_size,

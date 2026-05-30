@@ -25,6 +25,10 @@
 
 namespace emdevif::detail {
 
+/**
+ * @brief 获取当前 FreeRTOS 配置下事件组支持的最大位数
+ * @return 最大位数。当 configUSE_16_BIT_TICKS 为 true 时返回 8，否则返回 24
+ */
 consteval BitsType_t maxEventBits() noexcept
 {
 #if (configUSE_16_BIT_TICKS)

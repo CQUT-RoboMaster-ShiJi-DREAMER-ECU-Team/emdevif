@@ -26,6 +26,10 @@
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
+/**
+ * @brief 有符号指定位宽整数类
+ * @tparam bits 位宽，必须满足 ValidBitIntWidth 概念
+ */
 template<BitsType_t bits>
     requires ValidBitIntWidth<bits>
 class BitInt
@@ -33,6 +37,9 @@ class BitInt
 protected:  // for testing
     /* clang-format off */
 
+    /**
+     * @brief 底层存储的无符号整数类型，根据位宽自动选择 uint8/16/32/64
+     */
     using RealType =
         std::conditional_t<(bits <= 8U), uint8_t,
             std::conditional_t<(bits > 8U && bits <= 16U), uint16_t,
@@ -42,6 +49,9 @@ protected:  // for testing
             >
         >;
 
+    /**
+     * @brief 有符号整数类型，与 RealType 对应
+     */
     using SignedType =
         std::conditional_t<(bits <= 8U), int8_t,
             std::conditional_t<(bits > 8U && bits <= 16U), int16_t,
@@ -56,6 +66,11 @@ protected:  // for testing
     static_assert(sizeof(SignedType) == sizeof(RealType));
     static_assert(detail::bitsOf<RealType>() != 0);
 
+    /**
+     * @brief 将有符号值截断到指定位宽的无符号存储值
+     * @param v 有符号输入值
+     * @return 截断后的无符号值
+     */
     static constexpr RealType truncateToReal(const SignedType v) noexcept
     {
         if constexpr (bits == detail::bitsOf<RealType>()) {
@@ -66,6 +81,11 @@ protected:  // for testing
         }
     }
 
+    /**
+     * @brief 将无符号存储值符号扩展为有符号类型
+     * @param v 无符号存储值
+     * @return 符号扩展后的有符号值
+     */
     static constexpr SignedType transToSigned(const RealType v) noexcept
     {
         if constexpr (bits == detail::bitsOf<RealType>()) {
@@ -77,6 +97,11 @@ protected:  // for testing
         }
     }
 
+    /**
+     * @brief 生成指定位数的置位掩码
+     * @param value_bits 需要置位的位数
+     * @return 掩码值
+     */
     static constexpr SignedType bitsSetValue(const BitsType_t value_bits) noexcept
     {
         SignedType result = 0U;
@@ -460,6 +485,9 @@ private:
     RealType value;
 };
 
+/**
+ * @brief BitInt<0> 的特化版本，始终为零值
+ */
 template<>
 class BitInt<0>
 {

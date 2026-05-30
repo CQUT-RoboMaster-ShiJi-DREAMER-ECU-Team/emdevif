@@ -1,6 +1,6 @@
 /**
  * @file can.hpp
- * @brief
+ * @brief CAN 通信外设封装类，通过句柄映射访问底层 CAN 外设并封装收发操作
  */
 
 #pragma once
@@ -26,6 +26,7 @@
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
+/// @brief CAN 通信外设封装类：通过句柄映射访问底层 CAN 外设并封装收发操作
 class Can : public CanModel
 {
 private:
@@ -34,12 +35,24 @@ private:
 public:
     Can() = delete;
 
+    /**
+     * @brief 根据句柄名构造 CAN 实例
+     * @param name CAN 外设句柄名称
+     */
     explicit constexpr Can(const std::string_view name) noexcept
         : instance_(static_cast<CanModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
         detail::PeripheralErrorHandler::checkInstanceIsExist(instance_, "CAN", name);
     }
 
+    /**
+     * @brief CAN 接收回调入口，将接收到的报文转发给注册的回调函数
+     * @param in_isr 是否在中断上下文中调用
+     * @param handle 外设句柄
+     * @param[out] received_header 接收到的报文帧头
+     * @param[out] received_data 接收到的数据缓冲区
+     * @return 错误码
+     */
     ErrorCode receiveCallbackEntry(const bool in_isr,
                                    void* handle,
                                    DataHeader& received_header,
@@ -49,7 +62,13 @@ public:
         return instance_->receive_callback(in_isr, handle, received_header, received_data);
     }
 
-    // NOLINTNEXTLINE
+    /**
+     * @brief 发送 CAN 报文
+     * @param in_isr 是否在中断上下文中调用
+     * @param header 待发送报文帧头
+     * @param data 待发送数据
+     * @return 错误码
+     */
     ErrorCode transmit(const bool in_isr, const DataHeader& header, const std::span<const uint8_t> data) const noexcept
     {
         EMDEVIF_ASSERT(instance_->transmit_function != nullptr);

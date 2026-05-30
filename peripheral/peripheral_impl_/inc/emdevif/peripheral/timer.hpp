@@ -1,6 +1,6 @@
 /**
  * @file timer.hpp
- * @brief
+ * @brief 定时器外设封装类
  */
 
 #pragma once
@@ -25,53 +25,66 @@
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
+/// @brief 定时器外设封装类，通过句柄映射访问底层定时器外设并封装定时操作
 class Timer : TimerModel
 {
 private:
     TimerModel::Instance* instance_;
 
 public:
+    /// @brief 根据句柄名构造定时器实例
+    /// @param name 定时器外设句柄名称
     explicit constexpr Timer(const std::string_view name) noexcept
         : instance_(static_cast<TimerModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
         detail::PeripheralErrorHandler::checkInstanceIsExist(instance_, "Timer", name);
     }
 
+    /// @brief 启用定时器
     void enable() const noexcept
     {
         EMDEVIF_ASSERT(instance_->enable != nullptr);
         instance_->enable(instance_->handle);
     }
 
+    /// @brief 禁用定时器
     void disable() const noexcept
     {
         EMDEVIF_ASSERT(instance_->disable != nullptr);
         instance_->disable(instance_->handle);
     }
 
+    /// @brief 获取定时器当前计数值
+    /// @return 当前计数值
     [[nodiscard]] uint32_t getCounter() const noexcept
     {
         EMDEVIF_ASSERT(instance_->getCounter != nullptr);
         return instance_->getCounter(instance_->handle);
     }
 
+    /// @brief 设置定时器计数值
+    /// @param counter 目标计数值
     void setCounter(const uint32_t counter) const noexcept
     {
         EMDEVIF_ASSERT(instance_->setCounter != nullptr);
         instance_->setCounter(instance_->handle, counter);
     }
 
+    /// @brief 启用定时器中断
     void enableInterrupt() const noexcept
     {
         EMDEVIF_ASSERT(instance_->enableInterrupt != nullptr);
         instance_->enableInterrupt(instance_->handle);
     }
+    /// @brief 禁用定时器中断
     void disableInterrupt() const noexcept
     {
         EMDEVIF_ASSERT(instance_->disableInterrupt != nullptr);
         instance_->disableInterrupt(instance_->handle);
     }
 
+    /// @brief 定时器周期到达回调入口
+    /// @param handle 外设句柄
     void periodElapsedCallback(void* handle) const noexcept
     {
         EMDEVIF_ASSERT(instance_->periodElapsed != nullptr);

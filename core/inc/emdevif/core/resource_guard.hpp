@@ -1,6 +1,6 @@
 /**
  * @file resource_guard.hpp
- * @brief
+ * @brief RAII 资源管理
  */
 
 #pragma once

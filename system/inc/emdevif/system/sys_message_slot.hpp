@@ -28,6 +28,10 @@ class SysMessageSlot;
 
 namespace detail {
 
+/**
+ * @brief SysMessageSlot 专用的队列适配器，屏蔽 push/pop 接口
+ * @tparam Type 消息数据类型
+ */
 template<typename Type>
 class SysQueueForSlotAdapter : public SysQueue<Type, 1>
 {
