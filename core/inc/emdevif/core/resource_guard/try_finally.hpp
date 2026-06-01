@@ -44,7 +44,7 @@ concept ValidFinallyFunction = std::is_nothrow_invocable_r_v<void, Func>;
 template<ValidTryFunction TryFunc, ValidFinallyFunction FinallyFunc>
 constexpr auto tryFinally(TryFunc&& try_block, FinallyFunc&& finally) -> std::invoke_result_t<TryFunc>
 {
-    [[maybe_unused]] Defer _{[&] noexcept { std::invoke(std::forward<FinallyFunc>(finally)); }};
+    [[maybe_unused]] Defer _{[&]() noexcept { std::invoke(std::forward<FinallyFunc>(finally)); }};
     return std::invoke(std::forward<TryFunc>(try_block));
 }
 

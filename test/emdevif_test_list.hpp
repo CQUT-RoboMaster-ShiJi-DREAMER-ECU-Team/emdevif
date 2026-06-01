@@ -5,24 +5,25 @@
 
 #pragma once
 #ifndef EMDEVIF_TEST_LIST_HPP
-#define EMDEVIF_TEST_LIST_HPP
+    #define EMDEVIF_TEST_LIST_HPP
 
-#include <array>
-#include <utility>
-#include <string_view>
+    #include <array>
+    #include <utility>
+    #include <string_view>
 
-#include "test_main.hpp"
+    #include "test_main.hpp"
 
-#include "heap_usage_checker.hpp"
+    #include "heap_usage_checker.hpp"
 
-#define TEST_LIST_ARG(func_name) #func_name, func_name
+    #define TEST_LIST_ARG(func_name) #func_name, func_name
 
-#ifndef USE_GENERATED_EMDEVIF_TEST_LIST
+    #ifndef USE_GENERATED_EMDEVIF_TEST_LIST
 
 static constexpr auto emdevif_test_list =
     std::to_array<std::pair<std::string_view, void (*)()>>({{TEST_LIST_ARG(cFeatureTest)},
                                                             {TEST_LIST_ARG(endianTest)},
                                                             {TEST_LIST_ARG(typeTraitsTest)},
+                                                            {TEST_LIST_ARG(resourceGuardTest)},
                                                             {TEST_LIST_ARG(initOnceTest)},
                                                             {TEST_LIST_ARG(bitIntTest)},
                                                             {TEST_LIST_ARG(mapTest)},
@@ -34,10 +35,10 @@ static constexpr auto emdevif_test_list =
                                                             {TEST_LIST_ARG(threadAndMutexTest)},
                                                             {TEST_LIST_ARG(logSystemHeapUsage)}});
 
-#else  // !USE_GENERATED_EMDEVIF_TEST_LIST
+    #else  // !USE_GENERATED_EMDEVIF_TEST_LIST
 
-#include "emdevif_test_list.generated.hpp"
+        #include "emdevif_test_list.generated.hpp"
 
-#endif  // !USE_GENERATED_EMDEVIF_TEST_LIST
+    #endif  // !USE_GENERATED_EMDEVIF_TEST_LIST
 
-#endif  // !EMDEVIF_TEST_LIST_HPP
+#endif      // !EMDEVIF_TEST_LIST_HPP
