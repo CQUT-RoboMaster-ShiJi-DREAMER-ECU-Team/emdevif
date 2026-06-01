@@ -28,7 +28,7 @@ emdevif/
 
 本项目开发需遵循统一编码规范，详见：
 
-[https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev_developing_or_testing_environment/blob/main/docs/emdevif-coding-style.md](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev_developing_or_testing_environment/blob/main/docs/emdevif-coding-style.md)
+[https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev/blob/main/docs/emdevif-coding-style.md](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev/blob/main/docs/emdevif-coding-style.md)
 
 ## 构建系统
 
@@ -51,7 +51,7 @@ emdevif/
 
 ## 参考资料
 
-- 编码规范：[https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev_developing_or_testing_environment/blob/main/docs/emdevif-coding-style.md](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev_developing_or_testing_environment/blob/main/docs/emdevif-coding-style.md)
-- 开发环境（集成与测试）：[https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev_developing_or_testing_environment](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev_developing_or_testing_environment)
+- 编码规范：[https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev/blob/main/docs/emdevif-coding-style.md](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev/blob/main/docs/emdevif-coding-style.md)
+- 开发环境（集成与测试）：[https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev)
 - Peripheral 架构与扩展：`peripheral/AGENTS.md`
 - 完整使用指南：`README.md`
