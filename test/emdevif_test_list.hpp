@@ -26,6 +26,7 @@ static constexpr auto emdevif_test_list =
                                                             {TEST_LIST_ARG(resourceGuardTest)},
                                                             {TEST_LIST_ARG(initOnceTest)},
                                                             {TEST_LIST_ARG(bitIntTest)},
+                                                            {TEST_LIST_ARG(whenTest)},
                                                             {TEST_LIST_ARG(mapTest)},
                                                             {TEST_LIST_ARG(ringBufferTest)},
                                                             {TEST_LIST_ARG(loggerTest)},

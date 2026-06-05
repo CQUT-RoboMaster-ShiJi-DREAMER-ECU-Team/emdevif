@@ -11,7 +11,7 @@ module;
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
-export module emdevif.core.util.when;
+export module emdevif.core.utils.when;
 
 #ifdef __clang__
     #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"

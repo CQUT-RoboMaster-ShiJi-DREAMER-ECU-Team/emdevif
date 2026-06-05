@@ -15,6 +15,7 @@ void resourceGuardTest();
 
 void initOnceTest();
 void bitIntTest();
+void whenTest();
 void mapTest();
 void ringBufferTest();
 
