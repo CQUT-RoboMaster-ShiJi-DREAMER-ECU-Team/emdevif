@@ -4,15 +4,15 @@
  */
 
 #pragma once
-#ifndef EMDEVIF_UTIL_BIT_INT_SIGNED_BIT_INT_HPP
-    #define EMDEVIF_UTIL_BIT_INT_SIGNED_BIT_INT_HPP
+#ifndef EMDEVIF_CORE_UTILS_BIT_INT_SIGNED_BIT_INT_HPP
+    #define EMDEVIF_CORE_UTILS_BIT_INT_SIGNED_BIT_INT_HPP
 
     #include "emdevif/core/detail/config.hpp"
-    #include "emdevif/util/bit_int/basic_config.hpp"
+    #include "emdevif/core/utils/bit_int/basic_config.hpp"
 
     #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/concepts.hpp"
-        #include "emdevif/util/bit_int/detail/exception_config.hpp"
+        #include "emdevif/core/utils/bit_int/detail/exception_config.hpp"
 
         #include <cstdint>
 
@@ -521,4 +521,4 @@ private:
 
 }  // namespace emdevif
 
-#endif  // !EMDEVIF_UTIL_BIT_INT_SIGNED_BIT_INT_HPP
+#endif  // !EMDEVIF_CORE_UTILS_BIT_INT_SIGNED_BIT_INT_HPP

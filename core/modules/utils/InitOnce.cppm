@@ -10,7 +10,7 @@ module;
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
-export module emdevif.util.init_once;
+export module emdevif.core.utils.init_once;
 
 import emdevif.core.error_handler;
 
@@ -18,4 +18,4 @@ import emdevif.core.error_handler;
     #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
 #endif
 
-#include "emdevif/util/init_once.hpp"
+#include "emdevif/core/utils/init_once.hpp"

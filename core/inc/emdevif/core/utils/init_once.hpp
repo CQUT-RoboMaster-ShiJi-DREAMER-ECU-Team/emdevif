@@ -4,8 +4,8 @@
  */
 
 #pragma once
-#ifndef EMDEVIF_UTIL_INIT_ONCE_HPP
-    #define EMDEVIF_UTIL_INIT_ONCE_HPP
+#ifndef EMDEVIF_CORE_UTILS_INIT_ONCE_HPP
+    #define EMDEVIF_CORE_UTILS_INIT_ONCE_HPP
 
     #include "emdevif/core/detail/config.hpp"
 
@@ -158,4 +158,5 @@ private:
 
 }  // namespace emdevif
 
-#endif  // !EMDEVIF_UTIL_INIT_ONCE_HPP
+#endif  // !EMDEVIF_CORE_UTILS_INIT_ONCE_HPP
+

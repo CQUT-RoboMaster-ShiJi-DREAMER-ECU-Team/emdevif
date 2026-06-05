@@ -16,7 +16,7 @@
 #include "event_groups.h"
 #endif
 
-#include "emdevif/util/bit_int.hpp"
+#include "emdevif/core/utils/bit_int.hpp"
 
 #include <cstdint>
 

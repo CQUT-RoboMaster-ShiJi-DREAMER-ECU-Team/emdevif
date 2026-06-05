@@ -13,7 +13,6 @@ emdevif/
 ├── timeline/                   # 微秒级时间戳
 ├── peripheral/                 # 外设操作接口（model / handle_map / impl_，有独立 AGENTS.md）
 ├── system/                     # RTOS 抽象（当前仅 FreeRTOS 实现）
-├── util/                       # 轻量工具层
 ├── test/                       # 测试入口 + emdevif_test_framework 子模块
 ├── support/                    # 平台适配层（stm32cubemx / esp-idf）
 ├── check_compile_features/     # 编译器 C++20 模块特性检测

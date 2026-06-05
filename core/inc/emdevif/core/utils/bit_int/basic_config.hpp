@@ -4,8 +4,8 @@
  */
 
 #pragma once
-#ifndef EMDEVIF_UTIL_BIT_INT_BASIC_CONFIG_HPP
-    #define EMDEVIF_UTIL_BIT_INT_BASIC_CONFIG_HPP
+#ifndef EMDEVIF_CORE_UTILS_BIT_INT_BASIC_CONFIG_HPP
+    #define EMDEVIF_CORE_UTILS_BIT_INT_BASIC_CONFIG_HPP
 
     #include "emdevif/core/detail/config.hpp"
 
@@ -60,4 +60,5 @@ consteval BitsType_t bitsOf() noexcept
 
 }  // namespace emdevif
 
-#endif  // !EMDEVIF_UTIL_BIT_INT_BASIC_CONFIG_HPP
+#endif  // !EMDEVIF_CORE_UTILS_BIT_INT_BASIC_CONFIG_HPP
+

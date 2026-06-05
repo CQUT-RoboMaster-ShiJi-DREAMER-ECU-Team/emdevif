@@ -16,7 +16,7 @@
 
 #include "emdevif/core/error_handler.hpp"
 #include "emdevif/system/thread.hpp"
-#include "emdevif/util/bit_int.hpp"
+#include "emdevif/core/utils/bit_int.hpp"
 
 #include <cstdint>
 #endif

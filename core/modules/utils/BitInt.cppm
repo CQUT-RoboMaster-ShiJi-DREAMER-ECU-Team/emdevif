@@ -14,11 +14,11 @@ module;
 #include <iostream>
 #include <compare>
 
-#include "emdevif/util/bit_int/detail/exception_config.hpp"
+#include "emdevif/core/utils/bit_int/detail/exception_config.hpp"
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
-export module emdevif.util.bit_int;
+export module emdevif.core.utils.bit_int;
 
 import emdevif.core.concepts;
 
@@ -26,4 +26,4 @@ import emdevif.core.concepts;
     #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
 #endif
 
-#include "emdevif/util/bit_int.hpp"
+#include "emdevif/core/utils/bit_int.hpp"

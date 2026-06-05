@@ -18,7 +18,7 @@ else ()
     message(STATUS "[${PROJECT_NAME}]: Will NOT use C++ modules.")
 endif ()
 
-set(emdevifAllModules "logger;timeline;system;peripheral;util")
+set(emdevifAllModules "logger;timeline;system;peripheral")
 
 option(EMDEVIF_ENABLE_TESTS "Enable the test for emdevif." OFF)
 set(EMDEVIF_ENABLED_MODULES ${emdevifAllModules} CACHE STRING

@@ -13,7 +13,7 @@ if (EMDEVIF_USE_CPP_MODULES)
     target_include_directories(${PROJECT_NAME} PUBLIC inc)
     target_link_libraries(${PROJECT_NAME}
         PUBLIC emdevif_core
-        PRIVATE emdevif_compile_options emdevif_util
+        PRIVATE emdevif_compile_options
     )
     target_sources(${PROJECT_NAME}
         PUBLIC FILE_SET emdevif_thread_modules TYPE CXX_MODULES FILES
@@ -23,7 +23,7 @@ else ()
     add_library(${PROJECT_NAME} INTERFACE)
     target_include_directories(${PROJECT_NAME} INTERFACE inc)
     target_link_libraries(${PROJECT_NAME}
-        INTERFACE emdevif_core emdevif_compile_options emdevif_util
+        INTERFACE emdevif_core emdevif_compile_options
     )
 endif ()
 
@@ -70,7 +70,6 @@ if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
 
     file(GLOB emdevifSystemFreeRtosImplSrcs "Implements/FreeRTOS/*.cpp")
     if (EMDEVIF_USE_CPP_MODULES)
-        target_link_libraries(${PROJECT_NAME} PUBLIC emdevif_util)
 
         target_include_directories(${PROJECT_NAME} PUBLIC Implements/FreeRTOS/inc)
 
@@ -87,13 +86,12 @@ if (EMDEVIF_THREAD_SYSTEM STREQUAL "FreeRTOS")
         add_library(emdevif_system_freertos_impl_ OBJECT)
         target_sources(emdevif_system_freertos_impl_ PRIVATE ${emdevifSystemFreeRtosImplSrcs})
         target_link_libraries(emdevif_system_freertos_impl_
-            PUBLIC emdevif_util emdevif_core
+            PUBLIC emdevif_core
             PRIVATE emdevif_compile_options emdevif_system
         )
 
         target_link_libraries(${PROJECT_NAME} INTERFACE
             $<TARGET_OBJECTS:emdevif_system_freertos_impl_>
-            emdevif_util
         )
     endif ()
 else ()
