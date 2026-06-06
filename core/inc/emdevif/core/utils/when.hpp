@@ -113,7 +113,7 @@ inline constexpr bool is_nothrow_when_args_v = IsNothrowWhenArgs<Args...>::value
 }  // namespace detail
 
 /**
- * when 表达式：更加通用的 switch 表达式
+ * when 表达式：更加通用的 switch
  *
  * 对于 switch 表达式：
  * @code{cpp}
@@ -131,6 +131,24 @@ inline constexpr bool is_nothrow_when_args_v = IsNothrowWhenArgs<Args...>::value
  *     emdevif::default_tag, [&]{ doDefault(); }
  * );
  * @endcode
+ *
+ * when 表达式比 switch 更加通用：case 标签后面的值必须是整型的常量表达式，而 when
+ * 表达式只要是支持用 `==` 运算符进行比较的，并且不抛出异常，就可以使用。
+ *
+ * 另外，还仿照 Kotlin 的 when 表达式设计，允许 when 表达式返回值，比如：
+ * @code{cpp}
+ * int r = emdevif::when(value,
+ *     1, [&] { return -1; },
+ *     2, [&] { return -2; }  // 注意，这两个 lambda 返回类型必须完全相同（都是隐式推导为 int）
+ * );
+ * @endcode
+ * 如果 value 的值是 2，那么最终 r 等于 -2
+ *
+ * 另外，在没有显式写出 emdevif::default_tag 的情况下，如果最终没有匹配的值，那么这个 when
+ * 表达式将返回默认构造的返回值（例如：如果 value 的值是 -1，那么没有匹配的值，最终 r 就等于 `int{}` 的值）
+ *
+ * @attention when 表达式的参数应该成对出现（case/default 标签 + lambda），并且如果使用了 default
+ * 标签，那么它必须是最后一对参数
  */
 EMDEVIF_MODULE_EXPORT
 template<typename T, typename... Args>
