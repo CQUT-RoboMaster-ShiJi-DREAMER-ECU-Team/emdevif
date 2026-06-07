@@ -52,12 +52,12 @@ public:
 
     MutexGuard() : v()  // NOLINT(*-use-equals-default)
     {
-        mutex = emdevif::Mutex::create({.name = "MutexGuard"});
+        mutex = emdevif::Mutex{emdevif::MutexBuilder{.name = "MutexGuard"}};
     }
 
     explicit MutexGuard(const T value) : v(value)
     {
-        mutex = emdevif::Mutex::create({.name = "MutexGuard"});
+        mutex = emdevif::Mutex{emdevif::MutexBuilder{.name = "MutexGuard"}};
     }
 
     ~MutexGuard()  // NOLINT(*-use-equals-default)
@@ -76,11 +76,12 @@ TEST_SUIT(MutexTest)
     TEST_CASE_BEGIN(BasicTest)
     {
         using emdevif::Mutex;
+        using emdevif::MutexBuilder;
 
         Mutex mutex;
         ASSERT_TRUE(mutex.getHandle() == nullptr, "");
 
-        mutex = Mutex::create({.name = "basic 1"});
+        mutex = Mutex{{.name = "basic 1"}};
         ASSERT_TRUE(mutex.getHandle() != nullptr, "");
 
         auto ret = mutex.lock();
@@ -96,8 +97,9 @@ TEST_SUIT(MutexTest)
     TEST_CASE_BEGIN(DirectlyTest)
     {
         using emdevif::Mutex;
+        using emdevif::MutexBuilder;
 
-        Mutex mutex({.name = "basic 1"});
+        Mutex mutex{MutexBuilder{.name = "basic 1"}};
         ASSERT_TRUE(mutex.getHandle() != nullptr, "");
 
         auto ret = mutex.lock();
@@ -116,8 +118,9 @@ TEST_SUIT(MutexTest)
     TEST_CASE_BEGIN(LockGuardTest)
     {
         using emdevif::Mutex;
+        using emdevif::MutexBuilder;
 
-        Mutex mutex({.name = "lock guard"});
+        Mutex mutex{MutexBuilder{.name = "lock guard"}};
         ASSERT_TRUE(mutex.getHandle() != nullptr, "");
 
         [&] {
@@ -171,7 +174,7 @@ TEST_SUIT(ThreadBasicTest)
         emdevif::Thread a_thread;
         Arg arga{&a_thread, &counter, &flag};
         a_thread = emdevif::Thread::create(
-            {.name = "Thread BasicTest a", .priority = emdevif::Thread::Priority::BelowNormal, .stack_size = 256},
+            {.name = "Thread BasicTest a", .priority = emdevif::ThreadPriority::BelowNormal, .stack_size = 256},
             [](void* param) {
                 auto [thd, cnt, flg] = *static_cast<Arg*>(param);
 
@@ -264,7 +267,7 @@ TEST_SUIT(ThreadAssignAndMoveTest)
 
         Arg arga{a_thread, counter, flag};
         a_thread = emdevif::Thread::create(
-            {.name = "Thd Assign a", .priority = emdevif::Thread::Priority::BelowNormal, .stack_size = 256},
+            {.name = "Thd Assign a", .priority = emdevif::ThreadPriority::BelowNormal, .stack_size = 256},
             [](void* param) {
                 const auto [thd, cnt, flg] = *static_cast<Arg*>(param);
 

@@ -32,16 +32,15 @@ import emdevif.core.error_handler;
 namespace emdevif {
 
 /**
- * @brief 创建信号量（FreeRTOS 实现，二值信号量）
- * @param attribute 属性，包含名称和可选的静态实例
- * @return 强类型句柄
+ * @brief 通过 Builder 构造信号量（FreeRTOS 实现，二值信号量）
+ * @param builder Builder
  */
-CountingSemaphore<1>::StronglyTypedHandle CountingSemaphore<1>::create(const Attribute& attribute) noexcept
+CountingSemaphore<1>::CountingSemaphore(CountingSemaphoreBuilder builder) noexcept : handle_(nullptr)
 {
     Handle handle = nullptr;
 
-    if (attribute.static_instance != nullptr) {
-        auto& static_instance = *static_cast<CountingSemaphore<1>::StaticInstance*>(attribute.static_instance);
+    if (builder.static_instance != nullptr) {
+        auto& static_instance = *static_cast<CountingSemaphoreStaticInstance<1>*>(builder.static_instance);
 
         handle = xSemaphoreCreateBinaryStatic(&static_cast<StaticSemaphore_t&>(static_instance));
     }
@@ -51,11 +50,11 @@ CountingSemaphore<1>::StronglyTypedHandle CountingSemaphore<1>::create(const Att
 
 #if (configQUEUE_REGISTRY_SIZE > 0)
     if (handle != nullptr) {
-        vQueueAddToRegistry(static_cast<QueueHandle_t>(handle), attribute.name);
+        vQueueAddToRegistry(static_cast<QueueHandle_t>(handle), builder.name);
     }
 #endif
 
-    return {handle};
+    handle_ = handle;
 }
 
 /**

@@ -22,6 +22,21 @@ EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 /**
+ * 互斥锁的静态实例
+ * @copydoc sys_static_instance
+ */
+class MutexStaticInstance;
+
+/**
+ * 互斥锁 Builder
+ */
+struct MutexBuilder {
+    const char* name{};                             ///< 名称
+
+    MutexStaticInstance* static_instance{nullptr};  ///< 静态实例内存
+};
+
+/**
  * 互斥锁
  */
 class Mutex
@@ -29,32 +44,14 @@ class Mutex
 public:
     using Handle = void*;  ///< 底层实现的句柄
 
-    class StaticInstance;
-
-    /// 属性
-    struct Attribute {
-        const char* name{};                        ///< 名称
-
-        StaticInstance* static_instance{nullptr};  ///< 静态实例内存
-    };
-
-private:
-    /**
-     * 强类型句柄
-     * @copydoc sys_strongly_typed_handle
-     */
-    struct StronglyTypedHandle {
-        Handle value;
-    };
-
 public:
     // todo 这里的注释中的示例仿照 thread 里的来写
+
     /**
-     * 创建互斥锁
-     * @param attribute 属性
-     * @return 创建好的强类型句柄
+     * 通过 Builder 构造互斥锁
+     * @param builder Builder
      */
-    static StronglyTypedHandle create(const Attribute& attribute) noexcept;
+    explicit Mutex(MutexBuilder builder) noexcept;
 
     /**
      * 销毁互斥锁
@@ -105,23 +102,8 @@ public:
 
     Mutex() noexcept : handle_(nullptr) {}
 
-    explicit Mutex(const StronglyTypedHandle strongly_handle) noexcept : handle_(strongly_handle.value) {}
-
     Mutex& operator=(const Mutex&) = delete;
     Mutex(const Mutex&) = delete;
-
-    Mutex& operator=(const StronglyTypedHandle strongly_handle) noexcept
-    {
-        if (handle_ != nullptr) {
-            EMDEVIF_FATAL_HANDLER("Should not create mutex on non-deleted mutex!");
-        }
-
-        handle_ = strongly_handle.value;
-
-        return *this;
-    }
-
-    explicit Mutex(const Attribute& attribute) noexcept : Mutex(create(attribute)) {}
 
     Mutex(Mutex&& other) noexcept : handle_(other.handle_)
     {
@@ -131,6 +113,11 @@ public:
     Mutex& operator=(Mutex&& other) noexcept
     {
         if (this == &other) {
+            return *this;
+        }
+
+        if (handle_ != nullptr) {
+            EMDEVIF_FATAL_HANDLER("Should not move-assign to a non-empty mutex!");
             return *this;
         }
 

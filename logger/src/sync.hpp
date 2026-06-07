@@ -22,7 +22,7 @@ static constexpr std::size_t logMsgBufferLength() noexcept
 static emdevif::Mutex logger_mutex_;
 
         #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
-static emdevif::Mutex::StaticInstance logger_mutex_static_instance_;
+static emdevif::MutexStaticInstance logger_mutex_static_instance_;
         #endif
     #endif
 
@@ -31,12 +31,12 @@ ErrorCode logInit(const VsnprintfImpl vsprintf_impl) noexcept
     detail::vsnprintf_impl_ = vsprintf_impl;
 
     #if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
-    logger_mutex_ = emdevif::Mutex::create({
+    logger_mutex_ = emdevif::Mutex{emdevif::MutexBuilder{
         .name = "loggerMutex",
         #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
         .static_instance = &logger_mutex_static_instance_,
         #endif
-    });
+    }};
     #endif
     return ErrorCode::Success;
 }

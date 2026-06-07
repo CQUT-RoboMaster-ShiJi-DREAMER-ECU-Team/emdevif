@@ -6,20 +6,20 @@
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
 module;
 #else
-#include "emdevif/system/thread.hpp"
+    #include "emdevif/system/thread.hpp"
 
-#include "emdevif/core/error_handler.hpp"
+    #include "emdevif/core/error_handler.hpp"
 #endif
 
 #include "emdevif/core/fatal_handler.h"
 
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-#include <cassert>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+    #include <cassert>
+    #include "freertos/FreeRTOS.h"
+    #include "freertos/task.h"
 #else
-#include "FreeRTOS.h"
-#include "task.h"
+    #include "FreeRTOS.h"
+    #include "task.h"
 #endif
 
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
@@ -30,38 +30,38 @@ import emdevif.core.error_handler;
 
 namespace emdevif {
 
-Thread::StronglyTypedHandle Thread::create(const Attribute& attribute,
-                                           const ThreadEntry entry,
-                                           void* arguments) noexcept
+Thread Thread::create(const ThreadBuilder& builder, const ThreadEntry entry, void* arguments) noexcept
 {
+    Thread t;
     TaskHandle_t handle = nullptr;
 
-    if (attribute.static_instance != nullptr && attribute.stack_size != 0U) {
+    if (builder.static_instance != nullptr && builder.stack_size != 0U) {
         // 由于此处的 Thread::StaticInstance 是指针类型，且它的自定义类型转换过程不涉及这个模板参数，
         // 因此它的模板参数的取值不影响结果。但不能为 0，因为这样做会构造出零长数组。
-        auto& static_instance = *static_cast<Thread::StaticInstance<1>*>(attribute.static_instance);
+        auto& static_instance = *static_cast<ThreadStaticInstance<1>*>(builder.static_instance);
 
         handle = xTaskCreateStatic(entry,
-                                   attribute.name,
-                                   attribute.stack_size,
+                                   builder.name,
+                                   builder.stack_size,
                                    arguments,
-                                   priorityMapToSystem(attribute.priority),
+                                   priorityMapToSystem(builder.priority),
                                    &static_cast<StackType_t&>(static_instance),
                                    &static_cast<StaticTask_t&>(static_instance));
     }
     else {
         const auto result = xTaskCreate(entry,
-                                        attribute.name,
-                                        attribute.stack_size,
+                                        builder.name,
+                                        builder.stack_size,
                                         arguments,
-                                        priorityMapToSystem(attribute.priority),
+                                        priorityMapToSystem(builder.priority),
                                         &handle);
         if (result != pdPASS) {
             handle = nullptr;
         }
     }
 
-    return {.value = handle};
+    t.handle_ = handle;
+    return t;
 }
 
 ErrorCode Thread::destroy(Thread& obj) noexcept

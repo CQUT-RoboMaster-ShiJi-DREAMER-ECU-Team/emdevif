@@ -5,39 +5,93 @@
 
 #pragma once
 #ifndef EMDEVIF_SYSTEM_THREAD_HPP
-#define EMDEVIF_SYSTEM_THREAD_HPP
+    #define EMDEVIF_SYSTEM_THREAD_HPP
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#include "emdevif/core/attributes_and_useful_macros.h"
-#include "emdevif/core/fatal_handler.h"
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/attributes_and_useful_macros.h"
+        #include "emdevif/core/fatal_handler.h"
 
-#include "emdevif/core/error_handler.hpp"
-#include "emdevif/system/heap.hpp"
+        #include "emdevif/core/error_handler.hpp"
+        #include "emdevif/system/heap.hpp"
 
-#include <cstdint>
+        #include <cstdint>
 
-#include <tuple>
-#include <utility>
-#endif
+        #include <tuple>
+        #include <utility>
+    #endif
+
+namespace emdevif::detail {
+class ThreadTypeChecker;  // 前向声明
+}
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
-#ifndef EMDEVIF_SYS_TICK_TYPE_UINT_BITS
-#define EMDEVIF_SYS_TICK_TYPE_UINT_BITS 64
-#endif
+    #ifndef EMDEVIF_SYS_TICK_TYPE_UINT_BITS
+        #define EMDEVIF_SYS_TICK_TYPE_UINT_BITS 64
+    #endif
 
-#if (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 16)
+    #if (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 16)
 using SysTick_t = uint16_t;
-#elif (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 32)
+    #elif (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 32)
 using SysTick_t = uint32_t;
-#elif (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 64)
+    #elif (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 64)
 using SysTick_t = uint64_t;
-#else
-#error "The value of macro `EMDEVIF_SYS_TICK_TYPE_UINT_BITS' can only equals to 16, 32 or 64."
-#endif
+    #else
+        #error "The value of macro `EMDEVIF_SYS_TICK_TYPE_UINT_BITS' can only equals to 16, 32 or 64."
+    #endif
+
+/**
+ * 线程标准入口函数指针
+ */
+using ThreadEntry = void (*)(void*);
+
+/**
+ * 优先级
+ */
+enum class ThreadPriority : int_fast8_t {
+    Idle = -1,    ///< 空闲任务优先级（确保与空闲优先级一致）
+
+    Low = 0,      ///< 低优先级
+    BelowNormal,  ///< 低于常规优先级
+    Normal,       ///< 常规优先级（默认值）
+    AboveNormal,  ///< 高于常规优先级
+    High,         ///< 高优先级
+    Realtime,     ///< 实时优先级
+
+    Max = -2      ///< 最高优先级（确保与最大优先级一致）
+};
+
+/**
+ * @page sys_static_instance 静态实例
+ * 静态实例是用于线程、信号量、系统队列等功能静态创建实例的载体，用于提供静态创建的内存块。
+ *
+ * 在接口中，静态实例仅作声明，定义在实现模块分区中（因为不同的操作系统的静态创建所需要的类型不一定相同）
+ */
+
+/**
+ * 线程的静态实例
+ *
+ * @copydoc sys_static_instance
+ *
+ * 对于开发者：线程的静态实例需要提供 `getInstanceAddr` 和 `getStackDepth` 方法，用于用户创建静态实例时调用。
+ * @tparam stack_depth 栈的深度（以字为单位）
+ */
+template<std::size_t stack_depth>
+class ThreadStaticInstance;
+
+/**
+ * 线程 Builder，用于 Thread::create 的参数。
+ */
+struct ThreadBuilder {
+    const char* name{};                               ///< 名称。必填参数。
+    ThreadPriority priority{ThreadPriority::Normal};  ///< 初始的优先级（默认为常规优先级）
+
+    void* static_instance{nullptr};                   ///< 静态实例内存
+    std::size_t stack_size{0U};                       ///< 栈深度
+};
 
 /**
  * 线程类
@@ -45,92 +99,66 @@ using SysTick_t = uint64_t;
 class Thread
 {
 public:
-    using ThreadEntry = void (*)(void*);  ///< 线程标准入口函数指针
-    using Handle = void*;                 ///< 线程句柄
+    using Handle = void*;  ///< 线程句柄
 
-    /**
-     * @page sys_static_instance 静态实例
-     * 静态实例是用于线程、信号量、系统队列等功能静态创建实例的载体，用于提供静态创建的内存块。
-     *
-     * 在接口中，静态实例仅作声明，定义在实现模块分区中（因为不同的操作系统的静态创建所需要的类型不一定相同）
-     */
-
-    /**
-     * 线程的静态实例
-     *
-     * @copydoc sys_static_instance
-     *
-     * 对于开发者：线程的静态实例需要提供 `getInstanceAddr` 和 `getStackDepth` 方法，用于用户创建静态实例时调用。
-     * @tparam stack_depth 栈的深度（以字为单位）
-     */
-    template<std::size_t stack_depth>
-    class StaticInstance;
-
-    /**
-     * 优先级
-     */
-    enum class Priority : int_fast8_t {
-        Idle = -1,    ///< 空闲任务优先级（确保与空闲优先级一致）
-
-        Low = 0,      ///< 低优先级
-        BelowNormal,  ///< 低于常规优先级
-        Normal,       ///< 常规优先级（默认值）
-        AboveNormal,  ///< 高于常规优先级
-        High,         ///< 高优先级
-        Realtime,     ///< 实时优先级
-
-        Max = -2      ///< 最高优先级（确保与最大优先级一致）
-    };
-
-    /**
-     * 属性，作为 create 方法的参数类型。
-     */
-    struct Attribute {
-        const char* name{};                   ///< 名称。必填参数。
-        Priority priority{Priority::Normal};  ///< 初始的优先级（默认为常规优先级）
-
-        void* static_instance{nullptr};       ///< 静态实例内存
-        std::size_t stack_size{0U};           ///< 栈深度
-    };
+    friend class emdevif::detail::ThreadTypeChecker;
 
     /**
      * 优先级映射范围。
      *
-     * 由于 Priority 只有 8 个等级，而实际的系统可能有更多的优先级，因此需要把 Priority
-     * 中的等级映射到实际系统的优先级中。这个映射的方式是：保持靠左剧中。例如实际系统有 9
-     * 个优先级，从 0 ~ 8 分别对应优先级最低到最高，那么 Priority 的 Low ~ Realtime
-     * 将会映射到实际优先级的 1 ~ 6，Priority::Idle 与 Priority::Max 则分别对应 0 和 8。
-     * @return std::pair 类型，值分别是 Priority::Low 与 Priority::Realtime
+     * 由于 ThreadPriority 只有 8 个等级，而实际的系统可能有更多的优先级，因此需要把 ThreadPriority
+     * 中的等级映射到实际系统的优先级中。这个映射的方式是：保持靠左居中。例如实际系统有 9
+     * 个优先级，从 0 ~ 8 分别对应优先级最低到最高，那么 ThreadPriority 的 Low ~ Realtime
+     * 将会映射到实际优先级的 1 ~ 6，ThreadPriority::Idle 与 ThreadPriority::Max 则分别对应 0 和 8。
+     * @return std::pair 类型，值分别是 ThreadPriority::Low 与 ThreadPriority::Realtime
      *         映射到实际系统的优先级。
      */
     static consteval auto priorityMapRange() noexcept;
 
 private:
     /**
-     * @page sys_strongly_typed_handle 强类型句柄
-     * 用于相关方法的返回值，同时也是类的其中一个构造函数接受的形参，这是为了区分类型，
-     * 防止用户不要直接将 void* 类型传入构造函数。
-     *
-     * 类型的定义会设置成 private 的，也是防止用户直接创建内部实现的强类型句柄
-     * （尽管语言上可以实现，但请不要使用 decltype 获取这个类型）。
-     */
-
-    /**
-     * 强类型句柄
-     * @copydoc sys_strongly_typed_handle
-     */
-    struct StronglyTypedHandle {
-        Handle value;
-    };
-
-    /**
-     * 将给定的 Priority 中的优先级映射到实际系统的优先级
+     * 将给定的 ThreadPriority 映射到实际系统的优先级
      * @param priority 优先级
      * @return 这个优先级映射到实际系统的优先级的值
      */
-    static constexpr auto priorityMapToSystem(Priority priority) noexcept;
+    static constexpr auto priorityMapToSystem(ThreadPriority priority) noexcept;
+
+    /**
+     * 线程任意入口的函数包装器
+     * @tparam Func 线程的入口函数（函数返回值必须是 void，参数任意）
+     * @tparam Args 这个入口函数的参数包
+     */
+    template<typename Func, typename... Args>
+    class FuncWrapper final
+    {
+    public:
+        explicit FuncWrapper(Func&& func, Args&&... args) noexcept
+            : func_(std::forward<Func>(func)), args_(std::forward<Args>(args)...)
+        {
+        }
+
+        /**
+         * 实际传入创建线程方法的函数
+         * @param arguments 包装后的函数参数
+         */
+        static void realFunc(void* arguments) noexcept
+        {
+            auto arg_pack = static_cast<FuncWrapper*>(arguments);
+
+            std::apply(arg_pack->func_, arg_pack->args_);
+        }
+
+        Func func_;                 ///< 函数对象
+        std::tuple<Args...> args_;  ///< 函数的参数包
+    };
 
 public:
+    enum class MulParam {
+        mulparam
+    };
+    /// 多参数线程入口创建标志
+    static constexpr auto mulparam = MulParam::mulparam;
+
     /**
      * 等待时间最大值
      */
@@ -204,7 +232,7 @@ public:
      * using namespace emdevif;
      *
      * constexpr auto thread_instance_stack_size = 128;
-     * static Thread::StaticInstance<thread_instance_stack_size> thread_instance;
+     * static ThreadStaticInstance<thread_instance_stack_size> thread_instance;
      * Thread thread;  // 静态创建的线程不允许删除，因此它必须在全局区定义或者加上 static
      *
      * void init()
@@ -217,57 +245,12 @@ public:
      *                             &arg);
      * }
      * @endcode
-     * @param attribute 属性。结构体成员详见 Attribute 的说明
+     * @param builder Builder，包含名称、优先级、静态实例、栈深度等属性
      * @param entry 线程标准入口，即一个签名为 void(void*) 的函数
      * @param arguments 传入线程标准入口的参数
-     * @return 创建的强类型句柄。
+     * @return 创建的线程实例
      */
-    static StronglyTypedHandle create(const Attribute& attribute, ThreadEntry entry, void* arguments) noexcept;
-
-private:
-    /**
-     * 线程任意入口的函数包装器
-     * @tparam Func 线程的入口函数（函数返回值必须是 void，参数任意）
-     * @tparam Args 这个入口函数的参数包
-     */
-    template<typename Func, typename... Args>
-    class FuncWrapper final
-    {
-    public:
-        explicit FuncWrapper(Func&& func, Args&&... args) noexcept
-            : func_(std::forward<Func>(func)), args_(std::forward<Args>(args)...)
-        {
-        }
-
-        /**
-         * 实际传入创建线程方法的函数
-         * @param arguments 包装后的函数参数
-         */
-        static void realFunc(void* arguments) noexcept
-        {
-            auto arg_pack = static_cast<FuncWrapper*>(arguments);
-
-            std::apply(arg_pack->func_, arg_pack->args_);
-        }
-
-        Func func_;                 ///< 函数对象
-        std::tuple<Args...> args_;  ///< 函数的参数包
-    };
-
-    /**
-     * 多参数的线程函数的线程的强类型句柄
-     */
-    struct MulParamThreadFuncHandle {
-        Handle handle;                    ///< 句柄
-        void* func_wrapper_memory_block;  ///< 储存形参包的内存块的地址
-    };
-
-public:
-    enum class MulParam {
-        mulparam
-    };
-    /// 多参数线程入口创建标志
-    static constexpr auto mulparam = MulParam::mulparam;
+    static Thread create(const ThreadBuilder& builder, ThreadEntry entry, void* arguments) noexcept;
 
     /**
      * 创建任意参数的入口函数的线程
@@ -301,25 +284,31 @@ public:
      * @attention 会使用系统的堆内存，因此需要启动调度器后才能创建（不能静态创建）。
      * @tparam Func 线程的入口函数的类型
      * @tparam Args 这个入口函数的参数包
-     * @param attribute 属性
+     * @param builder Builder
      * @param Mulparam 必须传入 Thread::mulparam 以表示创建的线程的入口函数的参数类型、数量是任意的
      * @param entry 线程的入口函数（可以是函数对象。函数返回值必须是 void，参数类型任意）
      * @param args 入口函数的参数
-     * @return 创建好的多参数的线程函数的线程的强类型句柄
+     * @return 创建好的线程实例
      */
     template<typename Func, typename... Args>
-    static auto create(const Attribute& attribute, MulParam, Func&& entry, Args&&... args) noexcept
-        -> MulParamThreadFuncHandle
+    static Thread create(const ThreadBuilder& builder, MulParam, Func&& entry, Args&&... args) noexcept
     {
         auto func_wrapper = heap::construct<FuncWrapper<Func, Args...>>(std::nothrow,
                                                                         std::forward<Func>(entry),
                                                                         std::forward<Args>(args)...);
         if (func_wrapper == nullptr) {
-            return {.handle = nullptr, .func_wrapper_memory_block = nullptr};
+            return Thread{};
         }
 
-        return {.handle = create(attribute, func_wrapper->realFunc, func_wrapper).value,
-                .func_wrapper_memory_block = static_cast<void*>(func_wrapper)};
+        Thread t = create(builder, func_wrapper->realFunc, func_wrapper);
+        if (t.handle_ == nullptr) {
+            heap::destruct(func_wrapper);
+            return Thread{};
+        }
+
+        t.func_wrapper_memory_block_ = static_cast<void*>(func_wrapper);
+
+        return t;
     }
 
     /**
@@ -407,50 +396,6 @@ public:
 
     Thread() noexcept : handle_(nullptr) {}
 
-    Thread(const StronglyTypedHandle strongly_handle) noexcept : handle_(strongly_handle.value) {}  // NOLINT
-
-    Thread& operator=(const StronglyTypedHandle strongly_handle) noexcept
-    {
-        if (handle_ != nullptr) {
-            EMDEVIF_FATAL_HANDLER("Should not create thread on non-deleted thread!");
-            return *this;
-        }
-
-        handle_ = strongly_handle.value;
-
-        return *this;
-    }
-
-    Thread(const Attribute& attribute, const ThreadEntry entry, void* arguments) noexcept
-        : Thread(create(attribute, entry, arguments))
-    {
-    }
-
-    Thread(const MulParamThreadFuncHandle mul_param_thread_func_handle) noexcept  // NOLINT
-        : handle_(mul_param_thread_func_handle.handle),
-          func_wrapper_memory_block_(mul_param_thread_func_handle.func_wrapper_memory_block)
-    {
-    }
-
-    Thread& operator=(const MulParamThreadFuncHandle mul_param_thread_func_handle) noexcept
-    {
-        if (handle_ != nullptr || func_wrapper_memory_block_ != nullptr) {
-            EMDEVIF_FATAL_HANDLER("Should not create thread on non-deleted thread!");
-            return *this;
-        }
-
-        handle_ = mul_param_thread_func_handle.handle;
-        func_wrapper_memory_block_ = mul_param_thread_func_handle.func_wrapper_memory_block;
-
-        return *this;
-    }
-
-    template<typename Func, typename... Args>
-    Thread(const Attribute& attribute, MulParam, const Func& entry, Args&&... args) noexcept
-        : Thread(create(attribute, mulparam, entry, std::forward<Args>(args)...))
-    {
-    }
-
     Thread(const Thread&) = delete;
     Thread& operator=(const Thread&) = delete;
 
@@ -464,6 +409,11 @@ public:
     Thread& operator=(Thread&& other) noexcept
     {
         if (this == &other) {
+            return *this;
+        }
+
+        if (handle_ != nullptr) {
+            EMDEVIF_FATAL_HANDLER("Should not move-assign to a non-empty thread!");
             return *this;
         }
 
@@ -485,6 +435,35 @@ private:
 
 }  // namespace emdevif
 
-#include "emdevif/system_impl/thread.inl"
+    #include "emdevif/system_impl/thread.inl"
+
+namespace emdevif::detail {
+
+template<typename>
+struct ValidThreadPriorityMapRangeReturnType : std::false_type {
+};
+
+template<std::unsigned_integral T, std::unsigned_integral U>
+struct ValidThreadPriorityMapRangeReturnType<std::pair<T, U>> : std::true_type {
+};
+
+template<std::unsigned_integral T, std::unsigned_integral U>
+struct ValidThreadPriorityMapRangeReturnType<std::tuple<T, U>> : std::true_type {
+};
+
+static_assert(ValidThreadPriorityMapRangeReturnType<std::remove_cvref_t<decltype(Thread::priorityMapRange())>>::value,
+              "Error for `emdevif` developers, please report bug with the error message: The return type of "
+              "`Thread::priorityMapRange()` must be `std::pair` or `std::tuple` with unsigned integral types.");
+
+class ThreadTypeChecker
+{
+public:
+    static_assert(
+        std::is_unsigned_v<std::remove_cvref_t<decltype(Thread::priorityMapToSystem(ThreadPriority::Normal))>>,
+        "Error for `emdevif` developers, please report bug with the error message: The return type of "
+        "`Thread::priorityMapToSystem()` must be an unsigned integral type.");
+};
+
+}  // namespace emdevif::detail
 
 #endif  // !EMDEVIF_SYSTEM_THREAD_HPP

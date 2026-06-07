@@ -30,10 +30,10 @@ EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 template<std::ptrdiff_t least_max_value>
-class CountingSemaphore<least_max_value>::StaticInstance
+class CountingSemaphoreStaticInstance
 {
 public:
-    StaticInstance() noexcept : instance() {}
+    CountingSemaphoreStaticInstance() noexcept : instance() {}
 
     friend class CountingSemaphore<least_max_value>;
 
@@ -48,22 +48,17 @@ private:
 };
 
 template<std::ptrdiff_t least_max_value>
-auto CountingSemaphore<least_max_value>::create(const Attribute& attribute) noexcept
-    -> CountingSemaphore<least_max_value>::StronglyTypedHandle
+CountingSemaphore<least_max_value>::CountingSemaphore(CountingSemaphoreBuilder builder) noexcept : handle_(nullptr)
 {
-    Handle handle = nullptr;
-
-    if (attribute.static_instance != nullptr) {
+    if (builder.static_instance != nullptr) {
         auto& static_instance =
-            *static_cast<CountingSemaphore<least_max_value>::StaticInstance*>(attribute.static_instance);
+            *static_cast<CountingSemaphoreStaticInstance<least_max_value>*>(builder.static_instance);
 
-        handle = xSemaphoreCreateCountingStatic(least_max_value, 0U, &static_cast<StaticSemaphore_t&>(static_instance));
+        handle_ = xSemaphoreCreateCountingStatic(least_max_value, 0U, &static_cast<StaticSemaphore_t&>(static_instance));
     }
     else {
-        handle = xSemaphoreCreateCounting(least_max_value, 0U);
+        handle_ = xSemaphoreCreateCounting(least_max_value, 0U);
     }
-
-    return {handle};
 }
 
 template<std::ptrdiff_t least_max_value>
@@ -129,21 +124,8 @@ class CountingSemaphore<1>
 public:
     using Handle = void*;
 
-    class StaticInstance;
-
-    struct Attribute {
-        const char* name{};                        ///< 名称
-
-        StaticInstance* static_instance{nullptr};  ///< 静态实例内存
-    };
-
-private:
-    struct StronglyTypedHandle {
-        Handle value;
-    };
-
 public:
-    static StronglyTypedHandle create(const Attribute& attribute) noexcept;
+    explicit CountingSemaphore(CountingSemaphoreBuilder builder) noexcept;
 
     static void destroy(CountingSemaphore& obj) noexcept;
 
@@ -169,24 +151,8 @@ public:
 
     CountingSemaphore() noexcept : handle_(nullptr) {}
 
-    explicit CountingSemaphore(const StronglyTypedHandle strongly_handle) noexcept : handle_(strongly_handle.value) {}
-
     CountingSemaphore& operator=(const CountingSemaphore&) = delete;
     CountingSemaphore(const CountingSemaphore&) = delete;
-
-    CountingSemaphore& operator=(const StronglyTypedHandle strongly_handle) noexcept
-    {
-        if (handle_ != nullptr) {
-            EMDEVIF_FATAL_HANDLER("Should not create binary semaphore on non-deleted binary semaphore!");
-            return *this;
-        }
-
-        handle_ = strongly_handle.value;
-
-        return *this;
-    }
-
-    explicit CountingSemaphore(const Attribute& attribute) noexcept : CountingSemaphore(create(attribute)) {}
 
     CountingSemaphore(CountingSemaphore&& other) noexcept : handle_(other.handle_)
     {
@@ -196,6 +162,11 @@ public:
     CountingSemaphore& operator=(CountingSemaphore&& other) noexcept
     {
         if (this == &other) {
+            return *this;
+        }
+
+        if (handle_ != nullptr) {
+            EMDEVIF_FATAL_HANDLER("Should not move-assign to a non-empty binary semaphore!");
             return *this;
         }
 
@@ -209,28 +180,6 @@ public:
 
 private:
     Handle handle_;
-};
-
-class CountingSemaphore<1>::StaticInstance
-{
-public:
-    StaticInstance() noexcept : instance() {}
-
-    friend class CountingSemaphore<1>;
-
-    [[nodiscard]] constexpr std::size_t getInstanceSize() const noexcept
-    {
-        return sizeof instance;
-    }
-
-private:
-    explicit operator StaticSemaphore_t&() noexcept
-    {
-        return instance;
-    }
-
-private:
-    StaticSemaphore_t instance;
 };
 
 inline void CountingSemaphore<1>::release(bool in_isr) noexcept

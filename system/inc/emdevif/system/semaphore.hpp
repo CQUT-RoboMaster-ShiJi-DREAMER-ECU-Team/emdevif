@@ -22,6 +22,23 @@ EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 /**
+ * 计数信号量的静态实例
+ * @copydoc sys_static_instance
+ * @tparam least_max_value 信号量计数最大值
+ */
+template<std::ptrdiff_t least_max_value>
+class CountingSemaphoreStaticInstance;
+
+/**
+ * 计数信号量 Builder
+ */
+struct CountingSemaphoreBuilder {
+    const char* name{};              ///< 名称
+
+    void* static_instance{nullptr};  ///< 静态实例内存
+};
+
+/**
  * 计数信号量
  * @tparam least_max_value 信号量计数最大值
  */
@@ -31,39 +48,17 @@ class CountingSemaphore
 public:
     using Handle = void*;  ///< 底层实现句柄
 
-    /**
-     * 静态实例
-     * @copydoc sys_static_instance
-     */
-    class StaticInstance;
-
-    /// 属性
-    struct Attribute {
-        const char* name{};                        ///< 名称
-
-        StaticInstance* static_instance{nullptr};  ///< 静态实例内存
-    };
-
-private:
-    /**
-     * 强类型句柄
-     * @copydoc sys_strongly_typed_handle
-     */
-    struct StronglyTypedHandle {
-        Handle value;
-    };
-
 public:
     /**
-     * 创建信号量
+     * 通过 Builder 构造信号量
      *
-     * 静态创建使用示例：
+     * 动态创建使用示例：
      * @code{.cpp}
      * import emdevif.sys.semaphore;
      *
      * void func(void*)
      * {
-     *     auto semaphore = emdevif::CountingSemaphore<2>::create({.name = "semaphore"});
+     *     auto semaphore = emdevif::CountingSemaphore<2>{CountingSemaphoreBuilder{.name = "semaphore"}};
      *     // 动态创建计数最大值为 2 的信号量
      *
      *     // ...
@@ -72,18 +67,18 @@ public:
      * }
      * @endcode
      *
-     * 动态创建使用示例：
+     * 静态创建使用示例：
      * @code{.cpp}
      * import emdevif.sys.semaphore;
      *
      * emdevif::CountingSemaphore<2> semaphore;
-     * emdevif::CountingSemaphore<2>::StaticInstance semaphore_instance;
+     * emdevif::CountingSemaphoreStaticInstance<2> semaphore_instance;
      *
      * void func(void*)
      * {
-     *     semaphore = emdevif::CountingSemaphore<2>::create({
+     *     semaphore = CountingSemaphore<2>{CountingSemaphoreBuilder{
      *         .name = "semaphore",
-     *         .static_instance = &semaphore_instance});
+     *         .static_instance = &semaphore_instance}};
      *     // 静态创建计数最大值为 2 的信号量
      *
      *     // 静态创建的实例不能删除
@@ -92,10 +87,9 @@ public:
      *     }
      * }
      * @endcode
-     * @param attribute 属性
-     * @return 创建的强类型句柄
+     * @param builder Builder
      */
-    static auto create(const Attribute& attribute) noexcept -> StronglyTypedHandle;
+    explicit CountingSemaphore(CountingSemaphoreBuilder builder) noexcept;
 
     /**
      * 销毁信号量
@@ -151,23 +145,8 @@ public:
 
     CountingSemaphore() noexcept : handle_(nullptr) {}
 
-    explicit CountingSemaphore(const StronglyTypedHandle strongly_handle) noexcept : handle_(strongly_handle.value) {}
-
     CountingSemaphore& operator=(const CountingSemaphore&) = delete;
     CountingSemaphore(const CountingSemaphore&) = delete;
-
-    CountingSemaphore& operator=(const StronglyTypedHandle strongly_handle) noexcept
-    {
-        if (handle_ != nullptr) {
-            EMDEVIF_FATAL_HANDLER("Should not create counting semaphore on non-deleted counting semaphore!");
-        }
-
-        handle_ = strongly_handle.value;
-
-        return *this;
-    }
-
-    explicit CountingSemaphore(const Attribute& attribute) noexcept : CountingSemaphore(create(attribute)) {}
 
     CountingSemaphore(CountingSemaphore&& other) noexcept : handle_(other.handle_)
     {
@@ -177,6 +156,11 @@ public:
     CountingSemaphore& operator=(CountingSemaphore&& other) noexcept
     {
         if (this == &other) {
+            return *this;
+        }
+
+        if (handle_ != nullptr) {
+            EMDEVIF_FATAL_HANDLER("Should not move-assign to a non-empty counting semaphore!");
             return *this;
         }
 

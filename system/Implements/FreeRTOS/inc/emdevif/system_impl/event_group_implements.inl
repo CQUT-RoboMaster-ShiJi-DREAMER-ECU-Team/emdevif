@@ -26,10 +26,10 @@
 namespace emdevif {
 EMDEVIF_MODULE_EXPORT_BEGIN
 
-class EventGroup::StaticInstance
+class EventGroupStaticInstance
 {
 public:
-    StaticInstance() noexcept : static_instance() {}
+    EventGroupStaticInstance() noexcept : static_instance() {}
 
     explicit operator StaticEventGroup_t&()
     {

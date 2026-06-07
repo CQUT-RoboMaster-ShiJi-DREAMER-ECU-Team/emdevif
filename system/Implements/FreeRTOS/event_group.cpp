@@ -29,12 +29,12 @@ import emdevif.core.error_handler;
 
 namespace emdevif {
 
-EventGroup::StronglyTypedHandle EventGroup::create(const Attribute& attribute)
+EventGroup::EventGroup(EventGroupBuilder builder) : handle_(nullptr)
 {
     Handle handle;
 
-    if (attribute.static_instance != nullptr) {
-        auto& static_instance = static_cast<StaticEventGroup_t&>(*attribute.static_instance);
+    if (builder.static_instance != nullptr) {
+        auto& static_instance = static_cast<StaticEventGroup_t&>(*builder.static_instance);
 
         handle = xEventGroupCreateStatic(&static_instance);
     }
@@ -42,7 +42,7 @@ EventGroup::StronglyTypedHandle EventGroup::create(const Attribute& attribute)
         handle = xEventGroupCreate();
     }
 
-    return {handle};
+    handle_ = handle;
 }
 
 void EventGroup::destroy(EventGroup& obj)

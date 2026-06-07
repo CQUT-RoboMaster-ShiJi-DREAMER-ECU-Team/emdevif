@@ -5,34 +5,34 @@
 
 #pragma once
 #ifndef EMDEVIF_FREERTOS_SYSTEM_IMPL_SYS_QUEUE_INL
-#define EMDEVIF_FREERTOS_SYSTEM_IMPL_SYS_QUEUE_INL
+    #define EMDEVIF_FREERTOS_SYSTEM_IMPL_SYS_QUEUE_INL
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-#include "freertos/FreeRTOS.h"
-#include "freertos/queue.h"
-#else
-#include "FreeRTOS.h"
-#include "queue.h"
-#endif
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+            #include "freertos/FreeRTOS.h"
+            #include "freertos/queue.h"
+        #else
+            #include "FreeRTOS.h"
+            #include "queue.h"
+        #endif
 
-#include "emdevif/core/fatal_handler.h"
+        #include "emdevif/core/fatal_handler.h"
 
-#include "emdevif/core/error_handler.hpp"
+        #include "emdevif/core/error_handler.hpp"
 
-#include <cstddef>
-#endif
+        #include <cstddef>
+    #endif
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 template<typename Type, std::size_t item_size>
-class SysQueue<Type, item_size>::StaticInstance
+class SysQueueStaticInstance
 {
 public:
-    StaticInstance() noexcept : instance(), queue_buffer() {}
+    SysQueueStaticInstance() noexcept : instance(), queue_buffer() {}
 
     explicit operator StaticQueue_t&() noexcept
     {
@@ -50,29 +50,25 @@ private:
 };
 
 template<typename Type, std::size_t item_size>
-auto SysQueue<Type, item_size>::create(const Attribute& attribute) -> SysQueue<Type, item_size>::StronglyTypedHandle
+SysQueue<Type, item_size>::SysQueue(SysQueueBuilder builder) : handle_(nullptr)
 {
-    Handle new_handle = nullptr;
+    if (builder.static_instance != nullptr) {
+        auto& static_instance = *static_cast<SysQueueStaticInstance<Type, item_size>*>(builder.static_instance);
 
-    if (attribute.static_instance != nullptr) {
-        auto& static_instance = *static_cast<SysQueue<Type, item_size>::StaticInstance*>(attribute.static_instance);
-
-        new_handle = xQueueCreateStatic(item_size,
-                                        sizeof(Type),
-                                        static_cast<uint8_t*>(static_cast<void*>(static_instance)),
-                                        &static_cast<StaticQueue_t&>(static_instance));
+        handle_ = xQueueCreateStatic(item_size,
+                                     sizeof(Type),
+                                     static_cast<uint8_t*>(static_cast<void*>(static_instance)),
+                                     &static_cast<StaticQueue_t&>(static_instance));
     }
     else {
-        new_handle = xQueueCreate(item_size, sizeof(Type));
+        handle_ = xQueueCreate(item_size, sizeof(Type));
     }
 
-#if (configQUEUE_REGISTRY_SIZE > 0)
-    if (new_handle != nullptr) {
-        vQueueAddToRegistry(static_cast<QueueHandle_t>(new_handle), attribute.name);
+    #if (configQUEUE_REGISTRY_SIZE > 0)
+    if (handle_ != nullptr) {
+        vQueueAddToRegistry(static_cast<QueueHandle_t>(handle_), builder.name);
     }
-#endif
-
-    return {new_handle};
+    #endif
 }
 
 template<typename Type, std::size_t item_size>
@@ -81,9 +77,9 @@ void SysQueue<Type, item_size>::destroy(SysQueue& obj)
     if (obj.handle_ != nullptr) {
         vQueueDelete(static_cast<QueueHandle_t>(obj.handle_));
 
-#if (configQUEUE_REGISTRY_SIZE > 0)
+    #if (configQUEUE_REGISTRY_SIZE > 0)
         vQueueUnregisterQueue(static_cast<QueueHandle_t>(obj.handle_));
-#endif
+    #endif
 
         obj.handle_ = nullptr;
     }

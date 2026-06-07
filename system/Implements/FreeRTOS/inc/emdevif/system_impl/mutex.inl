@@ -28,10 +28,10 @@
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
-class Mutex::StaticInstance
+class MutexStaticInstance
 {
 public:
-    StaticInstance() noexcept : instance() {}
+    MutexStaticInstance() noexcept : instance() {}
 
     friend class Mutex;
 

@@ -89,9 +89,16 @@ private:
 public:
     using Handle = QueueImpl_::Handle;  ///< 句柄类型
 
-    static auto create(const QueueImpl_::Attribute& attribute)
+    /**
+     * 通过 SysQueueBuilder 创建 SysMessageSlot
+     * @param builder Builder
+     * @return 创建好的 SysMessageSlot
+     */
+    static SysMessageSlot create(SysQueueBuilder builder)
     {
-        return QueueImpl_::create(attribute);
+        SysMessageSlot slot;
+        slot.queue_impl_ = QueueImpl_{std::move(builder)};
+        return slot;
     }
 
     static void destroy(SysMessageSlot& obj)

@@ -5,57 +5,51 @@
 
 #pragma once
 #ifndef EMDEVIF_SYSTEM_EVENT_GROUP_HPP
-#define EMDEVIF_SYSTEM_EVENT_GROUP_HPP
+    #define EMDEVIF_SYSTEM_EVENT_GROUP_HPP
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#include "emdevif/system_impl/event_group_definitions.hpp"
+    #include "emdevif/system_impl/event_group_definitions.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#include "emdevif/core/fatal_handler.h"
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/fatal_handler.h"
 
-#include "emdevif/core/error_handler.hpp"
-#include "emdevif/system/thread.hpp"
-#include "emdevif/core/utils/bit_int.hpp"
+        #include "emdevif/core/error_handler.hpp"
+        #include "emdevif/system/thread.hpp"
+        #include "emdevif/core/utils/bit_int.hpp"
 
-#include <cstdint>
-#endif
+        #include <cstdint>
+    #endif
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
+
+/**
+ * 事件组的静态实例
+ * @copydoc sys_static_instance
+ */
+class EventGroupStaticInstance;
+
+/**
+ * 事件组 Builder
+ */
+struct EventGroupBuilder {
+    const char* name{};                                  ///< 名称
+
+    EventGroupStaticInstance* static_instance{nullptr};  ///< 静态实例内存
+};
 
 class EventGroup
 {
 public:
     using Handle = void*;  ///< 底层实现句柄类型
 
-    /**
-     * 静态实例
-     * @copydoc sys_static_instance
-     */
-    class StaticInstance;
-
-    /// 属性
-    struct Attribute {
-        const char* name{};                        ///< 名称
-
-        StaticInstance* static_instance{nullptr};  ///< 静态实例内存
-    };
-
-private:
-    /// 强类型句柄
-    /// @copydoc sys_strongly_typed_handle
-    struct StronglyTypedHandle {
-        Handle value;
-    };
-
 public:
     /**
-     * 创建事件组
-     * @param attribute 属性
-     * @return 强类型句柄
+     * 通过 Builder 构造事件组
+     * @param builder Builder
      */
-    static StronglyTypedHandle create(const Attribute& attribute);
+    explicit EventGroup(EventGroupBuilder builder);
 
     /**
      * 销毁事件组
@@ -142,24 +136,8 @@ public:
 
     EventGroup() noexcept : handle_(nullptr) {}
 
-    explicit EventGroup(const StronglyTypedHandle strongly_handle) noexcept : handle_(strongly_handle.value) {}
-
     EventGroup& operator=(const EventGroup&) = delete;
     EventGroup(const EventGroup&) = delete;
-
-    EventGroup& operator=(const StronglyTypedHandle strongly_handle) noexcept
-    {
-        if (handle_ != nullptr) {
-            EMDEVIF_FATAL_HANDLER("Should not create event group on non-deleted event group!");
-            return *this;
-        }
-
-        handle_ = strongly_handle.value;
-
-        return *this;
-    }
-
-    explicit EventGroup(const Attribute& attribute) noexcept : EventGroup(create(attribute)) {}
 
     EventGroup(EventGroup&& other) noexcept : handle_(other.handle_)
     {
@@ -169,6 +147,11 @@ public:
     EventGroup& operator=(EventGroup&& other) noexcept
     {
         if (this == &other) {
+            return *this;
+        }
+
+        if (handle_ != nullptr) {
+            EMDEVIF_FATAL_HANDLER("Should not move-assign to a non-empty event group!");
             return *this;
         }
 
@@ -186,6 +169,6 @@ private:
 
 }  // namespace emdevif
 
-#include "emdevif/system_impl/event_group_implements.inl"
+    #include "emdevif/system_impl/event_group_implements.inl"
 
 #endif  // !EMDEVIF_SYSTEM_EVENT_GROUP_HPP

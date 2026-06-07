@@ -34,35 +34,35 @@
 #endif
 
 #if (!(defined(INCLUDE_xTaskResumeFromISR) && INCLUDE_xTaskResumeFromISR))
-#error "FreeRTOS Config `INCLUDE_xTaskResumeFromISR\' should be enabled!"
+#error "FreeRTOS Config `INCLUDE_xTaskResumeFromISR' should be enabled!"
 #endif
 
 #if (!(defined(INCLUDE_vTaskSuspend) && INCLUDE_vTaskSuspend))
-#error "FreeRTOS Config `INCLUDE_vTaskSuspend\' should be enabled!"
+#error "FreeRTOS Config `INCLUDE_vTaskSuspend' should be enabled!"
 #endif
 
 #if (!(defined(INCLUDE_vTaskDelete) && INCLUDE_vTaskDelete))
-#error "FreeRTOS Config `INCLUDE_vTaskDelete\' should be enabled!"
+#error "FreeRTOS Config `INCLUDE_vTaskDelete' should be enabled!"
 #endif
 
 #if (!(defined(configSUPPORT_STATIC_ALLOCATION) && configSUPPORT_STATIC_ALLOCATION))
-#error "FreeRTOS Config `configSUPPORT_STATIC_ALLOCATION\' should be enabled!"
+#error "FreeRTOS Config `configSUPPORT_STATIC_ALLOCATION' should be enabled!"
 #endif
 
 #if (!(defined(configSUPPORT_DYNAMIC_ALLOCATION) && configSUPPORT_DYNAMIC_ALLOCATION))
-#error "FreeRTOS Config `configSUPPORT_DYNAMIC_ALLOCATION\' should be enabled!"
+#error "FreeRTOS Config `configSUPPORT_DYNAMIC_ALLOCATION' should be enabled!"
 #endif
 
 #if (!(defined(INCLUDE_vTaskDelayUntil) && INCLUDE_vTaskDelayUntil))
-#error "FreeRTOS Config `INCLUDE_vTaskDelayUntil\' should be enabled!"
+#error "FreeRTOS Config `INCLUDE_vTaskDelayUntil' should be enabled!"
 #endif
 
 #if (!(defined(INCLUDE_vTaskDelay) && INCLUDE_vTaskDelay))
-#error "FreeRTOS Config `INCLUDE_vTaskDelay\' should be enabled!"
+#error "FreeRTOS Config `INCLUDE_vTaskDelay' should be enabled!"
 #endif
 
 #if (!(defined(INCLUDE_eTaskGetState) && INCLUDE_eTaskGetState))
-#error "FreeRTOS Config `INCLUDE_eTaskGetState\' should be enabled!"
+#error "FreeRTOS Config `INCLUDE_eTaskGetState' should be enabled!"
 #endif
 
 EMDEVIF_MODULE_EXPORT
@@ -75,12 +75,12 @@ static_assert(std::numeric_limits<emdevif::MessageQueueTimeout_t>::max() <= port
 static_assert(std::is_same_v<SysTick_t, ::TickType_t>, "We need to keep SysTick_t same to TickType_t in FreeRTOS");
 
 template<std::size_t stack_depth>
-class Thread::StaticInstance
+class ThreadStaticInstance
 {
 public:
     static_assert(stack_depth > 0U, "Stack depth must be greater than 0.");
 
-    StaticInstance() noexcept : instance(), stack_buffer() {}
+    ThreadStaticInstance() noexcept : instance(), stack_buffer() {}
 
     friend class Thread;
 
@@ -97,7 +97,7 @@ private:
 
 public:
     /**
-     * 获取静态实例的地址（用于初始化填入 Attribute 形参）
+     * 获取静态实例的地址（用于初始化填入 ThreadBuilder 形参）
      * @return 静态实例存储的地址
      */
     void* getInstanceAddr() noexcept
@@ -106,7 +106,7 @@ public:
     }
 
     /**
-     * 获取静态实例的栈深（用于初始化填入 Attribute 形参）
+     * 获取静态实例的栈深（用于初始化填入 ThreadBuilder 形参）
      * @return 静态实例的栈深（以字为单位）
      */
     std::size_t getStackDepth() noexcept  // NOLINT
@@ -127,21 +127,21 @@ consteval SysTick_t Thread::maxDelay() noexcept
 consteval auto Thread::priorityMapRange() noexcept
 {
     constexpr UBaseType_t max_priority = configMAX_PRIORITIES - 1;
-    constexpr UBaseType_t centered_priority = (max_priority - static_cast<UBaseType_t>(Priority::Realtime)) / 2U;
+    constexpr UBaseType_t centered_priority = (max_priority - static_cast<UBaseType_t>(ThreadPriority::Realtime)) / 2U;
 
     return std::pair<UBaseType_t, UBaseType_t>{centered_priority,
-                                               centered_priority + static_cast<UBaseType_t>(Priority::Realtime)};
+                                               centered_priority + static_cast<UBaseType_t>(ThreadPriority::Realtime)};
 }
 
-constexpr auto Thread::priorityMapToSystem(const Priority priority) noexcept
+constexpr auto Thread::priorityMapToSystem(const ThreadPriority priority) noexcept
 {
-    if (priority == Priority::Idle) {
+    if (priority == ThreadPriority::Idle) {
         return static_cast<UBaseType_t>(0U);
     }
 
     constexpr UBaseType_t max_priority = configMAX_PRIORITIES - 1;
 
-    if (priority == Priority::Max) {
+    if (priority == ThreadPriority::Max) {
         return max_priority;
     }
 

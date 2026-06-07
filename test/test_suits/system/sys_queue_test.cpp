@@ -74,7 +74,7 @@ TEST_SUIT(SysQueueBasicTest)
 
     TEST_CASE_BEGIN(ConstructDirectly)
     {
-        emdevif::SysQueue<int, 5> queue = emdevif::SysQueue<int, 5>::create({.name = "BasicTestQueue"});
+        emdevif::SysQueue<int, 5> queue{emdevif::SysQueueBuilder{.name = "BasicTestQueue"}};
         static_assert(std::is_same_v<decltype(queue)::ImplType, emdevif::SysQueue<int, 5>>);
 
         emdevif_test_TestCaseContex contex = GET_THIS_TEST_CASE_CONTEXT();
@@ -87,7 +87,7 @@ TEST_SUIT(SysQueueBasicTest)
         emdevif::SysQueue<int, 5> queue;
         static_assert(std::is_same_v<decltype(queue)::ImplType, emdevif::SysQueue<int, 5>>);
 
-        queue = decltype(queue)::create({.name = "BasicTestQueue"});
+        queue = emdevif::SysQueue<int, 5>{emdevif::SysQueueBuilder{.name = "BasicTestQueue"}};
 
         emdevif_test_TestCaseContex contex = GET_THIS_TEST_CASE_CONTEXT();
         testImplWithoutCreate(contex, queue);

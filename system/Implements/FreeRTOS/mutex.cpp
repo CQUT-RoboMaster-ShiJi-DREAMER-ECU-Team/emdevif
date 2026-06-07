@@ -31,12 +31,12 @@ import emdevif.core.error_handler;
 
 namespace emdevif {
 
-Mutex::StronglyTypedHandle Mutex::create(const Attribute& attribute) noexcept
+Mutex::Mutex(MutexBuilder builder) noexcept : handle_(nullptr)
 {
     QueueHandle_t handle = nullptr;
 
-    if (attribute.static_instance != nullptr) {
-        auto& static_instance = *static_cast<Mutex::StaticInstance*>(attribute.static_instance);
+    if (builder.static_instance != nullptr) {
+        auto& static_instance = *static_cast<MutexStaticInstance*>(builder.static_instance);
 
         handle = xSemaphoreCreateMutexStatic(&static_cast<StaticSemaphore_t&>(static_instance));
     }
@@ -46,11 +46,11 @@ Mutex::StronglyTypedHandle Mutex::create(const Attribute& attribute) noexcept
 
 #if (configQUEUE_REGISTRY_SIZE > 0)
     if (handle != nullptr) {
-        vQueueAddToRegistry(handle, attribute.name);
+        vQueueAddToRegistry(handle, builder.name);
     }
 #endif
 
-    return {.value = handle};
+    handle_ = handle;
 }
 
 void Mutex::destroy(Mutex& obj) noexcept

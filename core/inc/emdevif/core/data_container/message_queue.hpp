@@ -19,6 +19,7 @@
 
 namespace emdevif {
 
+// todo 需要增加宏配置：让这个类型可在32位或64位中选
 /**
  * @brief 超时时间类型（以 tick 为单位）
  */

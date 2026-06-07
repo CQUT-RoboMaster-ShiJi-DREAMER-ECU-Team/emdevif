@@ -18,17 +18,17 @@ static RingBuffer<std::array<char, logger_buffer_size>, logger_buffer_count> buf
 
 static Mutex mutex_;
     #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
-static Mutex::StaticInstance mutex_static_instance_;
+static MutexStaticInstance mutex_static_instance_;
     #endif
 
 static Thread logger_async_printer_thread_;
     #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
-static Thread::StaticInstance<logger_async_thread_stack_size> logger_async_printer_thread_instance_;
+static ThreadStaticInstance<logger_async_thread_stack_size> logger_async_printer_thread_instance_;
     #endif
 
 static BinarySemaphore logger_async_printer_semaphore_;
     #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
-static BinarySemaphore::StaticInstance logger_async_printer_semaphore_static_instance_;
+static CountingSemaphoreStaticInstance<1> logger_async_printer_semaphore_static_instance_;
     #endif
 
 EMDEVIF_NO_RETURN static void logPrinterThread(void*) noexcept
@@ -62,22 +62,22 @@ ErrorCode logInit(const VsnprintfImpl vsprintf_impl) noexcept
 
     buffer_.clear();
 
-    mutex_ = Mutex::create({
+    mutex_ = Mutex{MutexBuilder{
         .name = "loggerMutex",
     #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
         .static_instance = &mutex_static_instance_,
     #endif
-    });
+    }};
     if (mutex_.getHandle() == nullptr) {
         return ErrorCode::OperationFail;
     }
 
-    logger_async_printer_semaphore_ = BinarySemaphore::create({
+    logger_async_printer_semaphore_ = BinarySemaphore{CountingSemaphoreBuilder{
         .name = "loggerSemaphore",
     #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
         .static_instance = &logger_async_printer_semaphore_static_instance_,
     #endif
-    });
+    }};
     if (logger_async_printer_semaphore_.getHandle() == nullptr) {
         return ErrorCode::OperationFail;
     }
@@ -85,7 +85,7 @@ ErrorCode logInit(const VsnprintfImpl vsprintf_impl) noexcept
     logger_async_printer_thread_ = Thread::create(
         {
             .name = "loggerThread",
-            .priority = Thread::Priority::Low,
+            .priority = ThreadPriority::Low,
     #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
             .static_instance = logger_async_printer_thread_instance_.getInstanceAddr(),
             .stack_size = logger_async_printer_thread_instance_.getStackDepth(),
