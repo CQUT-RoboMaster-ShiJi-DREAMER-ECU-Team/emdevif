@@ -4,33 +4,33 @@ include(cmake/config_compile_options.cmake)
 
 project(emdevif_core C CXX)
 
-option(EMDEVIF_CORE_USE_BUILT_IN_BOOST_PFR_LIB
-    "Enabled it to use built-in Boost.PFR library. If disabled it, you should \
-provide `Boost::pfr\' alias library(Use find_package, FetchContent or built-in \
-Boost.PFR library on another place)."
-    ON
-)
-
 add_library(${PROJECT_NAME} STATIC)
 
 if (EMDEVIF_USE_CPP_MODULES)
     target_compile_definitions(${PROJECT_NAME} PUBLIC EMDEVIF_USE_MODULES=1)
 
-    set(BOOST_USE_MODULES ON CACHE BOOL
+    set(BOOST_USE_MODULES ON CACHE INTERNAL
         "This value was set to ON with \"FORCE\"(Because of `EMDEVIF_USE_CPP_MODULES\' \
 is ON), DO NOT EDIT IT!"
         FORCE
     )
 else ()
-    set(BOOST_USE_MODULES OFF CACHE BOOL
+    set(BOOST_USE_MODULES OFF CACHE INTERNAL
         "This value was set to OFF with \"FORCE\"(Because of `EMDEVIF_USE_CPP_MODULES\' \
 is OFF), DO NOT EDIT IT!"
         FORCE
     )
 endif ()
 
-if (EMDEVIF_CORE_USE_BUILT_IN_BOOST_PFR_LIB)
-    add_subdirectory(depends/boost_pfr)
+include(cmake/get_cpm.cmake)
+CPMFindPackage(
+    NAME boost_pfr
+    GITHUB_REPOSITORY boostorg/pfr
+    GIT_TAG "boost-1.91.0"
+    VERSION 1.89.0
+)
+if (NOT boost_pfr_ADDED)
+    message(FATAL_ERROR "[${PROJECT_NAME}]: CPM: Failed to add package `boost_pfr`")
 endif ()
 
 target_link_libraries(${PROJECT_NAME} PUBLIC Boost::pfr)
