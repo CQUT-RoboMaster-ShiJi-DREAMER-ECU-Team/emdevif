@@ -13,9 +13,8 @@ module;
 export module emdevif.system.sys_message_slot;
 
 import emdevif.system.thread;
-import emdevif.system.sys_queue;
-import emdevif.core.data_container.message_slot;
-import emdevif.core.data_container.message_queue;
+export import emdevif.system.sys_queue;
+export import emdevif.core.data_container.message_queue;
 import emdevif.core.error_handler;
 
 #ifdef __clang__

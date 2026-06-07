@@ -45,17 +45,18 @@ struct SysQueueBuilder {
 /**
  * 系统队列
  * @tparam Type 队列每个元素的类型
- * @tparam item_size 队列的大小
+ * @tparam item_size_ 队列的大小
  */
-template<typename Type, std::size_t item_size>
-class SysQueue : public MessageQueueInterface<SysQueue, Type, item_size>
+template<typename Type, std::size_t item_size_>
+class SysQueue
 {
 public:
-    friend class MessageQueueInterface<SysQueue, Type, item_size>;
+    using ValueType = Type;  ///< 消息元素类型
+    using Handle = void*;    ///< 句柄
 
-    using Handle = void*;  ///< 句柄
+    static constexpr std::size_t item_size = item_size_;
 
-public:                    // todo 等消息队列接口做好了之后再来补注释
+    // todo 等消息队列接口做好了之后再来补注释
     /**
      * 通过 Builder 构造系统队列
      * @param builder Builder
@@ -80,7 +81,6 @@ public:                    // todo 等消息队列接口做好了之后再来补
         handle_ = nullptr;
     }
 
-private:
     /**
      * @brief 向队列尾部推送数据
      * @param in_isr 是否在中断上下文中调用
@@ -89,7 +89,7 @@ private:
      * @retval ErrorCode::Success 推送成功
      * @retval ErrorCode::Timeout 超时
      */
-    ErrorCode pushImpl(bool in_isr, const Type& data, SysTick_t timeout_tick = 0U);
+    ErrorCode push(bool in_isr, const Type& data, MessageQueueTimeout_t timeout_tick = 0U) noexcept;
 
     /**
      * @brief 强制向队列尾部推送数据（覆盖旧数据）
@@ -98,7 +98,7 @@ private:
      * @retval ErrorCode::Success 推送成功
      * @retval ErrorCode::OperationFail 操作失败
      */
-    ErrorCode forcePushImpl(bool in_isr, const Type& data);
+    ErrorCode forcePush(bool in_isr, const Type& data) noexcept;
 
     /**
      * @brief 从队列头部取出数据
@@ -108,7 +108,7 @@ private:
      * @retval ErrorCode::Success 取出成功
      * @retval ErrorCode::Timeout 超时
      */
-    ErrorCode popImpl(bool in_isr, Type& data, SysTick_t timeout_tick = 0U);
+    ErrorCode pop(bool in_isr, Type& data, MessageQueueTimeout_t timeout_tick = 0U) noexcept;
 
     /**
      * @brief 从队列头部取出数据（丢弃数据）
@@ -116,7 +116,7 @@ private:
      * @retval ErrorCode::Success 取出成功
      * @retval ErrorCode::Timeout 超时
      */
-    ErrorCode popImpl(bool in_isr);
+    ErrorCode pop(bool in_isr) noexcept;
 
     /**
      * @brief 查看队列头部的数据但不移除
@@ -126,32 +126,36 @@ private:
      * @retval ErrorCode::Success 查看成功
      * @retval ErrorCode::Timeout 超时
      */
-    ErrorCode peekImpl(bool in_isr, Type& data, SysTick_t timeout_tick = 0U);
+    ErrorCode peek(bool in_isr, Type& data, MessageQueueTimeout_t timeout_tick = 0U) noexcept;
 
     /**
      * @brief 清空队列中的所有数据
      */
-    void clearImpl();
+    void clear() noexcept;
 
     /**
      * @brief 获取队列中已存储的元素数量
      * @return 已存储的元素数量
      */
-    [[nodiscard]] std::size_t storeCountImpl() const;
+    [[nodiscard]] std::size_t storeCount() const noexcept;
 
     /**
      * @brief 获取队列中剩余可用空间
      * @return 剩余可存储的元素数量
      */
-    [[nodiscard]] std::size_t remainCountImpl() const;
+    [[nodiscard]] std::size_t remainCount() const noexcept;
 
-    [[nodiscard]] Handle getHandleImpl() const
+    [[nodiscard]] Handle getHandle() const noexcept
     {
         return handle_;
     }
 
-public:
-    SysQueue() : handle_(nullptr) {}
+    [[nodiscard]] static constexpr std::size_t maxItemCount() noexcept
+    {
+        return item_size_;
+    }
+
+    SysQueue() noexcept : handle_(nullptr) {}
 
     SysQueue& operator=(const SysQueue&) = delete;
     SysQueue(const SysQueue&) = delete;
@@ -184,9 +188,7 @@ private:
     Handle handle_;  ///< 底层实现的句柄
 };
 
-template<typename Type, std::size_t item_size>
-struct IsMessageQueue<SysQueue<Type, item_size>> : public std::true_type {
-};
+static_assert(MessageQueue<SysQueue<int, 5>>);
 
 }  // namespace emdevif
 

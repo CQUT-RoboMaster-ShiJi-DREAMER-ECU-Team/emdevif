@@ -8,13 +8,14 @@
 #include "heap_usage_checker.hpp"
 
 #include <type_traits>
+#include <concepts>
 
 #ifdef EMDEVIF_USE_MODULES
-import emdevif.core.data_container.message_slot;
+import emdevif.core.data_container.message_queue;
 import emdevif.system.sys_message_slot;
 import emdevif.core.error_handler;
 #else
-    #include "emdevif/core/data_container/message_slot.hpp"
+    #include "emdevif/core/data_container/message_queue.hpp"
     #include "emdevif/system/sys_message_slot.hpp"
     #include "emdevif/core/error_handler.hpp"
 #endif
@@ -73,8 +74,9 @@ TEST_SUIT(SysMessageSlotBasicTest)
 
     TEST_CASE_BEGIN(ConstructDirectly)
     {
-        emdevif::SysMessageSlot<int> slot = emdevif::SysMessageSlot<int>::create({.name = "BasicTestSlot"});
-        static_assert(std::is_same_v<decltype(slot), emdevif::SysMessageSlot<int>>);
+        emdevif::MessageSlot auto slot =
+            emdevif::SysMessageSlot<int>(emdevif::SysQueueBuilder{.name = "BasicTestSlot"});
+        static_assert(std::same_as<decltype(slot), emdevif::SysMessageSlot<int>>);
 
         emdevif_test_TestCaseContex contex = GET_THIS_TEST_CASE_CONTEXT();
         testImplWithoutCreate(contex, slot);
@@ -83,8 +85,8 @@ TEST_SUIT(SysMessageSlotBasicTest)
 
     TEST_CASE_BEGIN(FactoryConstruct)
     {
-        emdevif::SysMessageSlot<int> slot;
-        static_assert(std::is_same_v<decltype(slot), emdevif::SysMessageSlot<int>>);
+        emdevif::MessageSlot auto slot = emdevif::SysMessageSlot<int>{};
+        static_assert(std::same_as<decltype(slot), emdevif::SysMessageSlot<int>>);
 
         slot = decltype(slot)::create({.name = "BasicTestSlot"});
 

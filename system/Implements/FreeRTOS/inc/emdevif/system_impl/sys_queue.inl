@@ -86,7 +86,9 @@ void SysQueue<Type, item_size>::destroy(SysQueue& obj)
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode SysQueue<Type, item_size>::pushImpl(const bool in_isr, const Type& data, const SysTick_t timeout_tick)
+ErrorCode SysQueue<Type, item_size>::push(const bool in_isr,
+                                          const Type& data,
+                                          const MessageQueueTimeout_t timeout_tick) noexcept
 {
     if (in_isr) {
         EMDEVIF_ASSERT(timeout_tick == 0U, "Timeout value should equals to 0 in ISR.");
@@ -121,7 +123,7 @@ ErrorCode SysQueue<Type, item_size>::pushImpl(const bool in_isr, const Type& dat
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode SysQueue<Type, item_size>::forcePushImpl(const bool in_isr, const Type& data)
+ErrorCode SysQueue<Type, item_size>::forcePush(const bool in_isr, const Type& data) noexcept
 {
     if (in_isr) {
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -144,7 +146,9 @@ ErrorCode SysQueue<Type, item_size>::forcePushImpl(const bool in_isr, const Type
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode SysQueue<Type, item_size>::popImpl(const bool in_isr, Type& data, const SysTick_t timeout_tick)
+ErrorCode SysQueue<Type, item_size>::pop(const bool in_isr,
+                                         Type& data,
+                                         const MessageQueueTimeout_t timeout_tick) noexcept
 {
     if (in_isr) {
         EMDEVIF_ASSERT(timeout_tick == 0U, "Timeout value should equals to 0 in ISR.");
@@ -180,14 +184,16 @@ ErrorCode SysQueue<Type, item_size>::popImpl(const bool in_isr, Type& data, cons
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode SysQueue<Type, item_size>::popImpl(const bool in_isr)
+ErrorCode SysQueue<Type, item_size>::pop(const bool in_isr) noexcept
 {
     Type data;
-    return popImpl(in_isr, data, 0U);
+    return pop(in_isr, data, 0U);
 }
 
 template<typename Type, std::size_t item_size>
-ErrorCode SysQueue<Type, item_size>::peekImpl(const bool in_isr, Type& data, const SysTick_t timeout_tick)
+ErrorCode SysQueue<Type, item_size>::peek(const bool in_isr,
+                                          Type& data,
+                                          const MessageQueueTimeout_t timeout_tick) noexcept
 {
     if (in_isr) {
         EMDEVIF_ASSERT(timeout_tick == 0U, "Timeout value should equals to 0 in ISR.");
@@ -218,19 +224,19 @@ ErrorCode SysQueue<Type, item_size>::peekImpl(const bool in_isr, Type& data, con
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 template<typename Type, std::size_t item_size>
-void SysQueue<Type, item_size>::clearImpl()
+void SysQueue<Type, item_size>::clear() noexcept
 {
     (void)xQueueReset(static_cast<QueueHandle_t>(handle_));
 }
 
 template<typename Type, std::size_t item_size>
-std::size_t SysQueue<Type, item_size>::storeCountImpl() const
+std::size_t SysQueue<Type, item_size>::storeCount() const noexcept
 {
     return uxQueueMessagesWaiting(static_cast<QueueHandle_t>(handle_));
 }
 
 template<typename Type, std::size_t item_size>
-std::size_t SysQueue<Type, item_size>::remainCountImpl() const
+std::size_t SysQueue<Type, item_size>::remainCount() const noexcept
 {
     return uxQueueSpacesAvailable(static_cast<QueueHandle_t>(handle_));
 }

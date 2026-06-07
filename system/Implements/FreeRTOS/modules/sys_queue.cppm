@@ -25,7 +25,7 @@ module;
 export module emdevif.system.sys_queue;
 
 import emdevif.core.error_handler;
-import emdevif.core.data_container.message_queue;
+export import emdevif.core.data_container.message_queue;
 import emdevif.system.thread;
 
 #ifdef __clang__

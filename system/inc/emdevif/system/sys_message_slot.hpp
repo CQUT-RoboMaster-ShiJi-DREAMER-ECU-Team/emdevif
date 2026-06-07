@@ -12,7 +12,6 @@
     #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/error_handler.hpp"
         #include "emdevif/core/data_container/message_queue.hpp"
-        #include "emdevif/core/data_container/message_slot.hpp"
         #include "emdevif/system/thread.hpp"
         #include "emdevif/system/sys_queue.hpp"
 
@@ -20,152 +19,134 @@
         #include <type_traits>
     #endif
 
+EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
-EMDEVIF_MODULE_EXPORT
-template<typename Type>
-class SysMessageSlot;
-
-namespace detail {
-
 /**
- * @brief SysMessageSlot 专用的队列适配器，屏蔽 push/pop 接口
+ * 系统消息槽 - 基于系统队列实现，仅暴露 forcePush / peek 接口
  * @tparam Type 消息数据类型
  */
 template<typename Type>
-class SysQueueForSlotAdapter : public SysQueue<Type, 1>
-{
-protected:
-    using QueueImpl_ = SysQueue<Type, 1>;
-
-    // ReSharper disable once CppNonExplicitConvertingConstructor
-    template<typename T>
-    SysQueueForSlotAdapter(T&& init_param)  // NOLINT(*-explicit-constructor, *-forwarding-reference-overload)
-        : QueueImpl_(std::forward<T>(init_param))
-    {
-    }
-
-    template<typename T>
-    SysQueueForSlotAdapter& operator=(T&& other) noexcept
-    {
-        auto super = static_cast<QueueImpl_*>(this);
-        super->operator=(std::forward<T>(other));
-
-        return *this;
-    }
-
-    SysQueueForSlotAdapter() = default;
-    SysQueueForSlotAdapter(const SysQueueForSlotAdapter&) = default;
-    ~SysQueueForSlotAdapter() = default;
-
-public:
-    ErrorCode push(bool in_isr, const Type& data, MessageQueueTimeout_t timeout_tick = 0U) = delete;
-    ErrorCode pop(bool in_isr, Type& data, MessageQueueTimeout_t timeout_tick = 0U) = delete;
-    ErrorCode pop(bool in_isr) = delete;
-
-    ErrorCode pushImpl(bool in_isr, const Type& data, SysTick_t timeout_tick = 0U) = delete;
-    ErrorCode popImpl(bool in_isr, Type& data, SysTick_t timeout_tick = 0U) = delete;
-    ErrorCode popImpl(bool in_isr) = delete;
-
-    friend class SysMessageSlot<Type>;
-};
-
-}  // namespace detail
-
-EMDEVIF_MODULE_EXPORT_BEGIN
-
-template<typename Type>
-class SysMessageSlot : public MessageSlotInterface<SysMessageSlot, Type>
+class SysMessageSlot
 {
 public:
-    friend class MessageSlotInterface<SysMessageSlot, Type>;
+    using ValueType = Type;  ///< 消息元素类型
+    using Handle = void*;    ///< 句柄类型
+
+    static constexpr std::size_t item_size = 1;
 
 private:
-    using QueueAdapter_ = detail::SysQueueForSlotAdapter<Type>;
-    using QueueImpl_ = QueueAdapter_::QueueImpl_;
-
-    QueueAdapter_ queue_impl_{};
+    SysQueue<Type, 1> queue_{};
 
 public:
-    using Handle = QueueImpl_::Handle;  ///< 句柄类型
-
     /**
      * 通过 SysQueueBuilder 创建 SysMessageSlot
      * @param builder Builder
      * @return 创建好的 SysMessageSlot
      */
-    static SysMessageSlot create(SysQueueBuilder builder)
+    static SysMessageSlot create(SysQueueBuilder builder) noexcept
     {
         SysMessageSlot slot;
-        slot.queue_impl_ = QueueImpl_{std::move(builder)};
+        slot.queue_ = SysQueue<Type, 1>{std::move(builder)};
         return slot;
     }
 
-    static void destroy(SysMessageSlot& obj)
+    static void destroy(SysMessageSlot& obj) noexcept
     {
-        obj.queue_impl_.destroy();
+        obj.queue_.destroy();
     }
 
-    void destroy()
+    void destroy() noexcept
     {
         destroy(*this);
     }
 
-private:
-    ErrorCode forcePushImpl(bool in_isr, const Type& data)
+    /**
+     * @brief 强制推送数据到消息槽（覆盖旧数据）
+     * @param in_isr 是否在中断上下文中调用
+     * @param data 待推送的数据
+     * @return 错误码
+     */
+    ErrorCode forcePush(bool in_isr, const Type& data) noexcept
     {
-        return queue_impl_.forcePush(in_isr, data);
+        return queue_.forcePush(in_isr, data);
     }
 
-    ErrorCode peekImpl(bool in_isr, Type& data, MessageQueueTimeout_t timeout_tick = 0U)
+    /**
+     * @brief 查看消息槽中的数据（不移除）
+     * @param in_isr 是否在中断上下文中调用
+     * @param[out] data 接收查看的数据
+     * @param timeout_tick 超时时间（tick 数），默认 0 表示不等待
+     * @return 错误码
+     */
+    ErrorCode peek(bool in_isr, Type& data, MessageQueueTimeout_t timeout_tick = 0U) noexcept
     {
-        return queue_impl_.peek(in_isr, data, timeout_tick);
+        return queue_.peek(in_isr, data, timeout_tick);
     }
 
-    void clearImpl()
+    /**
+     * @brief 清空消息槽
+     */
+    void clear() noexcept
     {
-        queue_impl_.clear();
+        queue_.clear();
     }
 
-    [[nodiscard]] std::size_t storeCountImpl() const
+    /**
+     * @brief 获取消息槽中已存储的元素数量
+     * @return 已存储的元素数量
+     */
+    [[nodiscard]] std::size_t storeCount() const noexcept
     {
-        return queue_impl_.storeCount();
+        return queue_.storeCount();
     }
 
-    [[nodiscard]] std::size_t remainCountImpl() const
+    /**
+     * @brief 获取消息槽中剩余的空闲槽位数量
+     * @return 剩余空闲槽位数量
+     */
+    [[nodiscard]] std::size_t remainCount() const noexcept
     {
-        return queue_impl_.remainCount();
+        return queue_.remainCount();
     }
 
-    [[nodiscard]] Handle getHandleImpl() const
+    /**
+     * @brief 获取消息槽最大容量（固定为 1）
+     * @return 消息槽最大容量
+     */
+    [[nodiscard]] static constexpr std::size_t maxItemCount() noexcept
     {
-        return queue_impl_.getHandle();
+        return 1;
     }
 
-public:
+    /**
+     * @brief 获取消息槽底层句柄
+     * @return 消息槽句柄
+     */
+    [[nodiscard]] Handle getHandle() const noexcept
+    {
+        return queue_.getHandle();
+    }
+
     SysMessageSlot() = default;
 
     // ReSharper disable once CppNonExplicitConvertingConstructor
     template<typename T>
-    SysMessageSlot(T&& init_param)  // NOLINT(*-explicit-constructor, *-forwarding-reference-overload)
-        : queue_impl_(std::forward<T>(init_param))
+    SysMessageSlot(T&& init_param) noexcept  // NOLINT(*-explicit-constructor, *-forwarding-reference-overload)
+        : queue_(std::forward<T>(init_param))
     {
     }
 
     template<typename T>
     SysMessageSlot& operator=(T&& other) noexcept
     {
-        queue_impl_.operator=(std::forward<T>(other));
+        queue_.operator=(std::forward<T>(other));
 
         return *this;
     }
 };
 
-template<typename Type>
-struct IsMessageSlot<SysMessageSlot<Type>> : public std::true_type {
-};
-
-EMDEVIF_MODULE_EXPORT_END
+static_assert(MessageSlot<SysMessageSlot<int>>);
 
 }  // namespace emdevif
 
