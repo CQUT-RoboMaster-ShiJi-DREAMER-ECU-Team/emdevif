@@ -5,21 +5,21 @@
 
 #pragma once
 #ifndef EMDEVIF_FREERTOS_SYSTEM_IMPL_SYSTEM_HEAP_INL
-#define EMDEVIF_FREERTOS_SYSTEM_IMPL_SYSTEM_HEAP_INL
+    #define EMDEVIF_FREERTOS_SYSTEM_IMPL_SYSTEM_HEAP_INL
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-#include "freertos/FreeRTOS.h"
-#else
-#include "FreeRTOS.h"
-#endif
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+            #include "freertos/FreeRTOS.h"
+        #else
+            #include "FreeRTOS.h"
+        #endif
 
-#include "emdevif/core/concepts.hpp"
+        #include "emdevif/core/concepts.hpp"
 
-#include <memory>
-#include <utility>
-#include <type_traits>
-#endif
+        #include <memory>
+        #include <utility>
+        #include <type_traits>
+    #endif
 
 namespace emdevif::heap::detail {
 
@@ -38,8 +38,10 @@ inline void free(void* block) noexcept
 EMDEVIF_MODULE_EXPORT
 namespace emdevif::heap {
 
+    #ifdef __cpp_exceptions
 template<typename T, typename... Args>
 T* construct(Args&&... args)
+
 {
     static_assert(!std::is_void_v<T>, "can't create pointer to incomplete type");
     static_assert(sizeof(T) > 0, "can't create pointer to incomplete type");
@@ -59,6 +61,7 @@ T* construct(Args&&... args)
 
     return ret;
 }
+    #endif
 
 template<typename T, typename... Args>
 T* construct(std::nothrow_t, Args&&... args) noexcept
@@ -107,9 +110,7 @@ public:
     }
 };
 
-template<typename T>
-using unique_ptr = std::unique_ptr<T, Deleter<T>>;
-
+    #ifdef __cpp_exceptions
 template<typename T, typename... Args>
 unique_ptr<T> make_unique(Args&&... args)
 {
@@ -120,6 +121,7 @@ unique_ptr<T> make_unique(Args&&... args)
         throw;
     }
 }
+    #endif
 
 template<typename T, typename... Args>
 unique_ptr<T> make_unique(std::nothrow_t, Args&&... args) noexcept

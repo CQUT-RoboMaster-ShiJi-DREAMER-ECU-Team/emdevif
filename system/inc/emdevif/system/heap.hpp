@@ -5,30 +5,42 @@
 
 #pragma once
 #ifndef EMDEVIF_SYSTEM_HEAP_HPP
-#define EMDEVIF_SYSTEM_HEAP_HPP
+    #define EMDEVIF_SYSTEM_HEAP_HPP
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#include "emdevif/core/concepts.hpp"
+    #include "emdevif/core/simplify_decl_macros.hpp"
 
-#include <memory>
-#include <utility>
-#include <type_traits>
-#endif
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/concepts.hpp"
+
+        #include <memory>
+        #include <utility>
+        #include <type_traits>
+    #endif
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif::heap {
 
 /**
  * @brief 在系统堆上构造对象
+ * @attention 当且仅当编译器未关闭异常的情况才能使用。如果编译器关闭了异常，请使用第一个参数接收
+ * std::nothrow 的重载
  * @tparam T 对象类型
  * @tparam Args 构造参数类型包
  * @param args 构造参数
- * @return 指向已构造对象的指针。若失败，调用 EMDEVIF_FATAL_HANDLER
+ * @return 指向已构造对象的指针。若失败，抛出异常
+ * @throws std::bad_alloc 内存分配失败
+ * @throws 其他 由 T 的构造函数抛出的异常
  */
 template<typename T, typename... Args>
-T* construct(Args&&... args);
+T* construct(Args&&... args)
+    #ifndef __cpp_exceptions
+    = EMDEVIF_REASON_DELETE(
+        "The compiler disabled C++ exceptions. Please enable it or use the first parameter to receive the overloaded "
+        "function of `std::nothrow`")
+    #endif
+    ;
 
 /**
  * @brief 在系统堆上构造对象（不抛出版本）
@@ -64,13 +76,23 @@ using unique_ptr = std::unique_ptr<T, Deleter<T>>;
 
 /**
  * @brief 在系统堆上构造对象并返回 unique_ptr
+ * @attention 当且仅当编译器未关闭异常的情况才能使用。如果编译器关闭了异常，请使用第一个参数接收
+ * std::nothrow 的重载
  * @tparam T 对象类型
  * @tparam Args 构造参数类型包
  * @param args 构造参数
  * @return 管理对象的 unique_ptr
+ * @throws std::bad_alloc 内存分配失败
+ * @throws 其他 由 T 的构造函数抛出的异常
  */
 template<typename T, typename... Args>
-unique_ptr<T> make_unique(Args&&... args);
+unique_ptr<T> make_unique(Args&&... args)
+    #ifndef __cpp_exceptions
+    = EMDEVIF_REASON_DELETE(
+        "The compiler disabled C++ exceptions. Please enable it or use the first parameter to receive the overloaded "
+        "function of `std::nothrow`")
+    #endif
+    ;
 
 /**
  * @brief 在系统堆上构造对象并返回 unique_ptr（不抛出版本）
@@ -92,6 +114,6 @@ class Allocator;
 
 }  // namespace emdevif::heap
 
-#include "emdevif/system_impl/heap.inl"
+    #include "emdevif/system_impl/heap.inl"
 
 #endif  // !EMDEVIF_SYSTEM_HEAP_HPP

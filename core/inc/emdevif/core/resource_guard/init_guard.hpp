@@ -5,16 +5,18 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_RESOURCE_GUARD_INIT_GUARD_HPP
-#define EMDEVIF_CORE_RESOURCE_GUARD_INIT_GUARD_HPP
+    #define EMDEVIF_CORE_RESOURCE_GUARD_INIT_GUARD_HPP
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#include "emdevif/core/error_handler.hpp"
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/error_handler.hpp"
 
-#include <utility>
-#include <concepts>
-#endif
+        #include <utility>
+        #include <concepts>
+    #endif
+
+    #include "emdevif/core/simplify_decl_macros.hpp"
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
@@ -55,10 +57,12 @@ private:
 
 public:
     InitGuard() = delete;
+    EMDEVIF_DELETE_COPY_AND_MOVE(InitGuard);
 
     /**
      * 构造 InitGuard 并自动调用对象的 init 函数
-     * @attention 如果是在关闭了异常的环境下，使用该构造函数会导致编译失败。可以通过调用另一个重载然后手动执行初始化。
+     * @attention 当且仅当编译器未关闭异常的情况才能使用。如果编译器关闭了异常，请考虑使用第一个参数接收
+     * emdevif::init_guard_do_not_init_object_tag 的重载，然后手动调用 init 方法
      * @tparam InitArgs init 参数类型
      * @param object 托管的对象
      * @param init_args 传递给 init 的参数
@@ -66,12 +70,19 @@ public:
      */
     template<typename... InitArgs>
         requires ValidHaveInitDeInitPairObject<ValueType, InitArgs...>
-    explicit InitGuard(ValueType& object, InitArgs&&... init_args) : object_(object)
+    explicit InitGuard(ValueType& object, InitArgs&&... init_args)
+    #ifdef __cpp_exceptions
+        : object_(object)
     {
         if (const ErrorCode ec = object_.init(std::forward<InitArgs>(init_args)...); ec != ErrorCode::Success) {
             throw ErrorWithCodeException(ec, "Failed to initialize object in InitGuard.");
         }
     }
+    #else
+        = EMDEVIF_REASON_DELETE(
+            "The compiler disabled C++ exceptions. Please enable it or use the first parameter to receive the "
+            "overloaded function of `emdevif::init_guard_do_not_init_object_tag`");
+    #endif
     /**
      * @overload
      * 构造 InitGuard 但不自动调用 init

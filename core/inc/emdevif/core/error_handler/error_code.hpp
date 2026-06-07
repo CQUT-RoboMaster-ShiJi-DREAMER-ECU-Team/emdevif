@@ -5,22 +5,24 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_ERROR_HANDLER_ERROR_CODE_HPP
-#define EMDEVIF_CORE_ERROR_HANDLER_ERROR_CODE_HPP
+    #define EMDEVIF_CORE_ERROR_HANDLER_ERROR_CODE_HPP
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#include "emdevif/core/error_handler/fatal_handler.hpp"
+    #include "emdevif/core/error_handler/fatal_handler.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#include "emdevif/core/concepts.hpp"
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/concepts.hpp"
 
-#include <cstdint>
+        #include <cstdint>
 
-#include <concepts>
-#include <compare>
-#include <source_location>
-#include <exception>
-#endif
+        #include <concepts>
+        #include <compare>
+        #include <source_location>
+        #include <exception>
+    #endif
+
+    #include "emdevif/core/simplify_decl_macros.hpp"
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
@@ -127,16 +129,6 @@ private:
     const char* error_str_;  ///< 错误信息
 
 public:
-    /**
-     * 构造返回错误码异常
-     * @param error_code 错误码
-     * @param message 异常消息，默认为空字符串
-     */
-    explicit ErrorWithCodeException(const ErrorCode error_code, const char* message = "") noexcept
-        : ec_(error_code), error_str_(message)
-    {
-    }
-
     [[nodiscard]] const char* what() const noexcept override
     {
         return error_str_;
@@ -147,6 +139,20 @@ public:
     {
         return ec_;
     }
+
+    /**
+     * 构造返回错误码异常
+     * @attention 当且仅当编译器未关闭异常的情况才能使用。
+     * @param error_code 错误码
+     * @param message 异常消息，默认为空字符串。
+     * 注意，该字符串需要确保在异常对象的生命周期内有效，建议使用字符串字面量或全局静态字符串。
+     */
+    explicit ErrorWithCodeException(const ErrorCode error_code, const char* message = "") noexcept
+    #ifdef __cpp_exceptions
+        : ec_(error_code), error_str_(message){}
+    #else
+        = EMDEVIF_REASON_DELETE("The compiler disabled C++ exceptions.");
+    #endif
 };
 
 }  // namespace emdevif

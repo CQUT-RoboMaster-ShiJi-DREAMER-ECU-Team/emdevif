@@ -16,6 +16,8 @@
         #include <concepts>
     #endif
 
+    #include "emdevif/core/simplify_decl_macros.hpp"
+
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
@@ -50,8 +52,7 @@ class LockGuard final
 {
 public:
     LockGuard() = delete;
-    LockGuard(const LockGuard&) = delete;
-    LockGuard(LockGuard&&) = delete;
+    EMDEVIF_DELETE_COPY_AND_MOVE(LockGuard);
 
 private:
     LockType& lock_instance_;  ///< 互斥锁实例的引用
@@ -59,19 +60,28 @@ private:
 public:
     /**
      * 构造 LockGuard 并自动加锁
+     * @attention 当且仅当编译器未关闭异常的情况才能使用。如果编译器关闭了异常，请考虑使用第一个参数接收
+     * emdevif::lock_guard_do_not_lock_when_init 的重载，然后手动调用 lock/try_lock 方法
      * @tparam Args 传递给 lock 的参数类型
      * @param lock_instance 互斥锁实例
      * @param args 传递给 lock 的参数
      * @throws ErrorWithCodeException 如果加锁失败
      */
     template<typename... Args>
-    explicit LockGuard(LockType& lock_instance, Args&&... args) : lock_instance_(lock_instance)
+    explicit LockGuard(LockType& lock_instance, Args&&... args)
+    #ifdef __cpp_exceptions
+        : lock_instance_(lock_instance)
     {
         auto ret = lock_instance_.lock(std::forward<Args>(args)...);
         if (ret != ErrorCode::Success) {
             throw ErrorWithCodeException(ret, "Failed to lock");
         }
     }
+    #else
+        = EMDEVIF_REASON_DELETE(
+            "The compiler disabled C++ exceptions. Please enable it or use the first parameter to receive the "
+            "overloaded function of `emdevif::lock_guard_do_not_lock_when_init`");
+    #endif
     /**
      * @overload
      * 构造 LockGuard 但不自动加锁

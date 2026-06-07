@@ -53,6 +53,7 @@ public:
      */
     explicit constexpr Defer(FunctionType&& func) : func_(std::move(func)) {}
 
+    Defer() = delete;
     EMDEVIF_DELETE_COPY_AND_MOVE(Defer);
 
     constexpr ~Defer() noexcept
