@@ -42,10 +42,16 @@ concept MessageSlot =
     } && std::same_as<std::remove_cvref_t<decltype(T::item_size)>, std::size_t> &&
     requires(T& t,
              const T& ct,
+             T u,
              bool in_isr,
              typename T::ValueType& data,
              const typename T::ValueType& cdata,
              MessageQueueTimeout_t timeout) {
+        { u = T{T::create({.name = ""})} } noexcept -> std::same_as<T&>;
+        { T::destroy(u) } noexcept -> std::same_as<void>;
+        { T::destroy(t) } noexcept -> std::same_as<void>;
+        { u.destroy() } noexcept -> std::same_as<void>;
+
         /**
          * 强制推送数据到队列（忽略队列满的情况）
          * @param in_isr 是否在中断上下文中调用

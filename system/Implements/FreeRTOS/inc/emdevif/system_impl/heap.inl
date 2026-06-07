@@ -98,7 +98,7 @@ template<typename T>
 class Deleter
 {
 public:
-    void operator()(T* p) const
+    void operator()(T* p) const noexcept
     {
         static_assert(!std::is_void_v<T>, "can't delete pointer to incomplete type");
         static_assert(sizeof(T) > 0, "can't delete pointer to incomplete type");
@@ -153,14 +153,14 @@ public:
     }
 
     // ReSharper disable once CppMemberFunctionMayBeStatic
-    pointer allocate(const size_type n)
+    pointer allocate(const size_type n) noexcept
     {
         return static_cast<pointer>(detail::mallocByte(n * sizeof(value_type)));
     }
 
     // ReSharper disable once CppMemberFunctionMayBeStatic
     // ReSharper disable once CppParameterMayBeConst
-    void deallocate(pointer p, const size_type)
+    void deallocate(pointer p, const size_type) noexcept
     {
         detail::free(p);
     }

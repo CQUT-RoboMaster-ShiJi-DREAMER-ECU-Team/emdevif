@@ -6,17 +6,17 @@
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
 module;
 #else
-#include "emdevif/system/event_group.hpp"
+    #include "emdevif/system/event_group.hpp"
 
-#include "emdevif/core/error_handler.hpp"
+    #include "emdevif/core/error_handler.hpp"
 #endif
 
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-#include "freertos/FreeRTOS.h"
-#include "freertos/event_groups.h"
+    #include "freertos/FreeRTOS.h"
+    #include "freertos/event_groups.h"
 #else
-#include "FreeRTOS.h"
-#include "event_groups.h"
+    #include "FreeRTOS.h"
+    #include "event_groups.h"
 #endif
 
 #include <cstddef>
@@ -29,7 +29,7 @@ import emdevif.core.error_handler;
 
 namespace emdevif {
 
-EventGroup::EventGroup(EventGroupBuilder builder) : handle_(nullptr)
+EventGroup::EventGroup(EventGroupBuilder builder) noexcept : handle_(nullptr)
 {
     Handle handle;
 
@@ -45,7 +45,7 @@ EventGroup::EventGroup(EventGroupBuilder builder) : handle_(nullptr)
     handle_ = handle;
 }
 
-void EventGroup::destroy(EventGroup& obj)
+void EventGroup::destroy(EventGroup& obj) noexcept
 {
     if (obj.handle_ != nullptr) {
         vEventGroupDelete(static_cast<EventGroupHandle_t>(obj.handle_));

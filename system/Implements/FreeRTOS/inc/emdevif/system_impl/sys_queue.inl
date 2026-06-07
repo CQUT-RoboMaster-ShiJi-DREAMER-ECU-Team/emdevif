@@ -50,7 +50,7 @@ private:
 };
 
 template<typename Type, std::size_t item_size>
-SysQueue<Type, item_size>::SysQueue(SysQueueBuilder builder) : handle_(nullptr)
+SysQueue<Type, item_size>::SysQueue(SysQueueBuilder builder) noexcept : handle_(nullptr)
 {
     if (builder.static_instance != nullptr) {
         auto& static_instance = *static_cast<SysQueueStaticInstance<Type, item_size>*>(builder.static_instance);
@@ -72,7 +72,7 @@ SysQueue<Type, item_size>::SysQueue(SysQueueBuilder builder) : handle_(nullptr)
 }
 
 template<typename Type, std::size_t item_size>
-void SysQueue<Type, item_size>::destroy(SysQueue& obj)
+void SysQueue<Type, item_size>::destroy(SysQueue& obj) noexcept
 {
     if (obj.handle_ != nullptr) {
         vQueueDelete(static_cast<QueueHandle_t>(obj.handle_));

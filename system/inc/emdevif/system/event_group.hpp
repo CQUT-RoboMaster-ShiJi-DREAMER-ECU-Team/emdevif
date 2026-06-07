@@ -49,18 +49,18 @@ public:
      * 通过 Builder 构造事件组
      * @param builder Builder
      */
-    explicit EventGroup(EventGroupBuilder builder);
+    explicit EventGroup(EventGroupBuilder builder) noexcept;
 
     /**
      * 销毁事件组
      * @param obj 待销毁的事件组
      */
-    static void destroy(EventGroup& obj);
+    static void destroy(EventGroup& obj) noexcept;
 
     /**
      * 销毁事件组（自身）
      */
-    void destroy()
+    void destroy() noexcept
     {
         destroy(*this);
         handle_ = nullptr;
@@ -129,7 +129,7 @@ public:
      * 获取底层实现句柄
      * @return 底层实现句柄
      */
-    [[nodiscard]] Handle getHandle() const
+    [[nodiscard]] Handle getHandle() const noexcept
     {
         return handle_;
     }

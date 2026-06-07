@@ -61,7 +61,7 @@ public:
      * 通过 Builder 构造系统队列
      * @param builder Builder
      */
-    explicit SysQueue(SysQueueBuilder builder);
+    explicit SysQueue(SysQueueBuilder builder) noexcept;
 
     /**
      * @brief 将 Builder 原样返回，用于泛型代码中通过 QueueImpl::create({...}) 统一创建
@@ -73,9 +73,9 @@ public:
         return builder;
     }
 
-    static void destroy(SysQueue& obj);
+    static void destroy(SysQueue& obj) noexcept;
 
-    void destroy()
+    void destroy() noexcept
     {
         destroy(*this);
         handle_ = nullptr;
