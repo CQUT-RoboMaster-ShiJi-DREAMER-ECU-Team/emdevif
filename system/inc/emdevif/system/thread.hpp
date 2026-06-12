@@ -14,12 +14,15 @@
         #include "emdevif/core/fatal_handler.h"
 
         #include "emdevif/core/error_handler.hpp"
+        #include "emdevif/core/concepts.hpp"
         #include "emdevif/system/heap.hpp"
-
-        #include <cstdint>
 
         #include <tuple>
         #include <utility>
+        #include <type_traits>
+        #include <concepts>
+        #include <limits>
+        #include <functional>
     #endif
 
 namespace emdevif::detail {
@@ -123,35 +126,6 @@ private:
      */
     static constexpr auto priorityMapToSystem(ThreadPriority priority) noexcept;
 
-    /**
-     * 线程任意入口的函数包装器
-     * @tparam Func 线程的入口函数（函数返回值必须是 void，参数任意）
-     * @tparam Args 这个入口函数的参数包
-     */
-    template<typename Func, typename... Args>
-    class FuncWrapper final
-    {
-    public:
-        explicit FuncWrapper(Func&& func, Args&&... args) noexcept
-            : func_(std::forward<Func>(func)), args_(std::forward<Args>(args)...)
-        {
-        }
-
-        /**
-         * 实际传入创建线程方法的函数
-         * @param arguments 包装后的函数参数
-         */
-        static void realFunc(void* arguments) noexcept
-        {
-            auto arg_pack = static_cast<FuncWrapper*>(arguments);
-
-            std::apply(arg_pack->func_, arg_pack->args_);
-        }
-
-        Func func_;                 ///< 函数对象
-        std::tuple<Args...> args_;  ///< 函数的参数包
-    };
-
 public:
     enum class MulParam {
         mulparam
@@ -252,6 +226,23 @@ public:
      */
     static Thread create(const ThreadBuilder& builder, ThreadEntry entry, void* arguments) noexcept;
 
+private:
+    template<typename Tuple, std::size_t... Indexes>
+    static void mulParamEntryInvoker_(void* args) noexcept
+    {
+        const heap::unique_ptr<Tuple> func_invoke_data{static_cast<Tuple*>(args)};
+        Tuple& tuple = *func_invoke_data.get();
+
+        std::invoke(std::move(std::get<Indexes>(tuple))...);
+    }
+
+    template<typename Tuple, std::size_t... Indexes>
+    static constexpr auto getMulParamEntryInvoker_(std::index_sequence<Indexes...>) noexcept
+    {
+        return &mulParamEntryInvoker_<Tuple, Indexes...>;
+    }
+
+public:
     /**
      * 创建任意参数的入口函数的线程
      *
@@ -291,23 +282,24 @@ public:
      * @return 创建好的线程实例
      */
     template<typename Func, typename... Args>
+        requires(!std::same_as<std::remove_cvref_t<Func>, Thread> && !std::same_as<std::remove_cvref_t<Func>, MulParam>)
     static Thread create(const ThreadBuilder& builder, MulParam, Func&& entry, Args&&... args) noexcept
     {
-        auto func_wrapper = heap::construct<FuncWrapper<Func, Args...>>(std::nothrow,
-                                                                        std::forward<Func>(entry),
-                                                                        std::forward<Args>(args)...);
-        if (func_wrapper == nullptr) {
+        using TupleType = std::tuple<std::decay_t<Func>, std::decay_t<Args>...>;
+        auto decay_copied_args =
+            heap::make_unique<TupleType>(std::nothrow, std::forward<Func>(entry), std::forward<Args>(args)...);
+        if (decay_copied_args.get() == nullptr) {
             return Thread{};
         }
 
-        Thread t = create(builder, func_wrapper->realFunc, func_wrapper);
-        if (t.handle_ == nullptr) {
-            heap::destruct(func_wrapper);
-            return Thread{};
+        constexpr std::size_t tuple_element_count = 1U + sizeof...(Args);
+        constexpr PointerType auto invoker =
+            getMulParamEntryInvoker_<TupleType>(std::make_index_sequence<tuple_element_count>{});
+
+        auto t = create(builder, invoker, decay_copied_args.get());
+        if (t.handle_ != nullptr) {
+            decay_copied_args.release();
         }
-
-        t.func_wrapper_memory_block_ = static_cast<void*>(func_wrapper);
-
         return t;
     }
 
@@ -399,12 +391,7 @@ public:
     Thread(const Thread&) = delete;
     Thread& operator=(const Thread&) = delete;
 
-    Thread(Thread&& other) noexcept
-        : handle_(other.handle_), func_wrapper_memory_block_(other.func_wrapper_memory_block_)
-    {
-        other.handle_ = nullptr;
-        other.func_wrapper_memory_block_ = nullptr;
-    }
+    Thread(Thread&& other) noexcept : handle_(std::exchange(other.handle_, nullptr)) {}
 
     Thread& operator=(Thread&& other) noexcept
     {
@@ -417,20 +404,14 @@ public:
             return *this;
         }
 
-        this->handle_ = other.handle_;
-        this->func_wrapper_memory_block_ = other.func_wrapper_memory_block_;
-
-        other.handle_ = nullptr;
-        other.func_wrapper_memory_block_ = nullptr;
-
+        this->handle_ = std::exchange(other.handle_, nullptr);
         return *this;
     }
 
     ~Thread() noexcept;
 
 private:
-    Handle handle_;                             ///< 底层实现的句柄
-    void* func_wrapper_memory_block_{nullptr};  ///< 对任意参数的函数的包装器的内存块
+    Handle handle_;  ///< 底层实现的句柄
 };
 
 }  // namespace emdevif

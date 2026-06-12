@@ -89,12 +89,6 @@ Thread::~Thread() noexcept
         destroy(*this);
         handle_ = nullptr;
     }
-
-    if (func_wrapper_memory_block_ != nullptr) {
-        // todo 任意参数的函数包装器还是存在缺陷：只能构造，不能正确析构。待修改
-        EMDEVIF_FATAL_HANDLER("Could not delete.");
-        // heap::destruct(func_wrapper_memory_block_);
-    }
 }
 
 }  // namespace emdevif

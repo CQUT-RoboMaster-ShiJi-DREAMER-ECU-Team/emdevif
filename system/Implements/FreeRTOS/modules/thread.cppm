@@ -22,7 +22,9 @@ module;
 #include <tuple>
 #include <utility>
 #include <type_traits>
+#include <concepts>
 #include <limits>
+#include <functional>
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
@@ -30,6 +32,7 @@ export module emdevif.system.thread;
 
 import emdevif.core.error_handler;
 import emdevif.core.data_container.message_queue;
+import emdevif.core.concepts;
 import emdevif.system.heap;
 
 #ifdef __clang__

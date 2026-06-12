@@ -399,5 +399,5 @@ void threadAndMutexTest()
     RUN_SUIT(MutexTest);
     // RUN_SUIT(ThreadBasicTest);  // todo 待修改测试内容
     // RUN_SUIT(ThreadAssignAndMoveTest);
-    // RUN_SUIT(MulParamFuncTest);
+    RUN_SUIT(MulParamFuncTest);
 }
