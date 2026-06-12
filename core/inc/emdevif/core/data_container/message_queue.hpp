@@ -22,11 +22,19 @@
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
-// todo 需要增加宏配置：让这个类型可在32位或64位中选
-/**
- * @brief 超时时间类型（以 tick 为单位）
- */
-using MessageQueueTimeout_t = std::uint_fast32_t;
+    #ifndef EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS
+        #define EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS 64
+    #endif
+
+    #if (EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS == 16)
+using MessageQueueTimeout_t = uint16_t;
+    #elif (EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS == 32)
+using MessageQueueTimeout_t = uint32_t;
+    #elif (EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS == 64)
+using MessageQueueTimeout_t = uint64_t;
+    #else
+        #error "The value of macro `EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS' can only equals to 16, 32 or 64."
+    #endif
 
 /**
  * 消息槽概念

@@ -17,8 +17,10 @@
         #include "emdevif/system/thread.hpp"
 
         #include <cstdint>
+        #include <cstddef>
 
         #include <type_traits>
+        #include <concepts>
     #endif
 
 EMDEVIF_MODULE_EXPORT
@@ -189,6 +191,9 @@ private:
 };
 
 static_assert(MessageQueue<SysQueue<int, 5>>);
+
+static_assert(std::same_as<emdevif::SysTick_t, MessageQueueTimeout_t>,
+              "emdevif::SysTick_t and MessageQueueTimeout_t must be the same type.");
 
 }  // namespace emdevif
 

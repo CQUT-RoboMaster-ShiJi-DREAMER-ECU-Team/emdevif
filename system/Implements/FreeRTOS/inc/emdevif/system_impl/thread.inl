@@ -5,73 +5,69 @@
 
 #pragma once
 #ifndef EMDEVIF_FREERTOS_SYSTEM_IMPL_SYSTEM_THREAD_INL
-#define EMDEVIF_FREERTOS_SYSTEM_IMPL_SYSTEM_THREAD_INL
+    #define EMDEVIF_FREERTOS_SYSTEM_IMPL_SYSTEM_THREAD_INL
 
-#include "emdevif/core/fatal_handler.h"
+    #include "emdevif/core/fatal_handler.h"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 
-#if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-#include <cassert>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#else
-#include "FreeRTOS.h"
-#include "task.h"
-#endif
+        #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+            #include <cassert>
+            #include "freertos/FreeRTOS.h"
+            #include "freertos/task.h"
+        #else
+            #include "FreeRTOS.h"
+            #include "task.h"
+        #endif
 
-#include "emdevif/core/data_container/message_queue.hpp"
+        #include "emdevif/core/data_container/message_queue.hpp"
 
-#include <utility>
-#include <type_traits>
-#include <limits>
+        #include <utility>
+        #include <type_traits>
+        #include <limits>
 
-#endif
+    #endif
 
-#if (configMAX_PRIORITIES < 6)
-#error \
-    "emdevif thread requires the max priorities more than or equal to 6. Please change the value of macro `configMAX_PRIORITIES' in FreeRTOSConfig.h."
-#endif
+    #if (configMAX_PRIORITIES < 6)
+        #error \
+            "emdevif thread requires the max priorities more than or equal to 6. Please change the value of macro `configMAX_PRIORITIES' in FreeRTOSConfig.h."
+    #endif
 
-#if (!(defined(INCLUDE_xTaskResumeFromISR) && INCLUDE_xTaskResumeFromISR))
-#error "FreeRTOS Config `INCLUDE_xTaskResumeFromISR' should be enabled!"
-#endif
+    #if (!(defined(INCLUDE_xTaskResumeFromISR) && INCLUDE_xTaskResumeFromISR))
+        #error "FreeRTOS Config `INCLUDE_xTaskResumeFromISR' should be enabled!"
+    #endif
 
-#if (!(defined(INCLUDE_vTaskSuspend) && INCLUDE_vTaskSuspend))
-#error "FreeRTOS Config `INCLUDE_vTaskSuspend' should be enabled!"
-#endif
+    #if (!(defined(INCLUDE_vTaskSuspend) && INCLUDE_vTaskSuspend))
+        #error "FreeRTOS Config `INCLUDE_vTaskSuspend' should be enabled!"
+    #endif
 
-#if (!(defined(INCLUDE_vTaskDelete) && INCLUDE_vTaskDelete))
-#error "FreeRTOS Config `INCLUDE_vTaskDelete' should be enabled!"
-#endif
+    #if (!(defined(INCLUDE_vTaskDelete) && INCLUDE_vTaskDelete))
+        #error "FreeRTOS Config `INCLUDE_vTaskDelete' should be enabled!"
+    #endif
 
-#if (!(defined(configSUPPORT_STATIC_ALLOCATION) && configSUPPORT_STATIC_ALLOCATION))
-#error "FreeRTOS Config `configSUPPORT_STATIC_ALLOCATION' should be enabled!"
-#endif
+    #if (!(defined(configSUPPORT_STATIC_ALLOCATION) && configSUPPORT_STATIC_ALLOCATION))
+        #error "FreeRTOS Config `configSUPPORT_STATIC_ALLOCATION' should be enabled!"
+    #endif
 
-#if (!(defined(configSUPPORT_DYNAMIC_ALLOCATION) && configSUPPORT_DYNAMIC_ALLOCATION))
-#error "FreeRTOS Config `configSUPPORT_DYNAMIC_ALLOCATION' should be enabled!"
-#endif
+    #if (!(defined(configSUPPORT_DYNAMIC_ALLOCATION) && configSUPPORT_DYNAMIC_ALLOCATION))
+        #error "FreeRTOS Config `configSUPPORT_DYNAMIC_ALLOCATION' should be enabled!"
+    #endif
 
-#if (!(defined(INCLUDE_vTaskDelayUntil) && INCLUDE_vTaskDelayUntil))
-#error "FreeRTOS Config `INCLUDE_vTaskDelayUntil' should be enabled!"
-#endif
+    #if (!(defined(INCLUDE_vTaskDelayUntil) && INCLUDE_vTaskDelayUntil))
+        #error "FreeRTOS Config `INCLUDE_vTaskDelayUntil' should be enabled!"
+    #endif
 
-#if (!(defined(INCLUDE_vTaskDelay) && INCLUDE_vTaskDelay))
-#error "FreeRTOS Config `INCLUDE_vTaskDelay' should be enabled!"
-#endif
+    #if (!(defined(INCLUDE_vTaskDelay) && INCLUDE_vTaskDelay))
+        #error "FreeRTOS Config `INCLUDE_vTaskDelay' should be enabled!"
+    #endif
 
-#if (!(defined(INCLUDE_eTaskGetState) && INCLUDE_eTaskGetState))
-#error "FreeRTOS Config `INCLUDE_eTaskGetState' should be enabled!"
-#endif
+    #if (!(defined(INCLUDE_eTaskGetState) && INCLUDE_eTaskGetState))
+        #error "FreeRTOS Config `INCLUDE_eTaskGetState' should be enabled!"
+    #endif
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
-static_assert(std::is_convertible_v<emdevif::MessageQueueTimeout_t, ::TickType_t>,
-              "emdevif::MessageQueueTimeout_t must be convertible to TickType_t (for FreeRTOS)");
-static_assert(std::numeric_limits<emdevif::MessageQueueTimeout_t>::max() <= portMAX_DELAY,
-              "emdevif::MessageQueueTimeout_t should not be exceed to portMAX_DELAY");
 static_assert(std::is_same_v<SysTick_t, ::TickType_t>, "We need to keep SysTick_t same to TickType_t in FreeRTOS");
 
 template<std::size_t stack_depth>

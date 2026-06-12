@@ -19,6 +19,7 @@ module;
 #include <cstddef>
 
 #include <type_traits>
+#include <concepts>
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
