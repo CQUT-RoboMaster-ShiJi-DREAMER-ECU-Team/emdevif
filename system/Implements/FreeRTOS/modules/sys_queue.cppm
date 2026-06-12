@@ -6,11 +6,11 @@
 module;
 
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-#include "freertos/FreeRTOS.h"
-#include "freertos/queue.h"
+    #include "freertos/FreeRTOS.h"
+    #include "freertos/queue.h"
 #else
-#include "FreeRTOS.h"
-#include "queue.h"
+    #include "FreeRTOS.h"
+    #include "queue.h"
 #endif
 
 #include "emdevif/core/fatal_handler.h"
@@ -20,6 +20,7 @@ module;
 
 #include <type_traits>
 #include <concepts>
+#include <utility>
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
@@ -30,7 +31,7 @@ export import emdevif.core.data_container.message_queue;
 import emdevif.system.thread;
 
 #ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
+    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
 #endif
 
 #include "emdevif/system/sys_queue.hpp"

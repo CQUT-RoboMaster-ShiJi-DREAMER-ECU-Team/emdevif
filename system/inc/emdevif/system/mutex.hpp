@@ -5,18 +5,19 @@
 
 #pragma once
 #ifndef EMDEVIF_SYSTEM_MUTEX_HPP
-#define EMDEVIF_SYSTEM_MUTEX_HPP
+    #define EMDEVIF_SYSTEM_MUTEX_HPP
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#include "emdevif/core/fatal_handler.h"
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/fatal_handler.h"
 
-#include "emdevif/core/error_handler.hpp"
-#include "emdevif/system/thread.hpp"
+        #include "emdevif/core/error_handler.hpp"
+        #include "emdevif/system/thread.hpp"
 
-#include <cstdint>
-#endif
+        #include <cstdint>
+        #include <utility>
+    #endif
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
@@ -105,10 +106,7 @@ public:
     Mutex& operator=(const Mutex&) = delete;
     Mutex(const Mutex&) = delete;
 
-    Mutex(Mutex&& other) noexcept : handle_(other.handle_)
-    {
-        other.handle_ = nullptr;
-    }
+    Mutex(Mutex&& other) noexcept : handle_(std::exchange(other.handle_, nullptr)) {}
 
     Mutex& operator=(Mutex&& other) noexcept
     {
@@ -121,8 +119,7 @@ public:
             return *this;
         }
 
-        this->handle_ = other.handle_;
-        other.handle_ = nullptr;
+        this->handle_ = std::exchange(other.handle_, nullptr);
 
         return *this;
     }
@@ -135,6 +132,6 @@ private:
 
 }  // namespace emdevif
 
-#include "emdevif/system_impl/mutex.inl"
+    #include "emdevif/system_impl/mutex.inl"
 
 #endif  // !EMDEVIF_SYSTEM_MUTEX_HPP

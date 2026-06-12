@@ -285,6 +285,9 @@ public:
         requires(!std::same_as<std::remove_cvref_t<Func>, Thread> && !std::same_as<std::remove_cvref_t<Func>, MulParam>)
     static Thread create(const ThreadBuilder& builder, MulParam, Func&& entry, Args&&... args) noexcept
     {
+        // 参考教程：
+        // https://mq-b.github.io/ModernCpp-ConcurrentProgramming-Tutorial/md/%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90/01thread%E7%9A%84%E6%9E%84%E9%80%A0%E4%B8%8E%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90.html
+
         using TupleType = std::tuple<std::decay_t<Func>, std::decay_t<Args>...>;
         auto decay_copied_args =
             heap::make_unique<TupleType>(std::nothrow, std::forward<Func>(entry), std::forward<Args>(args)...);

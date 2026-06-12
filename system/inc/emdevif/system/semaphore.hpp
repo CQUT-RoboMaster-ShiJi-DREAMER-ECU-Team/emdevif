@@ -5,18 +5,20 @@
 
 #pragma once
 #ifndef EMDEVIF_SYSTEM_SEMAPHORE_HPP
-#define EMDEVIF_SYSTEM_SEMAPHORE_HPP
+    #define EMDEVIF_SYSTEM_SEMAPHORE_HPP
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#include "emdevif/core/fatal_handler.h"
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include "emdevif/core/fatal_handler.h"
 
-#include "emdevif/core/error_handler.hpp"
-#include "emdevif/system/thread.hpp"
+        #include "emdevif/core/error_handler.hpp"
+        #include "emdevif/system/thread.hpp"
 
-#include <cstddef>
-#endif
+        #include <cstddef>
+
+        #include <utility>
+    #endif
 
 EMDEVIF_MODULE_EXPORT
 namespace emdevif {
@@ -148,10 +150,7 @@ public:
     CountingSemaphore& operator=(const CountingSemaphore&) = delete;
     CountingSemaphore(const CountingSemaphore&) = delete;
 
-    CountingSemaphore(CountingSemaphore&& other) noexcept : handle_(other.handle_)
-    {
-        other.handle_ = nullptr;
-    }
+    CountingSemaphore(CountingSemaphore&& other) noexcept : handle_(std::exchange(other.handle_, nullptr)) {}
 
     CountingSemaphore& operator=(CountingSemaphore&& other) noexcept
     {
@@ -164,8 +163,7 @@ public:
             return *this;
         }
 
-        this->handle_ = other.handle_;
-        other.handle_ = nullptr;
+        this->handle_ = std::exchange(other.handle_, nullptr);
 
         return *this;
     }
@@ -181,6 +179,6 @@ using BinarySemaphore = CountingSemaphore<1>;
 
 }  // namespace emdevif
 
-#include "emdevif/system_impl/semaphore.inl"
+    #include "emdevif/system_impl/semaphore.inl"
 
 #endif  // !EMDEVIF_SYSTEM_SEMAPHORE_HPP

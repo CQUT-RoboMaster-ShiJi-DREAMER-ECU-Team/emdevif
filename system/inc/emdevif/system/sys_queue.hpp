@@ -19,6 +19,7 @@
         #include <cstdint>
         #include <cstddef>
 
+        #include <utility>
         #include <type_traits>
         #include <concepts>
     #endif
@@ -162,10 +163,7 @@ public:
     SysQueue& operator=(const SysQueue&) = delete;
     SysQueue(const SysQueue&) = delete;
 
-    SysQueue(SysQueue&& other) noexcept : handle_(other.handle_)
-    {
-        other.handle_ = nullptr;
-    }
+    SysQueue(SysQueue&& other) noexcept : handle_(std::exchange(other.handle_, nullptr)) {}
 
     SysQueue& operator=(SysQueue&& other) noexcept
     {
@@ -178,8 +176,7 @@ public:
             return *this;
         }
 
-        this->handle_ = other.handle_;
-        other.handle_ = nullptr;
+        this->handle_ = std::exchange(other.handle_, nullptr);
 
         return *this;
     }

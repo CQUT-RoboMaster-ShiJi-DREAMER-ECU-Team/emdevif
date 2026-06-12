@@ -5,25 +5,26 @@
 
 #pragma once
 #ifndef EMDEVIF_FREERTOS_SYSTEM_IMPL_SEMAPHORE_INL
-#define EMDEVIF_FREERTOS_SYSTEM_IMPL_SEMAPHORE_INL
+    #define EMDEVIF_FREERTOS_SYSTEM_IMPL_SEMAPHORE_INL
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-#include "freertos/FreeRTOS.h"
-#include "freertos/semphr.h"
-#else
-#include "FreeRTOS.h"
-#include "semphr.h"
-#endif
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+            #include "freertos/FreeRTOS.h"
+            #include "freertos/semphr.h"
+        #else
+            #include "FreeRTOS.h"
+            #include "semphr.h"
+        #endif
 
-#include "emdevif/core/error_handler.hpp"
+        #include "emdevif/core/error_handler.hpp"
 
-#include "emdevif/core/fatal_handler.h"
+        #include "emdevif/core/fatal_handler.h"
 
-#include <cstddef>
-#endif
+        #include <cstddef>
+        #include <utility>
+    #endif
 
 // for template<std::ptrdiff_t least_max_value> CountingSemaphore
 EMDEVIF_MODULE_EXPORT
@@ -54,7 +55,8 @@ CountingSemaphore<least_max_value>::CountingSemaphore(CountingSemaphoreBuilder b
         auto& static_instance =
             *static_cast<CountingSemaphoreStaticInstance<least_max_value>*>(builder.static_instance);
 
-        handle_ = xSemaphoreCreateCountingStatic(least_max_value, 0U, &static_cast<StaticSemaphore_t&>(static_instance));
+        handle_ =
+            xSemaphoreCreateCountingStatic(least_max_value, 0U, &static_cast<StaticSemaphore_t&>(static_instance));
     }
     else {
         handle_ = xSemaphoreCreateCounting(least_max_value, 0U);
@@ -154,10 +156,7 @@ public:
     CountingSemaphore& operator=(const CountingSemaphore&) = delete;
     CountingSemaphore(const CountingSemaphore&) = delete;
 
-    CountingSemaphore(CountingSemaphore&& other) noexcept : handle_(other.handle_)
-    {
-        other.handle_ = nullptr;
-    }
+    CountingSemaphore(CountingSemaphore&& other) noexcept : handle_(std::exchange(other.handle_, nullptr)) {}
 
     CountingSemaphore& operator=(CountingSemaphore&& other) noexcept
     {
@@ -170,8 +169,7 @@ public:
             return *this;
         }
 
-        this->handle_ = other.handle_;
-        other.handle_ = nullptr;
+        this->handle_ = std::exchange(other.handle_, nullptr);
 
         return *this;
     }

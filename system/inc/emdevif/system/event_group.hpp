@@ -18,6 +18,8 @@
         #include "emdevif/system/thread.hpp"
         #include "emdevif/core/utils/bit_int.hpp"
 
+        #include <utility>
+
         #include <cstdint>
     #endif
 
@@ -139,10 +141,7 @@ public:
     EventGroup& operator=(const EventGroup&) = delete;
     EventGroup(const EventGroup&) = delete;
 
-    EventGroup(EventGroup&& other) noexcept : handle_(other.handle_)
-    {
-        other.handle_ = nullptr;
-    }
+    EventGroup(EventGroup&& other) noexcept : handle_(std::exchange(other.handle_, nullptr)) {}
 
     EventGroup& operator=(EventGroup&& other) noexcept
     {
@@ -155,8 +154,7 @@ public:
             return *this;
         }
 
-        this->handle_ = other.handle_;
-        other.handle_ = nullptr;
+        this->handle_ = std::exchange(other.handle_, nullptr);
 
         return *this;
     }

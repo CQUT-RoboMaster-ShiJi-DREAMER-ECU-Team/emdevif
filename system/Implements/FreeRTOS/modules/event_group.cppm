@@ -6,16 +6,18 @@
 module;
 
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-#include "freertos/FreeRTOS.h"
-#include "freertos/event_groups.h"
+    #include "freertos/FreeRTOS.h"
+    #include "freertos/event_groups.h"
 #else
-#include "FreeRTOS.h"
-#include "event_groups.h"
+    #include "FreeRTOS.h"
+    #include "event_groups.h"
 #endif
 
 #include "emdevif/core/fatal_handler.h"
 
 #include <cstdint>
+
+#include <utility>
 
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
@@ -26,7 +28,7 @@ import emdevif.system.thread;
 import emdevif.core.utils.bit_int;
 
 #ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
+    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
 #endif
 
 #include "emdevif/system/event_group.hpp"
