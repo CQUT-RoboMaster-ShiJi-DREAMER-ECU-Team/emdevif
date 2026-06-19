@@ -5,18 +5,18 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_ENDIAN_HPP
-#define EMDEVIF_CORE_ENDIAN_HPP
+    #define EMDEVIF_CORE_ENDIAN_HPP
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#include <cstdint>
+    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+        #include <cstdint>
 
-#include <concepts>
-#include <bit>
-#include <array>
-#include <algorithm>
-#endif
+        #include <concepts>
+        #include <bit>
+        #include <array>
+        #include <algorithm>
+    #endif
 
 namespace emdevif {
 
@@ -29,10 +29,9 @@ namespace detail {
  * @return 反转后的值
  */
 template<typename T>
+    requires(std::has_unique_object_representations_v<T>)
 constexpr T byteSwapGeneric(T value) noexcept
 {
-    static_assert(std::has_unique_object_representations_v<T>, "T may not have padding bits");
-
     auto value_representation = std::bit_cast<std::array<std::byte, sizeof(T)>>(value);
     std::ranges::reverse(value_representation);
     return std::bit_cast<T>(value_representation);
@@ -47,30 +46,31 @@ constexpr T byteSwapGeneric(T value) noexcept
 template<std::integral T>
 constexpr T byteSwapIntegral(const T v) noexcept
 {
-#ifdef __cpp_lib_byteswap
+    #ifdef __cpp_lib_byteswap
     return std::byteswap(v);
-#else
+    #else
 
     if constexpr (sizeof(T) == 1) {
         return v;
     }
-
-    if constexpr (sizeof(T) == 2) {
+    else if constexpr (sizeof(T) == 2) {
         return ((((v) >> 8) & 0xFFU) | (((v) & 0xFFU) << 8));
     }
-    if constexpr (sizeof(T) == 4) {
+    else if constexpr (sizeof(T) == 4) {
         return ((((v) & 0xFF000000U) >> 24) | (((v) & 0x00FF0000U) >> 8) | (((v) & 0x0000FF00U) << 8) |
                 (((v) & 0x000000FFU) << 24));
     }
-    if constexpr (sizeof(T) == 8) {
+    else if constexpr (sizeof(T) == 8) {
         return ((((v) & 0xFF00000000000000ULL) >> 56) | (((v) & 0x00FF000000000000ULL) >> 40) |
                 (((v) & 0x0000FF0000000000ULL) >> 24) | (((v) & 0x000000FF00000000ULL) >> 8) |
                 (((v) & 0x00000000FF000000ULL) << 8) | (((v) & 0x0000000000FF0000ULL) << 24) |
                 (((v) & 0x000000000000FF00ULL) << 40) | (((v) & 0x00000000000000FFULL) << 56));
     }
+    else {
+        return byteSwapGeneric(v);
+    }
 
-    return byteSwapGeneric(v);
-#endif
+    #endif
 }
 
 }  // namespace detail
@@ -82,22 +82,22 @@ constexpr T byteSwapIntegral(const T v) noexcept
  * @param v 待反转端序的变量值
  * @return 反转后的值
  */
-EMDEVIF_MODULE_EXPORT template<typename T>
-constexpr T byteSwap(const T v) noexcept
+EMDEVIF_MODULE_EXPORT
+template<typename T, typename U = std::remove_cvref_t<T>>
+constexpr U byteSwap(const T v) noexcept
 {
-    if constexpr (sizeof(T) == 1) {
+    if constexpr (sizeof(U) == 1) {
         return v;
     }
-
-    constexpr std::array integral_support_size_list{2, 4, 8};
-    if constexpr (std::ranges::find(integral_support_size_list, sizeof(T))) {
-        if constexpr (!std::is_integral_v<T>) {
-            constexpr auto size_of_T = sizeof(T);
+    else if constexpr (constexpr std::array integral_support_size_list{2, 4, 8};
+                       std::ranges::find(integral_support_size_list, sizeof(U))) {
+        if constexpr (!std::is_integral_v<U>) {
+            constexpr auto size_of_U = sizeof(U);
             /* clang-format off */
             using ConvertIntegral =
-                std::conditional_t<(size_of_T <= 1U), uint8_t,
-                    std::conditional_t<(size_of_T >= 2U && size_of_T <= 3U), uint16_t,
-                        std::conditional_t<(size_of_T >= 4U && size_of_T <= 7U), uint32_t,
+                std::conditional_t<(size_of_U <= 1U), uint8_t,
+                    std::conditional_t<(size_of_U >= 2U && size_of_U <= 3U), uint16_t,
+                        std::conditional_t<(size_of_U >= 4U && size_of_U <= 7U), uint32_t,
                             uint64_t
                         >
                     >
@@ -106,14 +106,15 @@ constexpr T byteSwap(const T v) noexcept
 
             auto u = std::bit_cast<ConvertIntegral>(v);
             u = detail::byteSwapIntegral(u);
-            return std::bit_cast<T>(u);
+            return std::bit_cast<U>(u);
         }
         else {
             return detail::byteSwapIntegral(v);
         }
     }
-
-    return detail::byteSwapGeneric(v);
+    else {
+        return detail::byteSwapGeneric(v);
+    }
 }
 
 }  // namespace emdevif
