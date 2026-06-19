@@ -23,6 +23,8 @@
         #include <limits>
 
         #include "emdevif/core/fatal_handler.h"
+
+        #include "emdevif/core/error_handler.hpp"
     #endif
 
 EMDEVIF_MODULE_EXPORT
