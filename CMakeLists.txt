@@ -9,7 +9,7 @@ option(EMDEVIF_USE_CPP_MODULES "Enabled it to use C++ modules." ON)
 if (EMDEVIF_USE_CPP_MODULES)
     if (NOT (EMDEVIF_COMPILER_SUPPORT_CPP20_MODULES))
         message(FATAL_ERROR "[${PROJECT_NAME}]: EMDEVIF_USE_CPP_MODULES is ON, "
-            "but the compiler \"${CMAKE_CXX_COMPILER}\" does not support C++20 modules."
+            "but the compiler `${CMAKE_CXX_COMPILER}` does not support C++20 modules."
         )
     endif ()
 
@@ -20,10 +20,9 @@ endif ()
 
 set(emdevifAllModules "logger;timeline;system;peripheral")
 
-option(EMDEVIF_ENABLE_TESTS "Enable the test for emdevif." OFF)
 set(EMDEVIF_ENABLED_MODULES ${emdevifAllModules} CACHE STRING
-    "Set the modules to be enabled in emdevif, separated by semicolons(\'\;\'). \
-Default value is all modules(Listed in local variable `emdevifAllModules\')."
+    "Set the modules to be enabled in emdevif, separated by semicolons(`;`). \
+Default value is all modules(Listed in local variable `emdevifAllModules`)."
 )
 
 option(EMDEVIF_USE_STM32CUBEMX "Enable it will link stm32cubemx lib to emdevif" OFF)
@@ -44,13 +43,7 @@ add_subdirectory(core)
 
 add_library(${PROJECT_NAME} INTERFACE)
 
-if (EMDEVIF_ENABLE_TESTS)
-    message(STATUS "[${PROJECT_NAME}]: Enabled tests, will link all modules.")
-
-    set(emdevifFinallyEnabledModules ${emdevifAllModules})
-else ()
-    set(emdevifFinallyEnabledModules ${EMDEVIF_ENABLED_MODULES})
-endif ()
+set(emdevifFinallyEnabledModules ${EMDEVIF_ENABLED_MODULES})
 
 set(emdevifFinallyLinkedLibs "")
 foreach (moduleName IN LISTS emdevifFinallyEnabledModules)
@@ -65,8 +58,3 @@ target_link_libraries(${PROJECT_NAME} INTERFACE
     emdevif_core
     ${emdevifFinallyLinkedLibs}
 )
-
-if (EMDEVIF_ENABLE_TESTS)
-    enable_testing()
-    add_subdirectory(test)
-endif ()
