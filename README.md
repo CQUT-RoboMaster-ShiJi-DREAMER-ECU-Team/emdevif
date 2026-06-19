@@ -98,7 +98,7 @@ cmake_minimum_required(VERSION 3.28)
 project(your_project_name C CXX)
 
 add_executable(${PROJECT_NAME}
-    src/main.c
+    src/main.cpp
     # 其他源文件...
 )
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -121,7 +121,7 @@ set(CMAKE_CXX_STANDARD 20)          # 最低限制是 C++20
 set(CMAKE_CXX_SCAN_FOR_MODULES ON)  # 启用 C++ 模块支持（如果需要使用模块，则必须启用）
 
 add_executable(${PROJECT_NAME}
-    src/main.c
+    src/main.cpp
     # 其他源文件...
 )
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -174,7 +174,7 @@ set(CMAKE_CXX_STANDARD 20)          # 最低限制是 C++20
 set(CMAKE_CXX_SCAN_FOR_MODULES ON)  # 启用 C++ 模块支持（如果需要使用模块，则必须启用）
 
 add_executable(${PROJECT_NAME}
-    src/main.c
+    src/main.cpp
     # 其他源文件...
 )
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -240,7 +240,7 @@ set(CMAKE_C_STANDARD 11)            # 最低限制是 C11
 set(CMAKE_CXX_STANDARD 20)          # 最低限制是 C++20
 set(CMAKE_CXX_SCAN_FOR_MODULES ON)  # 启用 C++ 模块支持（必须设置为 ON）
 
-add_executable(${PROJECT_NAME} src/main.c)
+add_executable(${PROJECT_NAME} src/main.cpp)
 target_include_directories(${PROJECT_NAME} PRIVATE inc)
 
 include(cmake/emdevif_config.cmake)
@@ -321,7 +321,7 @@ set(CMAKE_C_STANDARD 11)             # 最低限制是 C11
 set(CMAKE_CXX_STANDARD 20)           # 最低限制是 C++20
 set(CMAKE_CXX_SCAN_FOR_MODULES OFF)  # 不使用模块，就不需要启用模块支持了
 
-add_executable(${PROJECT_NAME} src/main.c)
+add_executable(${PROJECT_NAME} src/main.cpp)
 target_include_directories(${PROJECT_NAME} PRIVATE inc)
 
 include(cmake/emdevif_config.cmake)
@@ -378,4 +378,4 @@ namespace emdevif::user_declares  // 命名空间也必须与它相同
 
 ## 测试
 
-见 [test](./test)。
+单元测试已迁移至宿主环境仓库 `rmdev-dev` 的 `tests/mock/` 目录，使用 GoogleTest 框架。详见 `rmdev-dev` 根目录 `AGENTS.md` 的宿主单元测试章节。
