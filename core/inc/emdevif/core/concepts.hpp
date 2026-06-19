@@ -23,10 +23,10 @@ namespace emdevif {
  * 有界的类型概念
  */
 template<typename T>
-concept HaveLimitType = requires {
-    std::numeric_limits<T>::max();
-    std::numeric_limits<T>::min();
-} || requires {
+concept HaveLimitType = ((std::is_arithmetic_v<T> || std::same_as<std::remove_cvref_t<T>, bool>) && requires {
+                            std::numeric_limits<T>::max();
+                            std::numeric_limits<T>::min();
+                        }) || requires {
     T::max();
     T::min();
 } || requires(T v, const T cv) {
