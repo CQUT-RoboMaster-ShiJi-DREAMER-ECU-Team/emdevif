@@ -24,10 +24,7 @@ emdevif: embedded developing interface 嵌入式开发接口。
 
 ## 模块与头文件说明
 
-rmdev、emdevif 库提供了两种导入方式：模块导入，和头文件导入。这两种方式根据您的条件来选择使用。模块导入需要您的编译器支持
-C++20
-模块，并且需要在 CMake 中启用模块支持（`set(CMAKE_CXX_SCAN_FOR_MODULES ON CACHE INTERNAL "" FORCE)`
-），它可以提供更好的编译性能和更清晰的接口；头文件导入则兼容性、LSP 更友好，但可能会导致较长的编译时间，并且会暴露部分实现细节。
+rmdev、emdevif 库提供了两种导入方式：模块导入，和头文件导入。这两种方式根据您的条件来选择使用。模块导入需要您的编译器支持 C++20 模块，并且需要在 CMake 中启用模块支持（`set(CMAKE_CXX_SCAN_FOR_MODULES ON CACHE INTERNAL "" FORCE)`），它可以提供更好的编译性能和更清晰的接口；头文件导入则兼容性、LSP 更友好，但可能会导致较长的编译时间，并且会暴露部分实现细节。
 
 条件允许的情况下，我们建议您使用模块导入的方式，这样可以获得更好的开发体验和编译性能。
 
@@ -39,7 +36,7 @@ C++20
 经测试，目前对模块支持较好的开发环境只有启用了 Nova 引擎的 CLion 2024.2 以及之后的版本，其他 IDE（例如 Visual
 Studio、VSCode）可能存在一些问题，例如无法正确识别模块接口、无法正确解析模块间的依赖关系等。
 
-**在启用模块的情况下，请勿同时引入头文件**（除了一些特殊情况，会有相应的说明），否则可能导致编译失败。
+**在启用模块的情况下，请勿对同一库同时以 `import` 和 `#include` 方式引入**（除了文档明确说明的特殊情况），否则可能导致 ODR 或编译失败。整个项目可以在不同目标间分别选择 `import` 或 `#include`，但建议通过统一的 `EMDEVIF_USE_CPP_MODULES` 开关保持一致。
 
 模块的命名与头文件的命名方式完全一致，例如：
 
@@ -328,15 +325,17 @@ include(cmake/emdevif_config.cmake)
 target_link_libraries(${PROJECT_NAME} PRIVATE emdevif)
 
 # 添加用户自定义的实现模块
-# 根据您的需求决定库的类型，如果时纯头文件库，则使用 INTERFACE 类型；如果实现包含源文件，则使用 STATIC 或 SHARED 类型。
+# 根据您的需求决定库的类型，如果是纯头文件库，则使用 INTERFACE 类型；如果实现包含源文件，则使用 STATIC 或 SHARED 类型。
 # 这里以纯头文件库为例：
 add_library(emdevif_user_declares INTERFACE)
 target_include_directories(emdevif_user_declares INTERFACE
     emdevif_collection/emdevif_user_declares/inc  # 包含用户自定义的实现模块的头文件路径
 )
+# 一旦以 #include 方式提供 emdevif_user_declares 时，都不能定义 EMDEVIF_USER_DECLARES_PROVIDE_MODULE。
+# 该宏仅在使用 .cppm 模块方式提供时才需要定义，与库类型（INTERFACE / STATIC / SHARED）无关。
 # target_compile_definitions(emdevif_user_declares PUBLIC
 #     EMDEVIF_USER_DECLARES_PROVIDE_MODULE=1
-# )  # 使用头文件时，**不能**定义这个宏，否则 emdevif 的模块会错误地认为用户提供了一个模块实现，从而在导入时产生错误。
+# )
 target_link_libraries(emdevif_user_declares
     # 可以链接其他库
     # 注意，部分库（相应库的文档会有说明）不能在这里链接，否则会产生循环依赖。

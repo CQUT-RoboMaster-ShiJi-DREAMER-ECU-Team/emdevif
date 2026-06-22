@@ -62,7 +62,7 @@ void app_main() {
 ```cpp
 #include <string_view>
 
-import emdevif.container.arrayMap;  // makeStaticMap 函数需要
+import emdevif.core.data_container.array_map;  // makeStaticMap 函数需要
 import emdevif.peripheral.model.serial;
 
 import emdevif.stm32Peripheral.hal.usart;  // 示例使用的库

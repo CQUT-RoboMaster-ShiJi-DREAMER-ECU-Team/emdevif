@@ -82,7 +82,7 @@ public:
 
 - `emdevif_user_declares` **不可链接** `emdevif_peripheral` 或 `emdevif_peripheral_impl_`，否则循环依赖
 - `emdevif_user_declares` 可以链接 `emdevif_peripheral_model`（仅模型定义，不含实现）
-- 用户侧同样不可导入 `emdevif.peripheral.*` 模块（含 impl），但可导入 `emdevif.peripheral.model.*`
+- 用户侧同样不可导入 `emdevif.peripheral.*` 模块（含 impl）及 `emdevif.peripheralHandleMap`，但可导入 `emdevif.peripheral.model.*`
 
 ## 开发约束
 - Model 的 `Instance` 结构体必须保持 `standard_layout`（有 `static_assert` 验证）
