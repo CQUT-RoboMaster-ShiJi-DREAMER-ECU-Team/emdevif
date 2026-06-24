@@ -7,9 +7,6 @@
 #ifndef EMDEVIF_CORE_DATA_CONTAINER_ARRAY_MAP_STATIC_MAP_HPP
 #define EMDEVIF_CORE_DATA_CONTAINER_ARRAY_MAP_STATIC_MAP_HPP
 
-#include "emdevif/core/detail/config.hpp"
-
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #include "emdevif/core/fatal_handler.h"
 #include "emdevif/core/error_handler.hpp"
 
@@ -17,9 +14,8 @@
 #include <array>
 #include <algorithm>
 #include <iterator>
-#endif
 
-EMDEVIF_MODULE_EXPORT
+
 namespace emdevif {
 
 /**

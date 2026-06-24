@@ -7,16 +7,12 @@
 #ifndef EMDEVIF_CORE_CONCEPTS_HPP
     #define EMDEVIF_CORE_CONCEPTS_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include <type_traits>
         #include <concepts>
         #include <compare>
         #include <limits>
-    #endif
 
-EMDEVIF_MODULE_EXPORT
+
 namespace emdevif {
 
 /**

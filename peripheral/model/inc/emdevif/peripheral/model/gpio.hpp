@@ -7,15 +7,11 @@
 #ifndef EMDEVIF_PERIPHERAL_MODEL_GPIO_HPP
     #define EMDEVIF_PERIPHERAL_MODEL_GPIO_HPP
 
-    #include "emdevif/core/detail/config.hpp"
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include <cstdint>
 
         #include <type_traits>
-    #endif
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 /// @brief GPIO 模型抽象类：定义 GPIO 外设的数据结构与函数接口类型

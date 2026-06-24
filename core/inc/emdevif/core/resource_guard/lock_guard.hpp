@@ -7,18 +7,14 @@
 #ifndef EMDEVIF_CORE_RESOURCE_GUARD_LOCK_GUARD_HPP
     #define EMDEVIF_CORE_RESOURCE_GUARD_LOCK_GUARD_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/error_handler.hpp"
 
         #include <utility>
         #include <concepts>
-    #endif
 
     #include "emdevif/core/simplify_decl_macros.hpp"
 
-EMDEVIF_MODULE_EXPORT
+
 namespace emdevif {
 
 /**
@@ -29,7 +25,7 @@ enum class LockGuardDoNotLockWhenInit {
 };
 
 /// 互斥锁守卫标记常量（构造时不自动加锁）
-constexpr auto lock_guard_do_not_lock_when_init = LockGuardDoNotLockWhenInit::tag_value_;
+constexpr inline auto lock_guard_do_not_lock_when_init = LockGuardDoNotLockWhenInit::tag_value_;
 
 /**
  * @brief 有效互斥锁类型概念

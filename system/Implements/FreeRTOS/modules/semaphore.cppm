@@ -13,21 +13,15 @@ module;
     #include "semphr.h"
 #endif
 
-#include "emdevif/core/fatal_handler.h"
-
-#include <cstddef>
-
-#include <utility>
-
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
 export module emdevif.system.semaphore;
 
-import emdevif.core.error_handler;
-import emdevif.system.thread;
-
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
 #include "emdevif/system/semaphore.hpp"
+
+export namespace emdevif {
+using ::emdevif::CountingSemaphoreStaticInstance;
+using ::emdevif::CountingSemaphoreBuilder;
+using ::emdevif::CountingSemaphore;
+using ::emdevif::BinarySemaphore;
+}

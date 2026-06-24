@@ -27,7 +27,6 @@
     #endif
 
 // for template<std::ptrdiff_t least_max_value> CountingSemaphore
-EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 template<std::ptrdiff_t least_max_value>
@@ -117,7 +116,6 @@ CountingSemaphore<least_max_value>::~CountingSemaphore() noexcept
 }  // namespace emdevif
 
 // for template<> CountingSemaphore<1>
-EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 template<>

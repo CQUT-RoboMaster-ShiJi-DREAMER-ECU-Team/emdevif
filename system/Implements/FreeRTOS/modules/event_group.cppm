@@ -13,22 +13,14 @@ module;
     #include "event_groups.h"
 #endif
 
-#include "emdevif/core/fatal_handler.h"
-
-#include <cstdint>
-
-#include <utility>
-
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
 export module emdevif.system.event_group;
 
-import emdevif.core.error_handler;
-import emdevif.system.thread;
-import emdevif.core.utils.bit_int;
-
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
 #include "emdevif/system/event_group.hpp"
+
+export namespace emdevif {
+using ::emdevif::EventGroupStaticInstance;
+using ::emdevif::EventGroupBuilder;
+using ::emdevif::EventGroup;
+}

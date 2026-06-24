@@ -7,16 +7,12 @@
 #ifndef EMDEVIF_CORE_TYPE_TRAITS_TUPLE_STYLE_HPP
 #define EMDEVIF_CORE_TYPE_TRAITS_TUPLE_STYLE_HPP
 
-#include "emdevif/core/detail/config.hpp"
-
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #include "boost/pfr.hpp"
 
 #include <type_traits>
 #include <utility>
 #include <tuple>
 #include <array>
-#endif
 
 namespace emdevif {
 
@@ -161,8 +157,6 @@ constexpr bool is_same_tuple_style_v = is_same_tuple_style<T, U>::value;
 
 }  // namespace detail
 
-EMDEVIF_MODULE_EXPORT_BEGIN
-
 /**
  * @page diff_tuple_like_and_tuple_style 类似元组与元组形式类型的区别
  * **类似元组（tuple_like）** 与 **元组形式（tuple_style）** 的区别
@@ -242,8 +236,6 @@ using is_same_tuple_style = detail::is_same_tuple_style<T, U>;
 template<typename T, typename U>
 constexpr bool is_same_tuple_style_v = detail::is_same_tuple_style_v<T, U>;
 
-EMDEVIF_MODULE_EXPORT_END
-
 namespace detail {
 
 template<typename Agg, typename Tuple, std::size_t... I>
@@ -253,8 +245,6 @@ constexpr Agg tuple_to_agg_impl(Tuple&& t, std::index_sequence<I...>) noexcept
 }
 
 }  // namespace detail
-
-EMDEVIF_MODULE_EXPORT_BEGIN
 
 /**
  * 类似元组类型转化为聚合类型
@@ -295,8 +285,6 @@ constexpr auto aggregate_to_pair(const Agg& a) noexcept
 {
     return std::make_pair(boost::pfr::get<0>(a), boost::pfr::get<1>(a));
 }
-
-EMDEVIF_MODULE_EXPORT_END
 
 }  // namespace emdevif
 

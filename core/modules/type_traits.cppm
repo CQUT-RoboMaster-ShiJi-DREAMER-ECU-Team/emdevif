@@ -10,14 +10,19 @@ module;
 #include <tuple>
 #include <array>
 
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/type_traits.hpp"
 
 export module emdevif.core.type_traits;
 
-import boost.pfr;
-
-#ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/core/type_traits.hpp"
+export namespace emdevif {
+    using ::emdevif::is_consteval;
+    using ::emdevif::is_tuple_like;
+    using ::emdevif::is_tuple_like_v;
+    using ::emdevif::is_tuple_style;
+    using ::emdevif::is_tuple_style_v;
+    using ::emdevif::is_same_tuple_style;
+    using ::emdevif::is_same_tuple_style_v;
+    using ::emdevif::tuple_to_aggregate;
+    using ::emdevif::aggregate_to_tuple;
+    using ::emdevif::aggregate_to_pair;
+}

@@ -7,11 +7,8 @@
 #ifndef EMDEVIF_SYSTEM_EVENT_GROUP_HPP
     #define EMDEVIF_SYSTEM_EVENT_GROUP_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
     #include "emdevif/system_impl/event_group_definitions.hpp"
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/fatal_handler.h"
 
         #include "emdevif/core/error_handler.hpp"
@@ -21,9 +18,7 @@
         #include <utility>
 
         #include <cstdint>
-    #endif
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 /**

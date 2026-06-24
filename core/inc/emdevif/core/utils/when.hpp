@@ -7,17 +7,11 @@
 #ifndef EMDEVIF_CORE_UTILS_WHEN_HPP
     #define EMDEVIF_CORE_UTILS_WHEN_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include <utility>
         #include <type_traits>
         #include <concepts>
-    #endif
 
 namespace emdevif {
-
-EMDEVIF_MODULE_EXPORT_BEGIN
 
 /// 默认标签类型
 struct default_tag_t {
@@ -25,8 +19,6 @@ struct default_tag_t {
 
 /// 默认标签，用于 when 表达式里
 inline constexpr default_tag_t default_tag{};
-
-EMDEVIF_MODULE_EXPORT_END
 
 namespace detail {
 
@@ -150,7 +142,6 @@ inline constexpr bool is_nothrow_when_args_v = IsNothrowWhenArgs<Args...>::value
  * @attention when 表达式的参数应该成对出现（case/default 标签 + lambda），并且如果使用了 default
  * 标签，那么它必须是最后一对参数
  */
-EMDEVIF_MODULE_EXPORT
 template<typename T, typename... Args>
 constexpr decltype(auto) when(const T& v, Args&&... args) noexcept(detail::is_nothrow_when_args_v<Args...>)
 {

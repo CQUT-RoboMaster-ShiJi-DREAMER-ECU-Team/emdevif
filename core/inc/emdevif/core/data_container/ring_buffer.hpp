@@ -7,9 +7,6 @@
 #ifndef EMDEVIF_CORE_DATA_CONTAINER_RING_BUFFER_HPP
 #define EMDEVIF_CORE_DATA_CONTAINER_RING_BUFFER_HPP
 
-#include "emdevif/core/detail/config.hpp"
-
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #include <cstdint>
 #include <cstring>
 
@@ -17,9 +14,8 @@
 #include <concepts>
 #include <span>
 #include <type_traits>
-#endif
 
-EMDEVIF_MODULE_EXPORT
+
 namespace emdevif {
 
 /**

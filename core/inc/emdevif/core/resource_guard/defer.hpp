@@ -7,17 +7,13 @@
 #ifndef EMDEVIF_CORE_RESOURCE_GUARD_DEFER_HPP
     #define EMDEVIF_CORE_RESOURCE_GUARD_DEFER_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include <utility>
         #include <concepts>
         #include <functional>
-    #endif
 
     #include "emdevif/core/simplify_decl_macros.hpp"
 
-EMDEVIF_MODULE_EXPORT
+
 namespace emdevif {
 
 /**

@@ -5,26 +5,14 @@
 
 module;
 
-#include "emdevif/core/fatal_handler.h"
-
-#include <cstring>
-
-#include <utility>
-#include <type_traits>
-#include <concepts>
-#include <array>
-#include <algorithm>
-#include <iterator>
-#include <functional>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/data_container/array_map.hpp"
 
 export module emdevif.core.data_container.array_map;
 
-import emdevif.core.error_handler;
-
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/core/data_container/array_map.hpp"
+export namespace emdevif {
+    using ::emdevif::ArrayMap;
+    using ::emdevif::makeArrayMap;
+    using ::emdevif::erase_if;
+    using ::emdevif::StaticMap;
+    using ::emdevif::makeStaticMap;
+}

@@ -7,9 +7,7 @@
 #ifndef EMDEVIF_PERIPHERAL_PERIPHERAL_HANDLE_MAP_HPP
     #define EMDEVIF_PERIPHERAL_PERIPHERAL_HANDLE_MAP_HPP
 
-    #include "emdevif/core/detail/config.hpp"
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/detail/include_emdevif_user_declares_in_headers.hpp"
 
         #include "emdevif/core/type_traits.hpp"
@@ -19,7 +17,6 @@
         #include <type_traits>
 
         #include "emdevif/core/simplify_decl_macros.hpp"
-    #endif
 
 namespace emdevif {
 
@@ -31,7 +28,7 @@ static_assert(
     "makeStaticMap<std::string_view, void*>\'.");
 
 /// @brief 外设句柄映射查找工具类，通过编译期静态映射表根据名称查找外设句柄
-EMDEVIF_MODULE_EXPORT class PeripheralHandleMap
+class PeripheralHandleMap
 {
 public:
     PeripheralHandleMap() = delete;

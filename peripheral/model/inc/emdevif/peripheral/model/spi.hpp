@@ -7,18 +7,14 @@
 #ifndef EMDEVIF_PERIPHERAL_MODEL_SPI_HPP
     #define EMDEVIF_PERIPHERAL_MODEL_SPI_HPP
 
-    #include "emdevif/core/detail/config.hpp"
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/error_handler.hpp"
 
         #include <cstdint>
 
         #include <span>
         #include <type_traits>
-    #endif
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 /// @brief SPI 通信模型抽象类，定义 SPI 外设的数据结构与函数接口类型

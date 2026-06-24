@@ -7,13 +7,9 @@
 #ifndef EMDEVIF_CORE_INTEGER_SUFFIX_HPP
 #define EMDEVIF_CORE_INTEGER_SUFFIX_HPP
 
-#include "emdevif/core/detail/config.hpp"
-
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #include <cstdint>
-#endif
 
-EMDEVIF_MODULE_EXPORT
+
 namespace emdevif::inline literals::inline integer_literals {
 
 /** @brief 构造 uint8_t 字面量 */

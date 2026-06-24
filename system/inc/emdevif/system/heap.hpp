@@ -7,19 +7,14 @@
 #ifndef EMDEVIF_SYSTEM_HEAP_HPP
     #define EMDEVIF_SYSTEM_HEAP_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
     #include "emdevif/core/simplify_decl_macros.hpp"
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/concepts.hpp"
 
         #include <memory>
         #include <utility>
         #include <type_traits>
-    #endif
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif::heap {
 
 /**

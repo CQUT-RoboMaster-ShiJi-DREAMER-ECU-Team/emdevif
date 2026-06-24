@@ -7,24 +7,20 @@
 #ifndef EMDEVIF_CORE_ERROR_HANDLER_ERROR_CODE_HPP
     #define EMDEVIF_CORE_ERROR_HANDLER_ERROR_CODE_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
     #include "emdevif/core/error_handler/fatal_handler.hpp"
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/concepts.hpp"
 
-        #include <cstdint>
+    #include <cstdint>
 
-        #include <concepts>
-        #include <compare>
-        #include <source_location>
-        #include <exception>
-    #endif
+    #include <concepts>
+    #include <compare>
+    #include <source_location>
+    #include <exception>
 
     #include "emdevif/core/simplify_decl_macros.hpp"
 
-EMDEVIF_MODULE_EXPORT
+
 namespace emdevif {
 
 /**

@@ -5,20 +5,10 @@
 
 module;
 
-#include <utility>
-#include <type_traits>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/system/sys_message_slot.hpp"
 
 export module emdevif.system.sys_message_slot;
 
-import emdevif.system.thread;
-export import emdevif.system.sys_queue;
-export import emdevif.core.data_container.message_queue;
-import emdevif.core.error_handler;
-
-#ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/system/sys_message_slot.hpp"
+export namespace emdevif {
+using ::emdevif::SysMessageSlot;
+}

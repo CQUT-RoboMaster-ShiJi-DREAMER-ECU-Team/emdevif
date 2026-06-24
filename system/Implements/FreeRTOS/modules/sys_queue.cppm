@@ -13,25 +13,14 @@ module;
     #include "queue.h"
 #endif
 
-#include "emdevif/core/fatal_handler.h"
-
-#include <cstdint>
-#include <cstddef>
-
-#include <type_traits>
-#include <concepts>
-#include <utility>
-
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
 export module emdevif.system.sys_queue;
 
-import emdevif.core.error_handler;
-export import emdevif.core.data_container.message_queue;
-import emdevif.system.thread;
-
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
 #include "emdevif/system/sys_queue.hpp"
+
+export namespace emdevif {
+using ::emdevif::SysQueueStaticInstance;
+using ::emdevif::SysQueueBuilder;
+using ::emdevif::SysQueue;
+}

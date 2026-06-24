@@ -5,21 +5,10 @@
 
 module;
 
-#include <string_view>
-#include <type_traits>
-
-#include "emdevif/core/simplify_decl_macros.hpp"
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/peripheral/peripheral_handle_map.hpp"
 
 export module emdevif.peripheral.peripheral_handle_map;
 
-import emdevif.core.type_traits;
-import emdevif.user_declares;
-import emdevif.core.data_container.array_map;
-
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/peripheral/peripheral_handle_map.hpp"
+export namespace emdevif {
+using ::emdevif::PeripheralHandleMap;
+}

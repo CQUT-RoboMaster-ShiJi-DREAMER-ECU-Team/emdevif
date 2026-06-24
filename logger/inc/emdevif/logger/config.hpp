@@ -7,8 +7,6 @@
 #ifndef EMDEVIF_LOGGER_CONFIG_HPP
     #define EMDEVIF_LOGGER_CONFIG_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
     #ifdef EMDEVIF_LOGGER_CONFIG_FILE
         #include EMDEVIF_LOGGER_CONFIG_FILE
     #endif

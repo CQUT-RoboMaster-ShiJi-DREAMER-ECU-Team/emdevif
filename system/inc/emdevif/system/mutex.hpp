@@ -7,9 +7,6 @@
 #ifndef EMDEVIF_SYSTEM_MUTEX_HPP
     #define EMDEVIF_SYSTEM_MUTEX_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/fatal_handler.h"
 
         #include "emdevif/core/error_handler.hpp"
@@ -17,9 +14,7 @@
 
         #include <cstdint>
         #include <utility>
-    #endif
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 /**

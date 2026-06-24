@@ -7,18 +7,14 @@
 #ifndef EMDEVIF_CORE_RESOURCE_GUARD_INIT_GUARD_HPP
     #define EMDEVIF_CORE_RESOURCE_GUARD_INIT_GUARD_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/error_handler.hpp"
 
         #include <utility>
         #include <concepts>
-    #endif
 
     #include "emdevif/core/simplify_decl_macros.hpp"
 
-EMDEVIF_MODULE_EXPORT
+
 namespace emdevif {
 
 /**
@@ -40,7 +36,7 @@ enum class InitGuardDoNotInitObjectTag {
 };
 
 /// 初始化守卫标记常量（不自动初始化对象）
-constexpr auto init_guard_do_not_init_object_tag = InitGuardDoNotInitObjectTag::value_;
+constexpr inline auto init_guard_do_not_init_object_tag = InitGuardDoNotInitObjectTag::value_;
 
 /**
  * @brief RAII 风格的 init/deInit 自动管理守卫

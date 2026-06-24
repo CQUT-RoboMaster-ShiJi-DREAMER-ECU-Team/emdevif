@@ -5,17 +5,13 @@
 
 module;
 
-#include <utility>
-#include <concepts>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/resource_guard/init_guard.hpp"
 
 export module emdevif.core.resource_guard.init_guard;
 
-import emdevif.core.error_handler;
-
-#ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/core/resource_guard/init_guard.hpp"
+export namespace emdevif {
+    using ::emdevif::ValidHaveInitDeInitPairObject;
+    using ::emdevif::InitGuardDoNotInitObjectTag;
+    using ::emdevif::init_guard_do_not_init_object_tag;
+    using ::emdevif::InitGuard;
+}

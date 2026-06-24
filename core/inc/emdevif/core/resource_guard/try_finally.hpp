@@ -7,15 +7,12 @@
 #ifndef EMDEVIF_CORE_RESOURCE_GUARD_TRY_FINALLY_HPP
     #define EMDEVIF_CORE_RESOURCE_GUARD_TRY_FINALLY_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include <utility>
         #include <concepts>
         #include <functional>
-    #endif
+        #include "emdevif/core/resource_guard/defer.hpp"
 
-EMDEVIF_MODULE_EXPORT
+
 namespace emdevif {
 
 /**

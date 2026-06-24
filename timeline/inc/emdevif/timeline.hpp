@@ -7,22 +7,17 @@
 #ifndef EMDEVIF_TIMELINE_HPP
     #define EMDEVIF_TIMELINE_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/detail/include_emdevif_user_declares_in_headers.hpp"
         #include "emdevif/core/simplify_decl_macros.hpp"
 
         #include <cstdint>
 
         #include <type_traits>
-    #endif
 
     #ifndef EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS
         #define EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS false
     #endif
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 /// 时间点类型

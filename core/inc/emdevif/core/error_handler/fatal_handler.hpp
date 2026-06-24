@@ -7,34 +7,30 @@
 #ifndef EMDEVIF_CORE_ERROR_HANDLER_FATAL_HANDLER_HPP
 #define EMDEVIF_CORE_ERROR_HANDLER_FATAL_HANDLER_HPP
 
-#include "emdevif/core/detail/config.hpp"
-
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #include "emdevif/core/attributes_and_useful_macros.h"
 
 #include <cstdarg>
 
 #include <type_traits>
-#endif
 
 namespace emdevif {
 
 /**
  * 终止程序的函数指针类型
  */
-EMDEVIF_MODULE_EXPORT using TerminateFunction = void(*)();
+using TerminateFunction = void(*)();
 
 /**
  * 终止整个程序
  */
-EMDEVIF_MODULE_EXPORT EMDEVIF_NO_RETURN void terminate();
+EMDEVIF_NO_RETURN void terminate();
 
 /**
  * 注册终止函数（不具备线程安全性，建议只在初始化的时候调用）。
  * 如果不调用这个函数，那么将调用默认的终止函数。
  * @param func 终止函数。注意该函数不能返回，否则是未定义行为。
  */
-EMDEVIF_MODULE_EXPORT void registerTerminateFunction(TerminateFunction func) noexcept;
+void registerTerminateFunction(TerminateFunction func) noexcept;
 
 /**
  * 致命错误回调函数指针
@@ -43,7 +39,7 @@ EMDEVIF_MODULE_EXPORT void registerTerminateFunction(TerminateFunction func) noe
  * @param format 将会传入消息的格式化字符串
  * @param args 将会传入填充占位符的可变参列表
  */
-EMDEVIF_MODULE_EXPORT using FatalHandlerCallBack =
+using FatalHandlerCallBack =
     void(*)(const char* file, int line, const char* format, std::va_list args);
 
 /**
@@ -55,7 +51,7 @@ EMDEVIF_MODULE_EXPORT using FatalHandlerCallBack =
  * @param format 错误信息的格式化字符串
  * @param args 填充占位符的可变参列表
  */
-EMDEVIF_MODULE_EXPORT EMDEVIF_NO_RETURN void fatalHandler(const char* file,
+EMDEVIF_NO_RETURN void fatalHandler(const char* file,
                                                           int line,
                                                           const char* format,
                                                           std::va_list args) noexcept;
@@ -64,7 +60,7 @@ EMDEVIF_MODULE_EXPORT EMDEVIF_NO_RETURN void fatalHandler(const char* file,
  * @overload
  * @param ... 填充占位符的值
  */
-EMDEVIF_MODULE_EXPORT EMDEVIF_NO_RETURN void fatalHandler(const char* file, int line, const char* format, ...) noexcept
+EMDEVIF_NO_RETURN void fatalHandler(const char* file, int line, const char* format, ...) noexcept
     EMDEVIF_FORMAT_CHECK(printf, 3, 4);
 
 /**
@@ -72,12 +68,12 @@ EMDEVIF_MODULE_EXPORT EMDEVIF_NO_RETURN void fatalHandler(const char* file, int 
  * 如果不调用这个函数，那么将不会有额外的处理，直接调用 terminate。
  * @param callback 回调函数
  */
-EMDEVIF_MODULE_EXPORT void registerFatalHandler(FatalHandlerCallBack callback) noexcept;
+void registerFatalHandler(FatalHandlerCallBack callback) noexcept;
 
 /**
  * 断言失败处理函数指针类型
  */
-EMDEVIF_MODULE_EXPORT using AssertFailedHandler =
+using AssertFailedHandler =
     void(*)(const char* file, int line, const char* func_name, const char* condition_name, const char* message);
 
 namespace detail {
@@ -105,7 +101,7 @@ extern AssertFailedHandler assertFailedHandler;
  * @param condition_name 表达式名称
  * @param message 信息
  */
-EMDEVIF_MODULE_EXPORT constexpr void emdevif_assert(const bool condition,
+constexpr void emdevif_assert(const bool condition,
                                                     const char* file,
                                                     const int line,
                                                     const char* func_name,
@@ -148,7 +144,7 @@ EMDEVIF_MODULE_EXPORT constexpr void emdevif_assert(const bool condition,
  * 如果不调用这个函数，那么将调用默认的断言失败处理函数。
  * @param handler 回调函数
  */
-EMDEVIF_MODULE_EXPORT void registerAssertFailedHandler(AssertFailedHandler handler) noexcept;
+void registerAssertFailedHandler(AssertFailedHandler handler) noexcept;
 
 }  // namespace emdevif
 

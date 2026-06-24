@@ -5,24 +5,16 @@
 
 module;
 
-#include <compare>
-#include <concepts>
-#include <cstddef>
-#include <iterator>
-#include <ranges>
-#include <string_view>
-#include <limits>
-
-#include "emdevif/core/fatal_handler.h"
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/data_container/fixed_string.hpp"
 
 export module emdevif.core.data_container.fixed_string;
 
-import emdevif.core.error_handler;
-
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/core/data_container/fixed_string.hpp"
+export namespace emdevif {
+    using ::emdevif::BasicFixedString;
+    using ::emdevif::FixedString;
+    using ::emdevif::FixedU8String;
+    using ::emdevif::FixedU16String;
+    using ::emdevif::FixedU32String;
+    using ::emdevif::FixedWString;
+    using ::emdevif::swap;
+}

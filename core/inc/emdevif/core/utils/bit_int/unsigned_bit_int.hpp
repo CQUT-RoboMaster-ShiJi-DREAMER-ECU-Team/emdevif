@@ -7,10 +7,8 @@
 #ifndef EMDEVIF_CORE_UTILS_BIT_INT_UNSIGNED_BIT_INT_HPP
     #define EMDEVIF_CORE_UTILS_BIT_INT_UNSIGNED_BIT_INT_HPP
 
-    #include "emdevif/core/detail/config.hpp"
     #include "emdevif/core/utils/bit_int/basic_config.hpp"
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/concepts.hpp"
         #include "emdevif/core/utils/bit_int/detail/exception_config.hpp"
 
@@ -19,9 +17,8 @@
         #include <concepts>
         #include <iostream>
         #include <compare>
-    #endif
 
-EMDEVIF_MODULE_EXPORT
+
 namespace emdevif {
 
 /**

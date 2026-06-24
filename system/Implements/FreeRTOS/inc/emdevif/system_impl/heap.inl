@@ -35,7 +35,6 @@ inline void free(void* block) noexcept
 
 }  // namespace emdevif::heap::detail
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif::heap {
 
     #ifdef __cpp_exceptions

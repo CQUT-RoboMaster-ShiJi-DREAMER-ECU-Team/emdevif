@@ -5,14 +5,19 @@
 
 module;
 
-#include <cstdint>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/integer_suffix.hpp"
 
 export module emdevif.core.integer_suffix;
 
-#ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/core/integer_suffix.hpp"
+export namespace emdevif::inline literals::inline integer_literals {
+    using ::emdevif::operator""_u8;
+    using ::emdevif::operator""_u16;
+    using ::emdevif::operator""_u32;
+    using ::emdevif::operator""_u64;
+    using ::emdevif::operator""_i8;
+    using ::emdevif::operator""_i16;
+    using ::emdevif::operator""_i32;
+    using ::emdevif::operator""_i64;
+    using ::emdevif::operator""_ptrdiff;
+    using ::emdevif::operator""_zu;
+}

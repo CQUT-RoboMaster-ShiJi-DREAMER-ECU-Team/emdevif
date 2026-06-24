@@ -7,7 +7,7 @@
 #ifndef EMDEVIF_PERIPHERAL_DETAIL_PERIPHERAL_ERROR_HANDLER_HPP
     #define EMDEVIF_PERIPHERAL_DETAIL_PERIPHERAL_ERROR_HANDLER_HPP
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
+
         #include <string_view>
         #include <type_traits>
 
@@ -15,7 +15,6 @@
         #include "emdevif/core/error_handler.hpp"
 
         #include "emdevif/core/fatal_handler.h"
-    #endif
 
 namespace emdevif::detail {
 

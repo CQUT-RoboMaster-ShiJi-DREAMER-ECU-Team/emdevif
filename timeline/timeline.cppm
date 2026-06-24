@@ -10,21 +10,12 @@ module;
 #endif
 
 #include "emdevif/core/simplify_decl_macros.hpp"
-
-#include <cstdint>
-
-#include <type_traits>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/timeline.hpp"
 
 export module emdevif.timeline;
 
-#ifdef EMDEVIF_USER_DECLARES_PROVIDE_MODULE
-import emdevif.user_declares;
-#endif
-
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/timeline.hpp"
+export namespace emdevif {
+using ::emdevif::BaseTimePoint;
+using ::emdevif::Timeline;
+using ::emdevif::Duration;
+}

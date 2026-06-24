@@ -5,20 +5,11 @@
 
 module;
 
-#include <cstdint>
-#include <cstring>
-
-#include <array>
-#include <concepts>
-#include <span>
-#include <type_traits>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/data_container/ring_buffer.hpp"
 
 export module emdevif.core.data_container.ring_buffer;
 
-#ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/core/data_container/ring_buffer.hpp"
+export namespace emdevif {
+    using ::emdevif::RingUnsigned;
+    using ::emdevif::RingBuffer;
+}

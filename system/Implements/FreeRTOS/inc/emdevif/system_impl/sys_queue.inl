@@ -25,7 +25,6 @@
         #include <cstddef>
     #endif
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 template<typename Type, std::size_t item_size>

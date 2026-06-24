@@ -7,25 +7,20 @@
 #ifndef EMDEVIF_CORE_UTILS_BIT_INT_BASIC_CONFIG_HPP
     #define EMDEVIF_CORE_UTILS_BIT_INT_BASIC_CONFIG_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include <cstdint>
         #include <type_traits>
         #include <concepts>
-    #endif
 
 namespace emdevif {
 
 /**
  * @brief 位宽类型，用于表示整数的位数
  */
-EMDEVIF_MODULE_EXPORT using BitsType_t = uint_fast8_t;
+using BitsType_t = uint_fast8_t;
 
 /**
  * @brief 有效的 BitInt 位宽概念，限制位宽不超过 64
  */
-EMDEVIF_MODULE_EXPORT
 template<BitsType_t bits>
 concept ValidBitIntWidth = (bits <= 64U);
 

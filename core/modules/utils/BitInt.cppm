@@ -5,25 +5,13 @@
 
 module;
 
-#include <cstdint>
-
-#include <type_traits>
-#include <concepts>
-#include <bit>
-#include <numeric>
-#include <iostream>
-#include <compare>
-
-#include "emdevif/core/utils/bit_int/detail/exception_config.hpp"
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/utils/bit_int.hpp"
 
 export module emdevif.core.utils.bit_int;
 
-import emdevif.core.concepts;
-
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/core/utils/bit_int.hpp"
+export namespace emdevif {
+    using ::emdevif::BitsType_t;
+    using ::emdevif::ValidBitIntWidth;
+    using ::emdevif::BitInt;
+    using ::emdevif::UBitInt;
+}

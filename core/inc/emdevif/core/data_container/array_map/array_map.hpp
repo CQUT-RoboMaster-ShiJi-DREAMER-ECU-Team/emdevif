@@ -7,9 +7,6 @@
 #ifndef EMDEVIF_CORE_DATA_CONTAINER_ARRAY_MAP_ARRAY_MAP_HPP
 #define EMDEVIF_CORE_DATA_CONTAINER_ARRAY_MAP_ARRAY_MAP_HPP
 
-#include "emdevif/core/detail/config.hpp"
-
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #include "emdevif/core/fatal_handler.h"
 #include "emdevif/core/error_handler.hpp"
 
@@ -22,9 +19,8 @@
 #include <iterator>
 #include <concepts>
 #include <functional>
-#endif
 
-EMDEVIF_MODULE_EXPORT
+
 namespace emdevif {
 
 /**
@@ -359,7 +355,7 @@ concept ValidArrayMapEraseIfPred = requires(Callable callable, const Arg& arg) {
  * @param pred 谓词函数
  * @return 移除的元素个数
  */
-EMDEVIF_MODULE_EXPORT template<typename KeyType,
+template<typename KeyType,
                                typename ValueType,
                                std::size_t max_size,
                                typename KeyEqual = std::equal_to<KeyType>,

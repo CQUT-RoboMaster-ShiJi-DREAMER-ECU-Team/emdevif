@@ -5,19 +5,10 @@
 
 module;
 
-#include <cstdint>
-
-#include <span>
-#include <type_traits>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/peripheral/model/can.hpp"
 
 export module emdevif.peripheral.model.can;
 
-import emdevif.core.error_handler;
-
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/peripheral/model/can.hpp"
+export namespace emdevif {
+using ::emdevif::CanModel;
+}

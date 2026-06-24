@@ -7,16 +7,12 @@
 #ifndef EMDEVIF_CORE_ENDIAN_HPP
     #define EMDEVIF_CORE_ENDIAN_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include <cstdint>
 
         #include <concepts>
         #include <bit>
         #include <array>
         #include <algorithm>
-    #endif
 
 namespace emdevif {
 
@@ -82,7 +78,6 @@ constexpr T byteSwapIntegral(const T v) noexcept
  * @param v 待反转端序的变量值
  * @return 反转后的值
  */
-EMDEVIF_MODULE_EXPORT
 template<typename T, typename U = std::remove_cvref_t<T>>
 constexpr U byteSwap(const T v) noexcept
 {

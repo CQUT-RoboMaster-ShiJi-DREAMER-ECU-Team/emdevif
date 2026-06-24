@@ -5,16 +5,10 @@
 
 module;
 
-#include <cstdint>
-
-#include <type_traits>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/peripheral/model/timer.hpp"
 
 export module emdevif.peripheral.model.timer;
 
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/peripheral/model/timer.hpp"
+export namespace emdevif {
+using ::emdevif::TimerModel;
+}

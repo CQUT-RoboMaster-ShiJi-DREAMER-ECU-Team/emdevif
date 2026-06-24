@@ -7,9 +7,6 @@
 #ifndef EMDEVIF_SYSTEM_THREAD_HPP
     #define EMDEVIF_SYSTEM_THREAD_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/attributes_and_useful_macros.h"
         #include "emdevif/core/fatal_handler.h"
 
@@ -23,13 +20,11 @@
         #include <concepts>
         #include <limits>
         #include <functional>
-    #endif
 
 namespace emdevif::detail {
 class ThreadTypeChecker;  // 前向声明
 }
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
     #ifndef EMDEVIF_SYS_TICK_TYPE_UINT_BITS

@@ -7,21 +7,16 @@
 #ifndef EMDEVIF_SYSTEM_ATOMIC_HPP
 #define EMDEVIF_SYSTEM_ATOMIC_HPP
 
-#include "emdevif/core/detail/config.hpp"
-
 #ifndef EMDEVIF_USE_STL_ATOMIC
 #define EMDEVIF_USE_STL_ATOMIC true
 #endif
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #if (EMDEVIF_USE_STL_ATOMIC)
 #include <atomic>
 #endif
-#endif
 
 #if (EMDEVIF_USE_STL_ATOMIC)
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 /**

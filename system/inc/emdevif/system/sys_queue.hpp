@@ -7,9 +7,6 @@
 #ifndef EMDEVIF_SYSTEM_SYS_QUEUE_HPP
     #define EMDEVIF_SYSTEM_SYS_QUEUE_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/fatal_handler.h"
 
         #include "emdevif/core/error_handler.hpp"
@@ -22,9 +19,7 @@
         #include <utility>
         #include <type_traits>
         #include <concepts>
-    #endif
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 /**

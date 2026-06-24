@@ -9,12 +9,9 @@
 
     #include "emdevif/logger/config.hpp"
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include <cstdint>
         #include <cstdarg>
-    #endif
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif::logger {
 
 /// @brief 日志工作模式枚举。

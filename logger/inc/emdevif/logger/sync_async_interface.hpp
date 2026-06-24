@@ -9,16 +9,13 @@
 
 #include "emdevif/logger/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #include "emdevif/core/fatal_handler.h"
 #include "emdevif/core/error_handler.hpp"
 
 #include <cstdarg>
 
 #include <utility>
-#endif
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif::logger {
 
 inline emdevif::ErrorCode init(const detail::VsnprintfImpl vsprintf_impl) noexcept

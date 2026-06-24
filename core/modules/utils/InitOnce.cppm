@@ -5,17 +5,10 @@
 
 module;
 
-#include <type_traits>
-#include <utility>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/utils/init_once.hpp"
 
 export module emdevif.core.utils.init_once;
 
-import emdevif.core.error_handler;
-
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/core/utils/init_once.hpp"
+export namespace emdevif {
+    using ::emdevif::InitOnce;
+}

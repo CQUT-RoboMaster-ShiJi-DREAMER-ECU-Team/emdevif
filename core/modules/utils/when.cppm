@@ -5,16 +5,12 @@
 
 module;
 
-#include <utility>
-#include <type_traits>
-#include <concepts>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/utils/when.hpp"
 
 export module emdevif.core.utils.when;
 
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/core/utils/when.hpp"
+export namespace emdevif {
+    using ::emdevif::default_tag_t;
+    using ::emdevif::default_tag;
+    using ::emdevif::when;
+}

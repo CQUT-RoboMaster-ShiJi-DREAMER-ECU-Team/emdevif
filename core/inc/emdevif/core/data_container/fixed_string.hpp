@@ -11,9 +11,6 @@
 #ifndef EMDEVIF_CORE_DATA_CONTAINER_FIXED_STRING_HPP
     #define EMDEVIF_CORE_DATA_CONTAINER_FIXED_STRING_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include <compare>
         #include <concepts>
         #include <cstddef>
@@ -25,9 +22,8 @@
         #include "emdevif/core/fatal_handler.h"
 
         #include "emdevif/core/error_handler.hpp"
-    #endif
 
-EMDEVIF_MODULE_EXPORT
+
 namespace emdevif {
 
 /**

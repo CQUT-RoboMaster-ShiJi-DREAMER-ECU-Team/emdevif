@@ -5,19 +5,10 @@
 
 module;
 
-#include <cstdint>
-
-#include <concepts>
-#include <bit>
-#include <array>
-#include <algorithm>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/endian.hpp"
 
 export module emdevif.core.endian;
 
-#ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/core/endian.hpp"
+export namespace emdevif {
+    using ::emdevif::byteSwap;
+}

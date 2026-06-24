@@ -5,11 +5,7 @@
 
 module;
 
-#include "emdevif/core/attributes_and_useful_macros.h"
-#include "emdevif/core/fatal_handler.h"
-
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-#include <cassert>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #else
@@ -17,26 +13,19 @@ module;
 #include "task.h"
 #endif
 
-#include <cstdint>
-
-#include <tuple>
-#include <utility>
-#include <type_traits>
-#include <concepts>
-#include <limits>
-#include <functional>
-
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
 export module emdevif.system.thread;
 
-import emdevif.core.error_handler;
-import emdevif.core.data_container.message_queue;
-import emdevif.core.concepts;
-import emdevif.system.heap;
-
-#ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
+#include "emdevif/core/attributes_and_useful_macros.h"
+#include "emdevif/core/fatal_handler.h"
 #include "emdevif/system/thread.hpp"
+
+export namespace emdevif {
+using ::emdevif::SysTick_t;
+using ::emdevif::ThreadEntry;
+using ::emdevif::ThreadPriority;
+using ::emdevif::ThreadStaticInstance;
+using ::emdevif::ThreadBuilder;
+using ::emdevif::Thread;
+}

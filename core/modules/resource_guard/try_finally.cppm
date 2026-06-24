@@ -5,18 +5,12 @@
 
 module;
 
-#include <utility>
-#include <concepts>
-#include <functional>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/resource_guard/try_finally.hpp"
 
 export module emdevif.core.resource_guard.try_finally;
 
-import emdevif.core.resource_guard.defer;
-
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/core/resource_guard/try_finally.hpp"
+export namespace emdevif {
+    using ::emdevif::ValidTryFunction;
+    using ::emdevif::ValidFinallyFunction;
+    using ::emdevif::tryFinally;
+}

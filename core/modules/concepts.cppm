@@ -5,17 +5,13 @@
 
 module;
 
-#include <type_traits>
-#include <concepts>
-#include <compare>
-#include <limits>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/concepts.hpp"
 
 export module emdevif.core.concepts;
 
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/core/concepts.hpp"
+export namespace emdevif {
+    using ::emdevif::HaveLimitType;
+    using ::emdevif::ArithmeticType;
+    using ::emdevif::FloatingPointType;
+    using ::emdevif::PointerType;
+}

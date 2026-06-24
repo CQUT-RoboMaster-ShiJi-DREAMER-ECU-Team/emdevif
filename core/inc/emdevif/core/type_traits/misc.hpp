@@ -7,13 +7,9 @@
 #ifndef EMDEVIF_CORE_TYPE_TRAITS_MISC_HPP
 #define EMDEVIF_CORE_TYPE_TRAITS_MISC_HPP
 
-#include "emdevif/core/detail/config.hpp"
-
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #include <type_traits>
-#endif
 
-EMDEVIF_MODULE_EXPORT namespace emdevif {
+namespace emdevif {
 
 /**
  * 判断表达式是否处于编译期求值上下文

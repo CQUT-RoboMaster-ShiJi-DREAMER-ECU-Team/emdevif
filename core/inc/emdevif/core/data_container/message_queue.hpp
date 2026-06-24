@@ -7,9 +7,6 @@
 #ifndef EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_HPP
     #define EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/error_handler.hpp"
 
         #include <cstdint>
@@ -17,9 +14,8 @@
 
         #include <concepts>
         #include <type_traits>
-    #endif
 
-EMDEVIF_MODULE_EXPORT
+
 namespace emdevif {
 
     #ifndef EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS

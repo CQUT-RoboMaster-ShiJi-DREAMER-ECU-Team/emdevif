@@ -65,7 +65,6 @@
         #error "FreeRTOS Config `INCLUDE_eTaskGetState' should be enabled!"
     #endif
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 static_assert(std::is_same_v<SysTick_t, ::TickType_t>, "We need to keep SysTick_t same to TickType_t in FreeRTOS");

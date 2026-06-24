@@ -5,16 +5,10 @@
 
 module;
 
-#include <cstdint>
-
-#include <type_traits>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/peripheral/model/gpio.hpp"
 
 export module emdevif.peripheral.model.gpio;
 
-#ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/peripheral/model/gpio.hpp"
+export namespace emdevif {
+using ::emdevif::GpioModel;
+}

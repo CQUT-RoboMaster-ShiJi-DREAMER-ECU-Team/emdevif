@@ -9,16 +9,13 @@
 
 #include "emdevif/logger/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #include "emdevif/core/fatal_handler.h"
 #include "emdevif/core/error_handler.hpp"
 
 #include "emdevif/core/detail/include_emdevif_user_declares_in_headers.hpp"
 
 #include <cstdarg>
-#endif
 
-EMDEVIF_MODULE_EXPORT
 namespace emdevif::logger {
 
 template<typename... Args>

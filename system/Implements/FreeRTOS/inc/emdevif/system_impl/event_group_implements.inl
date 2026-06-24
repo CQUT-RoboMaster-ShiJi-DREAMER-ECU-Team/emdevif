@@ -24,7 +24,6 @@
 #endif
 
 namespace emdevif {
-EMDEVIF_MODULE_EXPORT_BEGIN
 
 class EventGroupStaticInstance
 {
@@ -134,7 +133,6 @@ inline ErrorCode EventGroup::sync(const EventBits_t bits_to_set,
     return ErrorCode::Timeout;
 }
 
-EMDEVIF_MODULE_EXPORT_END
 }  // namespace emdevif
 
 #endif  // !EMDEVIF_FREERTOS_SYSTEM_IMPL_EVENT_GROUP_IMPLEMENTS_INL

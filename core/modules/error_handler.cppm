@@ -5,24 +5,22 @@
 
 module;
 
-#include "emdevif/core/attributes_and_useful_macros.h"
-
-#include <cstdint>
-#include <cstdarg>
-
-#include <concepts>
-#include <compare>
-#include <source_location>
-#include <exception>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/core/error_handler.hpp"
 
 export module emdevif.core.error_handler;
 
-import emdevif.core.concepts;
-
-#ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/core/error_handler.hpp"
+export namespace emdevif {
+    using ::emdevif::TerminateFunction;
+    using ::emdevif::terminate;
+    using ::emdevif::registerTerminateFunction;
+    using ::emdevif::FatalHandlerCallBack;
+    using ::emdevif::fatalHandler;
+    using ::emdevif::registerFatalHandler;
+    using ::emdevif::AssertFailedHandler;
+    using ::emdevif::emdevif_assert;
+    using ::emdevif::registerAssertFailedHandler;
+    using ::emdevif::ErrorCode;
+    using ::emdevif::terminateIfNotSucceed;
+    using ::emdevif::terminateIfNullptr;
+    using ::emdevif::ErrorWithCodeException;
+}

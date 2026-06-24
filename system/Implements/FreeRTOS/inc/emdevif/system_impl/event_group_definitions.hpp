@@ -7,9 +7,6 @@
 #ifndef EMDEVIF_FREERTOS_SYSTEM_IMPL_EVENT_GROUP_DEFINITIONS_HPP
 #define EMDEVIF_FREERTOS_SYSTEM_IMPL_EVENT_GROUP_DEFINITIONS_HPP
 
-#include "emdevif/core/detail/config.hpp"
-
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
@@ -21,7 +18,6 @@
 #include "emdevif/core/utils/bit_int.hpp"
 
 #include <cstdint>
-#endif
 
 namespace emdevif::detail {
 

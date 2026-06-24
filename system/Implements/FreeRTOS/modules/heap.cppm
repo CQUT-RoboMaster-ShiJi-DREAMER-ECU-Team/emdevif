@@ -11,18 +11,17 @@ module;
 #include "FreeRTOS.h"
 #endif
 
-#include <memory>
-#include <utility>
-#include <type_traits>
-
 #define EMDEVIF_MODULE_INTERFACE_UNIT
 
 export module emdevif.system.heap;
 
-import emdevif.core.concepts;
-
-#ifdef __clang__
-#pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
 #include "emdevif/system/heap.hpp"
+
+export namespace emdevif::heap {
+using ::emdevif::heap::construct;
+using ::emdevif::heap::destruct;
+using ::emdevif::heap::Deleter;
+using ::emdevif::heap::unique_ptr;
+using ::emdevif::heap::make_unique;
+using ::emdevif::heap::Allocator;
+}

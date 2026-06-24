@@ -3,19 +3,11 @@
  * @brief 错误处理
  */
 
-#if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
-module;
-#else
 #include "emdevif/core/error_handler.hpp"
-#endif
 
 #include "emdevif/core/attributes_and_useful_macros.h"
 
 #include <cstdarg>
-
-#if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
-module emdevif.core.error_handler;
-#endif
 
 namespace emdevif {
 

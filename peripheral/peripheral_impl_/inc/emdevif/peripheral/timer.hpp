@@ -7,10 +7,8 @@
 #ifndef EMDEVIF_PERIPHERAL_TIMER_HPP
     #define EMDEVIF_PERIPHERAL_TIMER_HPP
 
-    #include "emdevif/core/detail/config.hpp"
     #include "emdevif/peripheral/detail/peripheral_error_handler.hpp"
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/peripheral/peripheral_handle_map.hpp"
         #include "emdevif/peripheral/model/timer.hpp"
         #include "emdevif/core/error_handler.hpp"
@@ -20,9 +18,6 @@
         #include <string_view>
 
         #include "emdevif/core/fatal_handler.h"
-    #endif
-
-EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 /// @brief 定时器外设封装类，通过句柄映射访问底层定时器外设并封装定时操作

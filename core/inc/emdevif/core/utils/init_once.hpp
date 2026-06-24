@@ -7,16 +7,12 @@
 #ifndef EMDEVIF_CORE_UTILS_INIT_ONCE_HPP
     #define EMDEVIF_CORE_UTILS_INIT_ONCE_HPP
 
-    #include "emdevif/core/detail/config.hpp"
-
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/core/error_handler.hpp"
 
         #include <type_traits>
         #include <utility>
-    #endif
 
-EMDEVIF_MODULE_EXPORT
+
 namespace emdevif {
 
 /**

@@ -5,19 +5,10 @@
 
 module;
 
-#include <cstdint>
-
-#include <span>
-#include <type_traits>
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/peripheral/model/spi.hpp"
 
 export module emdevif.peripheral.model.spi;
 
-import emdevif.core.error_handler;
-
-#ifdef __clang__
-    #pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
-#endif
-
-#include "emdevif/peripheral/model/spi.hpp"
+export namespace emdevif {
+using ::emdevif::SpiModel;
+}

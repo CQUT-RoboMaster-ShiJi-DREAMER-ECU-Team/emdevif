@@ -7,10 +7,8 @@
 #ifndef EMDEVIF_PERIPHERAL_SPI_HPP
     #define EMDEVIF_PERIPHERAL_SPI_HPP
 
-    #include "emdevif/core/detail/config.hpp"
     #include "emdevif/peripheral/detail/peripheral_error_handler.hpp"
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
         #include "emdevif/peripheral/peripheral_handle_map.hpp"
         #include "emdevif/peripheral/model/spi.hpp"
         #include "emdevif/core/error_handler.hpp"
@@ -23,9 +21,6 @@
         #include <type_traits>
 
         #include "emdevif/core/fatal_handler.h"
-    #endif
-
-EMDEVIF_MODULE_EXPORT
 namespace emdevif {
 
 /// @brief SPI 通信外设封装类，通过句柄映射访问底层 SPI 外设并封装全双工收发操作
