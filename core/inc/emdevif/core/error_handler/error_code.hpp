@@ -13,6 +13,7 @@
 #include <concepts>
 #include <exception>
 #include <source_location>
+#include <utility>
 
 #include "emdevif/core/concepts.hpp"
 #include "emdevif/core/error_handler/fatal_handler.hpp"
@@ -65,6 +66,17 @@ public:
     }
 
     constexpr std::strong_ordering operator<=>(const ErrorCode&) const noexcept = default;
+
+    /**
+     * 转化为底层类型
+     *
+     * 等价于 `static_cast<std::underlying_type_t<ErrorCodeValue>>(value_)`
+     * @return 底层类型的值
+     */
+    [[nodiscard]] constexpr decltype(auto) toUnderlying() const noexcept
+    {
+        return static_cast<std::underlying_type_t<ErrorCodeValue>>(value_);
+    }
 
     /**
      * 如果未成功（值不是 ErrorCode::Success），终止程序
