@@ -18,7 +18,7 @@ namespace emdevif {
 /**
  * 终止程序的函数指针类型
  */
-using TerminateFunction = void(*)();
+using TerminateFunction = void (*)();
 
 /**
  * 终止整个程序
@@ -39,8 +39,7 @@ void registerTerminateFunction(TerminateFunction func) noexcept;
  * @param format 将会传入消息的格式化字符串
  * @param args 将会传入填充占位符的可变参列表
  */
-using FatalHandlerCallBack =
-    void(*)(const char* file, int line, const char* format, std::va_list args);
+using FatalHandlerCallBack = void (*)(const char* file, int line, const char* format, std::va_list args);
 
 /**
  * 致命错误处理函数
@@ -51,10 +50,7 @@ using FatalHandlerCallBack =
  * @param format 错误信息的格式化字符串
  * @param args 填充占位符的可变参列表
  */
-EMDEVIF_NO_RETURN void fatalHandler(const char* file,
-                                                          int line,
-                                                          const char* format,
-                                                          std::va_list args) noexcept;
+EMDEVIF_NO_RETURN void fatalHandler(const char* file, int line, const char* format, std::va_list args) noexcept;
 
 /**
  * @overload
@@ -74,14 +70,15 @@ void registerFatalHandler(FatalHandlerCallBack callback) noexcept;
  * 断言失败处理函数指针类型
  */
 using AssertFailedHandler =
-    void(*)(const char* file, int line, const char* func_name, const char* condition_name, const char* message);
+    void (*)(const char* file, int line, const char* func_name, const char* condition_name, const char* message);
 
 namespace detail {
 
 /**
  * 断言失败处理函数指针（编译期初始化为默认的断言失败处理函数）
  *
- * @attention 如果编译器报错提示 'emdevif::detail::assertFailedHandler@@emdevif.core.error_handler' was not declared 'constexpr'，
+ * @attention 如果编译器报错提示 'emdevif::detail::assertFailedHandler@@emdevif.core.error_handler' was not declared
+ * 'constexpr'，
  * 这不是框架的设计错误，而是某处的断言在常量求值上下文中失败了，需要用户检查函数传入的参数是否符合断言条件。
  */
 extern AssertFailedHandler assertFailedHandler;
@@ -102,11 +99,11 @@ extern AssertFailedHandler assertFailedHandler;
  * @param message 信息
  */
 constexpr void emdevif_assert(const bool condition,
-                                                    const char* file,
-                                                    const int line,
-                                                    const char* func_name,
-                                                    const char* condition_name,
-                                                    const char* message = "") noexcept
+                              const char* file,
+                              const int line,
+                              const char* func_name,
+                              const char* condition_name,
+                              const char* message = "") noexcept
 {
     // 把这个函数设置为 constexpr 是为了在常量求值上下文中也能够使用
 

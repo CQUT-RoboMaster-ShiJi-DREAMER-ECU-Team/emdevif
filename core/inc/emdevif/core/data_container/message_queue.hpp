@@ -5,32 +5,32 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_HPP
-    #define EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_HPP
+#define EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_HPP
 
-        #include <cstddef>
-        #include <cstdint>
+#include <cstddef>
+#include <cstdint>
 
-        #include <concepts>
-        #include <type_traits>
+#include <concepts>
+#include <type_traits>
 
-        #include "emdevif/core/error_handler.hpp"
-
+#include "emdevif/core/error_handler.hpp"
 
 namespace emdevif {
 
-    #ifndef EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS
-        #define EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS 64
-    #endif
+#ifndef EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS
+#define EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS 64
+#endif
 
-    #if (EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS == 16)
+#if (EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS == 16)
 using MessageQueueTimeout_t = uint16_t;
-    #elif (EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS == 32)
+#elif (EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS == 32)
 using MessageQueueTimeout_t = uint32_t;
-    #elif (EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS == 64)
+#elif (EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS == 64)
 using MessageQueueTimeout_t = uint64_t;
-    #else
-        #error "The value of macro `EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS' can only equals to 16, 32 or 64."
-    #endif
+#else
+#error \
+    "The value of macro `EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_TIMEOUT_TYPE_BITS' can only equals to 16, 32 or 64."
+#endif
 
 /**
  * 消息槽概念

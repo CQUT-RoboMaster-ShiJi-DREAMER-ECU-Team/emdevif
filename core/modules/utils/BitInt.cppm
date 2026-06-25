@@ -10,8 +10,8 @@ module;
 export module emdevif.core.utils.bit_int;
 
 export namespace emdevif {
-    using ::emdevif::BitsType_t;
-    using ::emdevif::ValidBitIntWidth;
-    using ::emdevif::BitInt;
-    using ::emdevif::UBitInt;
-}
+using ::emdevif::BitInt;
+using ::emdevif::BitsType_t;
+using ::emdevif::UBitInt;
+using ::emdevif::ValidBitIntWidth;
+}  // namespace emdevif

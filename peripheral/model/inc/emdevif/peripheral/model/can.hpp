@@ -5,15 +5,14 @@
 
 #pragma once
 #ifndef EMDEVIF_PERIPHERAL_MODEL_CAN_HPP
-    #define EMDEVIF_PERIPHERAL_MODEL_CAN_HPP
+#define EMDEVIF_PERIPHERAL_MODEL_CAN_HPP
 
+#include <cstdint>
 
-        #include <cstdint>
+#include <span>
+#include <type_traits>
 
-        #include <span>
-        #include <type_traits>
-
-        #include "emdevif/core/error_handler.hpp"
+#include "emdevif/core/error_handler.hpp"
 
 namespace emdevif {
 

@@ -9,21 +9,20 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_DATA_CONTAINER_FIXED_STRING_HPP
-    #define EMDEVIF_CORE_DATA_CONTAINER_FIXED_STRING_HPP
+#define EMDEVIF_CORE_DATA_CONTAINER_FIXED_STRING_HPP
 
-        #include <cstddef>
+#include <cstddef>
 
-        #include <compare>
-        #include <concepts>
-        #include <iterator>
-        #include <limits>
-        #include <ranges>
-        #include <string_view>
+#include <compare>
+#include <concepts>
+#include <iterator>
+#include <limits>
+#include <ranges>
+#include <string_view>
 
-        #include "emdevif/core/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
-        #include "emdevif/core/error_handler.hpp"
-
+#include "emdevif/core/error_handler.hpp"
 
 namespace emdevif {
 

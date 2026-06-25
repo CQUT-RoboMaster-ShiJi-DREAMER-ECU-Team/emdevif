@@ -5,13 +5,12 @@
 
 #pragma once
 #ifndef EMDEVIF_PERIPHERAL_MODEL_TIMER_HPP
-    #define EMDEVIF_PERIPHERAL_MODEL_TIMER_HPP
+#define EMDEVIF_PERIPHERAL_MODEL_TIMER_HPP
 
+#include <cstdint>
 
-        #include <cstdint>
-
-        #include <span>
-        #include <type_traits>
+#include <span>
+#include <type_traits>
 
 namespace emdevif {
 

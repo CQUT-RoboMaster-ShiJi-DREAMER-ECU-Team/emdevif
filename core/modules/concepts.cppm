@@ -10,8 +10,8 @@ module;
 export module emdevif.core.concepts;
 
 export namespace emdevif {
-    using ::emdevif::HaveLimitType;
-    using ::emdevif::ArithmeticType;
-    using ::emdevif::FloatingPointType;
-    using ::emdevif::PointerType;
-}
+using ::emdevif::ArithmeticType;
+using ::emdevif::FloatingPointType;
+using ::emdevif::HaveLimitType;
+using ::emdevif::PointerType;
+}  // namespace emdevif

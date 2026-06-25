@@ -10,7 +10,7 @@ module;
 export module emdevif.core.resource_guard.try_finally;
 
 export namespace emdevif {
-    using ::emdevif::ValidTryFunction;
-    using ::emdevif::ValidFinallyFunction;
-    using ::emdevif::tryFinally;
-}
+using ::emdevif::tryFinally;
+using ::emdevif::ValidFinallyFunction;
+using ::emdevif::ValidTryFunction;
+}  // namespace emdevif

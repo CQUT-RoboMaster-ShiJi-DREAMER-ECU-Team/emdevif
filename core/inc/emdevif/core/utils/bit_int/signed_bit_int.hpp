@@ -5,21 +5,20 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_UTILS_BIT_INT_SIGNED_BIT_INT_HPP
-    #define EMDEVIF_CORE_UTILS_BIT_INT_SIGNED_BIT_INT_HPP
+#define EMDEVIF_CORE_UTILS_BIT_INT_SIGNED_BIT_INT_HPP
 
-    #include "emdevif/core/utils/bit_int/basic_config.hpp"
+#include "emdevif/core/utils/bit_int/basic_config.hpp"
 
-        #include <cstdint>
+#include <cstdint>
 
-        #include <bit>
-        #include <compare>
-        #include <concepts>
-        #include <iostream>
-        #include <numeric>
+#include <bit>
+#include <compare>
+#include <concepts>
+#include <iostream>
+#include <numeric>
 
-        #include "emdevif/core/concepts.hpp"
-        #include "emdevif/core/utils/bit_int/detail/exception_config.hpp"
-
+#include "emdevif/core/concepts.hpp"
+#include "emdevif/core/utils/bit_int/detail/exception_config.hpp"
 
 namespace emdevif {
 
@@ -223,11 +222,11 @@ public:
     {
         const auto rhs_signed = transToSigned(rhs.value);
 
-    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
+#if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (rhs_signed == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-    #endif
+#endif
 
         return (static_cast<SignedType>(lhs) / rhs_signed);
     }
@@ -240,11 +239,11 @@ public:
     {
         const auto rhs_signed = transToSigned(rhs.value);
 
-    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
+#if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (rhs_signed == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-    #endif
+#endif
 
         return (static_cast<SignedType>(lhs) % rhs_signed);
     }
@@ -338,11 +337,11 @@ public:
     {
         const auto other_signed = static_cast<SignedType>(other);
 
-    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
+#if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (other_signed == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-    #endif
+#endif
 
         return *this = *this / other_signed;
     }
@@ -354,11 +353,11 @@ public:
     {
         const auto other_signed = static_cast<SignedType>(other);
 
-    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
+#if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (other_signed == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-    #endif
+#endif
 
         return *this = *this % other_signed;
     }

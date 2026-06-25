@@ -5,17 +5,16 @@
 
 #pragma once
 #ifndef EMDEVIF_PERIPHERAL_PERIPHERAL_HANDLE_MAP_HPP
-    #define EMDEVIF_PERIPHERAL_PERIPHERAL_HANDLE_MAP_HPP
+#define EMDEVIF_PERIPHERAL_PERIPHERAL_HANDLE_MAP_HPP
 
+#include <string_view>
 
-        #include <string_view>
-
-        #include "emdevif/core/simplify_decl_macros.hpp"
+#include "emdevif/core/simplify_decl_macros.hpp"
 
 namespace emdevif {
 
 namespace user_impl::peripheral_handle_map {
-    void* findHandle(std::string_view name) noexcept;
+void* findHandle(std::string_view name) noexcept;
 }
 
 /// @brief 外设句柄映射查找工具类，通过用户提供的 findHandle 函数根据名称查找外设句柄

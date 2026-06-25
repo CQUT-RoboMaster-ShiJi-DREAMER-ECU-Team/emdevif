@@ -5,12 +5,12 @@
 
 #pragma once
 #ifndef EMDEVIF_LOGGER_CONFIG_VALUES_HPP
-    #define EMDEVIF_LOGGER_CONFIG_VALUES_HPP
+#define EMDEVIF_LOGGER_CONFIG_VALUES_HPP
 
-    #include <cstdarg>
-        #include <cstdint>
+#include <cstdarg>
+#include <cstdint>
 
-        #include "emdevif/logger/config.hpp"
+#include "emdevif/logger/config.hpp"
 
 namespace emdevif::logger {
 
@@ -67,7 +67,7 @@ constexpr const char* toCString(const LoggerLevel logger_level) noexcept
     }
 }
 
-    #if (EMDEVIF_LOGGER_MODE == 0 || EMDEVIF_LOGGER_MODE == 1)
+#if (EMDEVIF_LOGGER_MODE == 0 || EMDEVIF_LOGGER_MODE == 1)
 // ReSharper disable once CppRedundantCastExpression
 /// @brief 当前配置的单条日志缓冲区大小（字节）。
 constexpr auto logger_buffer_size = static_cast<std::size_t>(EMDEVIF_LOGGER_BUFFER_SIZE);
@@ -75,7 +75,7 @@ constexpr auto logger_buffer_size = static_cast<std::size_t>(EMDEVIF_LOGGER_BUFF
 // ReSharper disable once CppRedundantCastExpression
 /// @brief 当前配置的日志缓冲区数量。
 constexpr auto logger_buffer_count = static_cast<std::size_t>(EMDEVIF_LOGGER_BUFFER_COUNT);
-    #endif
+#endif
 
 }  // namespace emdevif::logger
 

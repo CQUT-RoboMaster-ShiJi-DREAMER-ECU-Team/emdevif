@@ -5,12 +5,11 @@
 
 #pragma once
 #ifndef EMDEVIF_PERIPHERAL_MODEL_GPIO_HPP
-    #define EMDEVIF_PERIPHERAL_MODEL_GPIO_HPP
+#define EMDEVIF_PERIPHERAL_MODEL_GPIO_HPP
 
+#include <cstdint>
 
-        #include <cstdint>
-
-        #include <type_traits>
+#include <type_traits>
 
 namespace emdevif {
 

@@ -10,5 +10,5 @@ module;
 export module emdevif.core.endian;
 
 export namespace emdevif {
-    using ::emdevif::byteSwap;
+using ::emdevif::byteSwap;
 }

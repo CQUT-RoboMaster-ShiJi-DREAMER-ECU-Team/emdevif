@@ -10,17 +10,17 @@ module;
 export module emdevif.core.error_handler;
 
 export namespace emdevif {
-    using ::emdevif::TerminateFunction;
-    using ::emdevif::terminate;
-    using ::emdevif::registerTerminateFunction;
-    using ::emdevif::FatalHandlerCallBack;
-    using ::emdevif::fatalHandler;
-    using ::emdevif::registerFatalHandler;
-    using ::emdevif::AssertFailedHandler;
-    using ::emdevif::emdevif_assert;
-    using ::emdevif::registerAssertFailedHandler;
-    using ::emdevif::ErrorCode;
-    using ::emdevif::terminateIfNotSucceed;
-    using ::emdevif::terminateIfNullptr;
-    using ::emdevif::ErrorWithCodeException;
-}
+using ::emdevif::AssertFailedHandler;
+using ::emdevif::emdevif_assert;
+using ::emdevif::ErrorCode;
+using ::emdevif::ErrorWithCodeException;
+using ::emdevif::fatalHandler;
+using ::emdevif::FatalHandlerCallBack;
+using ::emdevif::registerAssertFailedHandler;
+using ::emdevif::registerFatalHandler;
+using ::emdevif::registerTerminateFunction;
+using ::emdevif::terminate;
+using ::emdevif::TerminateFunction;
+using ::emdevif::terminateIfNotSucceed;
+using ::emdevif::terminateIfNullptr;
+}  // namespace emdevif

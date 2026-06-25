@@ -6,11 +6,11 @@
 module;
 
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-    #include "freertos/FreeRTOS.h"
-    #include "freertos/semphr.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
 #else
-    #include "FreeRTOS.h"
-    #include "semphr.h"
+#include "FreeRTOS.h"
+#include "semphr.h"
 #endif
 
 #include "emdevif/system/semaphore.hpp"

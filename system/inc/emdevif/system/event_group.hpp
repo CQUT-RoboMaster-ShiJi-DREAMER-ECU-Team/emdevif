@@ -5,18 +5,18 @@
 
 #pragma once
 #ifndef EMDEVIF_SYSTEM_EVENT_GROUP_HPP
-    #define EMDEVIF_SYSTEM_EVENT_GROUP_HPP
+#define EMDEVIF_SYSTEM_EVENT_GROUP_HPP
 
-    #include <cstdint>
+#include <cstdint>
 
-        #include <utility>
+#include <utility>
 
-        #include "emdevif/core/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
-        #include "emdevif/core/error_handler.hpp"
-        #include "emdevif/core/utils/bit_int.hpp"
-        #include "emdevif/system/thread.hpp"
-        #include "emdevif/system_impl/event_group_definitions.hpp"
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/core/utils/bit_int.hpp"
+#include "emdevif/system/thread.hpp"
+#include "emdevif/system_impl/event_group_definitions.hpp"
 
 namespace emdevif {
 
@@ -161,6 +161,6 @@ private:
 
 }  // namespace emdevif
 
-    #include "emdevif/system_impl/event_group_implements.inl"
+#include "emdevif/system_impl/event_group_implements.inl"
 
 #endif  // !EMDEVIF_SYSTEM_EVENT_GROUP_HPP

@@ -10,9 +10,9 @@ module;
 export module emdevif.core.data_container.array_map;
 
 export namespace emdevif {
-    using ::emdevif::ArrayMap;
-    using ::emdevif::makeArrayMap;
-    using ::emdevif::erase_if;
-    using ::emdevif::StaticMap;
-    using ::emdevif::makeStaticMap;
-}
+using ::emdevif::ArrayMap;
+using ::emdevif::erase_if;
+using ::emdevif::makeArrayMap;
+using ::emdevif::makeStaticMap;
+using ::emdevif::StaticMap;
+}  // namespace emdevif

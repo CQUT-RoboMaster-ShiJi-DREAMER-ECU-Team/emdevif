@@ -5,11 +5,11 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_UTILS_BIT_INT_BASIC_CONFIG_HPP
-    #define EMDEVIF_CORE_UTILS_BIT_INT_BASIC_CONFIG_HPP
+#define EMDEVIF_CORE_UTILS_BIT_INT_BASIC_CONFIG_HPP
 
-        #include <cstdint>
-        #include <type_traits>
-        #include <concepts>
+#include <cstdint>
+#include <type_traits>
+#include <concepts>
 
 namespace emdevif {
 
@@ -56,4 +56,3 @@ consteval BitsType_t bitsOf() noexcept
 }  // namespace emdevif
 
 #endif  // !EMDEVIF_CORE_UTILS_BIT_INT_BASIC_CONFIG_HPP
-

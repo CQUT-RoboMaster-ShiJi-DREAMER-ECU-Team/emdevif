@@ -10,6 +10,6 @@ module;
 export module emdevif.core.data_container.ring_buffer;
 
 export namespace emdevif {
-    using ::emdevif::RingUnsigned;
-    using ::emdevif::RingBuffer;
-}
+using ::emdevif::RingBuffer;
+using ::emdevif::RingUnsigned;
+}  // namespace emdevif

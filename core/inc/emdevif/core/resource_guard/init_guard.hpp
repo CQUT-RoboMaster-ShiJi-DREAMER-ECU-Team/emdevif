@@ -5,14 +5,13 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_RESOURCE_GUARD_INIT_GUARD_HPP
-    #define EMDEVIF_CORE_RESOURCE_GUARD_INIT_GUARD_HPP
+#define EMDEVIF_CORE_RESOURCE_GUARD_INIT_GUARD_HPP
 
-        #include <concepts>
-        #include <utility>
+#include <concepts>
+#include <utility>
 
-        #include "emdevif/core/error_handler.hpp"
-    #include "emdevif/core/simplify_decl_macros.hpp"
-
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/core/simplify_decl_macros.hpp"
 
 namespace emdevif {
 
@@ -66,18 +65,18 @@ public:
     template<typename... InitArgs>
         requires ValidHaveInitDeInitPairObject<ValueType, InitArgs...>
     explicit InitGuard(ValueType& object, InitArgs&&... init_args)
-    #ifdef __cpp_exceptions
+#ifdef __cpp_exceptions
         : object_(object)
     {
         if (const ErrorCode ec = object_.init(std::forward<InitArgs>(init_args)...); ec != ErrorCode::Success) {
             throw ErrorWithCodeException(ec, "Failed to initialize object in InitGuard.");
         }
     }
-    #else
+#else
         = EMDEVIF_REASON_DELETE(
             "The compiler disabled C++ exceptions. Please enable it or use the first parameter to receive the "
             "overloaded function of `emdevif::init_guard_do_not_init_object_tag`");
-    #endif
+#endif
     /**
      * @overload
      * 构造 InitGuard 但不自动调用 init

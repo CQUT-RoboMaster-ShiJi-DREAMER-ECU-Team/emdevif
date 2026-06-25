@@ -5,16 +5,15 @@
 
 #pragma once
 #ifndef EMDEVIF_PERIPHERAL_DETAIL_PERIPHERAL_ERROR_HANDLER_HPP
-    #define EMDEVIF_PERIPHERAL_DETAIL_PERIPHERAL_ERROR_HANDLER_HPP
+#define EMDEVIF_PERIPHERAL_DETAIL_PERIPHERAL_ERROR_HANDLER_HPP
 
+#include <string_view>
+#include <type_traits>
 
-        #include <string_view>
-        #include <type_traits>
+#include "emdevif/core/fatal_handler.h"
 
-        #include "emdevif/core/fatal_handler.h"
-
-        #include "emdevif/core/error_handler.hpp"
-        #include "emdevif/core/simplify_decl_macros.hpp"
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/core/simplify_decl_macros.hpp"
 
 namespace emdevif::detail {
 

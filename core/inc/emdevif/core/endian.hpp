@@ -5,14 +5,14 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_ENDIAN_HPP
-    #define EMDEVIF_CORE_ENDIAN_HPP
+#define EMDEVIF_CORE_ENDIAN_HPP
 
-        #include <cstdint>
+#include <cstdint>
 
-        #include <algorithm>
-        #include <array>
-        #include <bit>
-        #include <concepts>
+#include <algorithm>
+#include <array>
+#include <bit>
+#include <concepts>
 
 namespace emdevif {
 
@@ -42,9 +42,9 @@ constexpr T byteSwapGeneric(T value) noexcept
 template<std::integral T>
 constexpr T byteSwapIntegral(const T v) noexcept
 {
-    #ifdef __cpp_lib_byteswap
+#ifdef __cpp_lib_byteswap
     return std::byteswap(v);
-    #else
+#else
 
     if constexpr (sizeof(T) == 1) {
         return v;
@@ -66,7 +66,7 @@ constexpr T byteSwapIntegral(const T v) noexcept
         return byteSwapGeneric(v);
     }
 
-    #endif
+#endif
 }
 
 }  // namespace detail

@@ -5,19 +5,19 @@
 
 #pragma once
 #ifndef EMDEVIF_PERIPHERAL_CAN_HPP
-    #define EMDEVIF_PERIPHERAL_CAN_HPP
+#define EMDEVIF_PERIPHERAL_CAN_HPP
 
-    #include <cstdint>
+#include <cstdint>
 
-        #include <span>
-        #include <string_view>
+#include <span>
+#include <string_view>
 
-        #include "emdevif/core/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
-        #include "emdevif/core/error_handler.hpp"
-        #include "emdevif/peripheral/detail/peripheral_error_handler.hpp"
-        #include "emdevif/peripheral/model/can.hpp"
-        #include "emdevif/peripheral/peripheral_handle_map.hpp"
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/peripheral/detail/peripheral_error_handler.hpp"
+#include "emdevif/peripheral/model/can.hpp"
+#include "emdevif/peripheral/peripheral_handle_map.hpp"
 namespace emdevif {
 
 /// @brief CAN 通信外设封装类：通过句柄映射访问底层 CAN 外设并封装收发操作

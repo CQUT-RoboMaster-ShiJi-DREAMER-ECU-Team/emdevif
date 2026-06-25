@@ -5,20 +5,19 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_UTILS_BIT_INT_UNSIGNED_BIT_INT_HPP
-    #define EMDEVIF_CORE_UTILS_BIT_INT_UNSIGNED_BIT_INT_HPP
+#define EMDEVIF_CORE_UTILS_BIT_INT_UNSIGNED_BIT_INT_HPP
 
-    #include "emdevif/core/utils/bit_int/basic_config.hpp"
+#include "emdevif/core/utils/bit_int/basic_config.hpp"
 
-        #include <cstdint>
+#include <cstdint>
 
-        #include <compare>
-        #include <concepts>
-        #include <iostream>
-        #include <type_traits>
+#include <compare>
+#include <concepts>
+#include <iostream>
+#include <type_traits>
 
-        #include "emdevif/core/concepts.hpp"
-        #include "emdevif/core/utils/bit_int/detail/exception_config.hpp"
-
+#include "emdevif/core/concepts.hpp"
+#include "emdevif/core/utils/bit_int/detail/exception_config.hpp"
 
 namespace emdevif {
 
@@ -172,11 +171,11 @@ public:
     {
         const auto rhs_val = static_cast<RealType>(rhs.value);
 
-    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
+#if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (rhs_val == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-    #endif
+#endif
 
         return overflowCast(static_cast<RealType>(lhs) / rhs_val);
     }
@@ -189,11 +188,11 @@ public:
     {
         const auto rhs_val = static_cast<RealType>(rhs.value);
 
-    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
+#if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         if (rhs_val == 0) {
             throw std::invalid_argument("Division by zero is not allowed.");
         }
-    #endif
+#endif
 
         return overflowCast(static_cast<RealType>(lhs) % rhs_val);
     }
@@ -285,7 +284,7 @@ public:
     template<typename OtherType>
     constexpr UBitInt& operator/=(const OtherType& other) EMDEVIF_UTIL_BITINT_NOEXCEPT
     {
-    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
+#if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         RealType res;
 
         try {
@@ -296,9 +295,9 @@ public:
         }
 
         return *this = res;
-    #else
+#else
         return *this = *this / other;
-    #endif
+#endif
     }
 
     // =========================== %=
@@ -306,7 +305,7 @@ public:
     template<typename OtherType>
     constexpr UBitInt& operator%=(const OtherType& other) EMDEVIF_UTIL_BITINT_NOEXCEPT
     {
-    #if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
+#if (defined(EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS) && EMDEVIF_UTIL_BIT_INT_USE_EXCEPTIONS)
         RealType res;
 
         try {
@@ -317,9 +316,9 @@ public:
         }
 
         return *this = res;
-    #else
+#else
         return *this = *this % other;
-    #endif
+#endif
     }
 
     // =========================== &=

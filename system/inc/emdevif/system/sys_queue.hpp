@@ -5,20 +5,20 @@
 
 #pragma once
 #ifndef EMDEVIF_SYSTEM_SYS_QUEUE_HPP
-    #define EMDEVIF_SYSTEM_SYS_QUEUE_HPP
+#define EMDEVIF_SYSTEM_SYS_QUEUE_HPP
 
-        #include <cstddef>
-        #include <cstdint>
+#include <cstddef>
+#include <cstdint>
 
-        #include <concepts>
-        #include <type_traits>
-        #include <utility>
+#include <concepts>
+#include <type_traits>
+#include <utility>
 
-        #include "emdevif/core/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
-        #include "emdevif/core/data_container/message_queue.hpp"
-        #include "emdevif/core/error_handler.hpp"
-        #include "emdevif/system/thread.hpp"
+#include "emdevif/core/data_container/message_queue.hpp"
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/system/thread.hpp"
 
 namespace emdevif {
 
@@ -189,6 +189,6 @@ static_assert(std::same_as<emdevif::SysTick_t, MessageQueueTimeout_t>,
 
 }  // namespace emdevif
 
-    #include "emdevif/system_impl/sys_queue.inl"
+#include "emdevif/system_impl/sys_queue.inl"
 
 #endif  // !EMDEVIF_SYSTEM_SYS_QUEUE_HPP

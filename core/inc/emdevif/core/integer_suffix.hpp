@@ -9,7 +9,6 @@
 
 #include <cstdint>
 
-
 namespace emdevif::inline literals::inline integer_literals {
 
 /** @brief 构造 uint8_t 字面量 */

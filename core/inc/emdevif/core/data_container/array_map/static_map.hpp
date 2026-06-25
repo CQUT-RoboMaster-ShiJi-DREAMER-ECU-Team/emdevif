@@ -16,7 +16,6 @@
 
 #include "emdevif/core/error_handler.hpp"
 
-
 namespace emdevif {
 
 /**

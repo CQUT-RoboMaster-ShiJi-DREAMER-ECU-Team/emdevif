@@ -5,19 +5,18 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_ERROR_HANDLER_ERROR_CODE_HPP
-    #define EMDEVIF_CORE_ERROR_HANDLER_ERROR_CODE_HPP
+#define EMDEVIF_CORE_ERROR_HANDLER_ERROR_CODE_HPP
 
-    #include <cstdint>
+#include <cstdint>
 
-    #include <compare>
-    #include <concepts>
-    #include <exception>
-    #include <source_location>
+#include <compare>
+#include <concepts>
+#include <exception>
+#include <source_location>
 
-    #include "emdevif/core/concepts.hpp"
-    #include "emdevif/core/error_handler/fatal_handler.hpp"
-    #include "emdevif/core/simplify_decl_macros.hpp"
-
+#include "emdevif/core/concepts.hpp"
+#include "emdevif/core/error_handler/fatal_handler.hpp"
+#include "emdevif/core/simplify_decl_macros.hpp"
 
 namespace emdevif {
 
@@ -142,11 +141,11 @@ public:
      * 注意，该字符串需要确保在异常对象的生命周期内有效，建议使用字符串字面量或全局静态字符串。
      */
     explicit ErrorWithCodeException(const ErrorCode error_code, const char* message = "") noexcept
-    #ifdef __cpp_exceptions
+#ifdef __cpp_exceptions
         : ec_(error_code), error_str_(message){}
-    #else
+#else
         = EMDEVIF_REASON_DELETE("The compiler disabled C++ exceptions.");
-    #endif
+#endif
 };
 
 }  // namespace emdevif

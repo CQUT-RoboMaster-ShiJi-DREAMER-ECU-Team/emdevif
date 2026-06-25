@@ -5,14 +5,14 @@
 
 #pragma once
 #ifndef EMDEVIF_SYSTEM_HEAP_HPP
-    #define EMDEVIF_SYSTEM_HEAP_HPP
+#define EMDEVIF_SYSTEM_HEAP_HPP
 
-    #include <memory>
-        #include <type_traits>
-        #include <utility>
+#include <memory>
+#include <type_traits>
+#include <utility>
 
-        #include "emdevif/core/concepts.hpp"
-        #include "emdevif/core/simplify_decl_macros.hpp"
+#include "emdevif/core/concepts.hpp"
+#include "emdevif/core/simplify_decl_macros.hpp"
 
 namespace emdevif::heap {
 
@@ -29,11 +29,11 @@ namespace emdevif::heap {
  */
 template<typename T, typename... Args>
 T* construct(Args&&... args)
-    #ifndef __cpp_exceptions
+#ifndef __cpp_exceptions
     = EMDEVIF_REASON_DELETE(
         "The compiler disabled C++ exceptions. Please enable it or use the first parameter to receive the overloaded "
         "function of `std::nothrow`")
-    #endif
+#endif
     ;
 
 /**
@@ -81,11 +81,11 @@ using unique_ptr = std::unique_ptr<T, Deleter<T>>;
  */
 template<typename T, typename... Args>
 unique_ptr<T> make_unique(Args&&... args)
-    #ifndef __cpp_exceptions
+#ifndef __cpp_exceptions
     = EMDEVIF_REASON_DELETE(
         "The compiler disabled C++ exceptions. Please enable it or use the first parameter to receive the overloaded "
         "function of `std::nothrow`")
-    #endif
+#endif
     ;
 
 /**
@@ -108,6 +108,6 @@ class Allocator;
 
 }  // namespace emdevif::heap
 
-    #include "emdevif/system_impl/heap.inl"
+#include "emdevif/system_impl/heap.inl"
 
 #endif  // !EMDEVIF_SYSTEM_HEAP_HPP

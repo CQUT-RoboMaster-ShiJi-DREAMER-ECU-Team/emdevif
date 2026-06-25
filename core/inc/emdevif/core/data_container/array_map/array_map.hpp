@@ -21,7 +21,6 @@
 
 #include "emdevif/core/error_handler.hpp"
 
-
 namespace emdevif {
 
 /**
@@ -357,10 +356,10 @@ concept ValidArrayMapEraseIfPred = requires(Callable callable, const Arg& arg) {
  * @return 移除的元素个数
  */
 template<typename KeyType,
-                               typename ValueType,
-                               std::size_t max_size,
-                               typename KeyEqual = std::equal_to<KeyType>,
-                               typename Pred>
+         typename ValueType,
+         std::size_t max_size,
+         typename KeyEqual = std::equal_to<KeyType>,
+         typename Pred>
     requires detail::ValidArrayMapEraseIfPred<Pred,
                                               typename ArrayMap<KeyType, ValueType, max_size, KeyEqual>::value_type>
 std::size_t erase_if(ArrayMap<KeyType, ValueType, max_size, KeyEqual>& c, Pred pred)

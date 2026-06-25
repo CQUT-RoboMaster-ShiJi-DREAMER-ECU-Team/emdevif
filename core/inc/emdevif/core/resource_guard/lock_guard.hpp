@@ -5,14 +5,13 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_RESOURCE_GUARD_LOCK_GUARD_HPP
-    #define EMDEVIF_CORE_RESOURCE_GUARD_LOCK_GUARD_HPP
+#define EMDEVIF_CORE_RESOURCE_GUARD_LOCK_GUARD_HPP
 
-        #include <concepts>
-        #include <utility>
+#include <concepts>
+#include <utility>
 
-        #include "emdevif/core/error_handler.hpp"
-    #include "emdevif/core/simplify_decl_macros.hpp"
-
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/core/simplify_decl_macros.hpp"
 
 namespace emdevif {
 
@@ -64,7 +63,7 @@ public:
      */
     template<typename... Args>
     explicit LockGuard(LockType& lock_instance, Args&&... args)
-    #ifdef __cpp_exceptions
+#ifdef __cpp_exceptions
         : lock_instance_(lock_instance)
     {
         auto ret = lock_instance_.lock(std::forward<Args>(args)...);
@@ -72,11 +71,11 @@ public:
             throw ErrorWithCodeException(ret, "Failed to lock");
         }
     }
-    #else
+#else
         = EMDEVIF_REASON_DELETE(
             "The compiler disabled C++ exceptions. Please enable it or use the first parameter to receive the "
             "overloaded function of `emdevif::lock_guard_do_not_lock_when_init`");
-    #endif
+#endif
     /**
      * @overload
      * 构造 LockGuard 但不自动加锁

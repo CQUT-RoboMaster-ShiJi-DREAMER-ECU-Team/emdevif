@@ -6,9 +6,9 @@
 module;
 
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-    #include "freertos/FreeRTOS.h"
+#include "freertos/FreeRTOS.h"
 #else
-    #include "FreeRTOS.h"
+#include "FreeRTOS.h"
 #endif
 
 #include "emdevif/system/heap.hpp"

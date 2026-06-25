@@ -6,17 +6,17 @@
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
 module;
 #else
-    #include "emdevif/core/error_handler.hpp"
-    #include "emdevif/system/thread.hpp"
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/system/thread.hpp"
 #endif
 
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-    #include <cassert>
-    #include "freertos/FreeRTOS.h"
-    #include "freertos/task.h"
+#include <cassert>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #else
-    #include "FreeRTOS.h"
-    #include "task.h"
+#include "FreeRTOS.h"
+#include "task.h"
 #endif
 
 #include "emdevif/core/fatal_handler.h"

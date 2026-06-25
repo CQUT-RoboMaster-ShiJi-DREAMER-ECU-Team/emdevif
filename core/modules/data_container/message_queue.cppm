@@ -10,7 +10,7 @@ module;
 export module emdevif.core.data_container.message_queue;
 
 export namespace emdevif {
-    using ::emdevif::MessageQueueTimeout_t;
-    using ::emdevif::MessageSlot;
-    using ::emdevif::MessageQueue;
-}
+using ::emdevif::MessageQueue;
+using ::emdevif::MessageQueueTimeout_t;
+using ::emdevif::MessageSlot;
+}  // namespace emdevif

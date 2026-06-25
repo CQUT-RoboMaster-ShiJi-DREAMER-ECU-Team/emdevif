@@ -7,7 +7,7 @@
 
 #pragma once
 #ifndef EMDEVIF_LOGGER_SRC_ASYNC_HPP_
-    #define EMDEVIF_LOGGER_SRC_ASYNC_HPP_
+#define EMDEVIF_LOGGER_SRC_ASYNC_HPP_
 
 namespace emdevif::logger::detail::async {
 
@@ -17,19 +17,19 @@ static constexpr auto logger_async_thread_stack_size = static_cast<std::size_t>(
 static RingBuffer<std::array<char, logger_buffer_size>, logger_buffer_count> buffer_{};
 
 static Mutex mutex_;
-    #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
+#if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
 static MutexStaticInstance mutex_static_instance_;
-    #endif
+#endif
 
 static Thread logger_async_printer_thread_;
-    #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
+#if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
 static ThreadStaticInstance<logger_async_thread_stack_size> logger_async_printer_thread_instance_;
-    #endif
+#endif
 
 static BinarySemaphore logger_async_printer_semaphore_;
-    #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
+#if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
 static CountingSemaphoreStaticInstance<1> logger_async_printer_semaphore_static_instance_;
-    #endif
+#endif
 
 EMDEVIF_NO_RETURN static void logPrinterThread(void*) noexcept
 {
@@ -64,9 +64,9 @@ ErrorCode logInit(const VsnprintfImpl vsprintf_impl) noexcept
 
     mutex_ = Mutex{MutexBuilder{
         .name = "loggerMutex",
-    #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
+#if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
         .static_instance = &mutex_static_instance_,
-    #endif
+#endif
     }};
     if (mutex_.getHandle() == nullptr) {
         return ErrorCode::OperationFail;
@@ -74,9 +74,9 @@ ErrorCode logInit(const VsnprintfImpl vsprintf_impl) noexcept
 
     logger_async_printer_semaphore_ = BinarySemaphore{CountingSemaphoreBuilder{
         .name = "loggerSemaphore",
-    #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
+#if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
         .static_instance = &logger_async_printer_semaphore_static_instance_,
-    #endif
+#endif
     }};
     if (logger_async_printer_semaphore_.getHandle() == nullptr) {
         return ErrorCode::OperationFail;
@@ -86,12 +86,12 @@ ErrorCode logInit(const VsnprintfImpl vsprintf_impl) noexcept
         {
             .name = "loggerThread",
             .priority = ThreadPriority::Low,
-    #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
+#if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
             .static_instance = logger_async_printer_thread_instance_.getInstanceAddr(),
             .stack_size = logger_async_printer_thread_instance_.getStackDepth(),
-    #else
+#else
             .stack_size = logger_async_thread_stack_size,
-    #endif
+#endif
         },
         logPrinterThread,
         nullptr);
@@ -104,15 +104,15 @@ ErrorCode logInit(const VsnprintfImpl vsprintf_impl) noexcept
 
 void logDeInit() noexcept
 {
-    #if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
+#if (!EMDEVIF_LOGGER_DYNAMIC_CREATE)
     EMDEVIF_FATAL_HANDLER(
         "emdevif_logger was created with static allocation, so it should not be destroyed. If you want to destroy it, "
         "please use dynamic create(set macro `EMDEVIF_LOGGER_DYNAMIC_CREATE` to true).");
-    #else
+#else
     mutex_.destroy();
     logger_async_printer_semaphore_.destroy();
     Thread::destroy(logger_async_printer_thread_);
-    #endif
+#endif
 }
 
 void logImpl(const LoggerLevel level, const char* format, std::va_list args) noexcept
@@ -140,7 +140,7 @@ void logImpl(const LoggerLevel level, const char* format, std::va_list args) noe
 
         const std::size_t msg_len = index1 + index2;
 
-    #if (EMDEVIF_LINE_SEPARATOR_MODE == EMDEVIF_LINE_SEPARATOR_MODE_LF)
+#if (EMDEVIF_LINE_SEPARATOR_MODE == EMDEVIF_LINE_SEPARATOR_MODE_LF)
         if (msg_len + 1 < logMsgBufferLength()) {
             p_buffer[msg_len] = '\n';
             p_buffer[msg_len + 1] = '\0';
@@ -148,7 +148,7 @@ void logImpl(const LoggerLevel level, const char* format, std::va_list args) noe
         else {
             p_buffer[logMsgBufferLength() - 1] = '\0';
         }
-    #elif (EMDEVIF_LINE_SEPARATOR_MODE == EMDEVIF_LINE_SEPARATOR_MODE_CR)
+#elif (EMDEVIF_LINE_SEPARATOR_MODE == EMDEVIF_LINE_SEPARATOR_MODE_CR)
         if (msg_len + 1 < logMsgBufferLength()) {
             p_buffer[msg_len] = '\r';
             p_buffer[msg_len + 1] = '\0';
@@ -156,7 +156,7 @@ void logImpl(const LoggerLevel level, const char* format, std::va_list args) noe
         else {
             p_buffer[logMsgBufferLength() - 1] = '\0';
         }
-    #else
+#else
         if (msg_len + 2 < logMsgBufferLength()) {
             p_buffer[msg_len] = '\r';
             p_buffer[msg_len + 1] = '\n';
@@ -165,7 +165,7 @@ void logImpl(const LoggerLevel level, const char* format, std::va_list args) noe
         else {
             p_buffer[logMsgBufferLength() - 1] = '\0';
         }
-    #endif
+#endif
 
         // 致命错误时，立即尝试打印所有日志并终止程序
         if (level == LoggerLevel::Fatal) {

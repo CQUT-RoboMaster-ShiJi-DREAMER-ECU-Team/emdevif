@@ -10,5 +10,5 @@ module;
 export module emdevif.core.utils.init_once;
 
 export namespace emdevif {
-    using ::emdevif::InitOnce;
+using ::emdevif::InitOnce;
 }

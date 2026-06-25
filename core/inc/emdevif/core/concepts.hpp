@@ -5,13 +5,12 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_CONCEPTS_HPP
-    #define EMDEVIF_CORE_CONCEPTS_HPP
+#define EMDEVIF_CORE_CONCEPTS_HPP
 
-        #include <type_traits>
-        #include <concepts>
-        #include <compare>
-        #include <limits>
-
+#include <type_traits>
+#include <concepts>
+#include <compare>
+#include <limits>
 
 namespace emdevif {
 

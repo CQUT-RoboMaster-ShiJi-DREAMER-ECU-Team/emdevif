@@ -5,21 +5,21 @@
 
 #pragma once
 #ifndef EMDEVIF_SYSTEM_THREAD_HPP
-    #define EMDEVIF_SYSTEM_THREAD_HPP
+#define EMDEVIF_SYSTEM_THREAD_HPP
 
-        #include <concepts>
-        #include <functional>
-        #include <limits>
-        #include <tuple>
-        #include <type_traits>
-        #include <utility>
+#include <concepts>
+#include <functional>
+#include <limits>
+#include <tuple>
+#include <type_traits>
+#include <utility>
 
-        #include "emdevif/core/attributes_and_useful_macros.h"
-        #include "emdevif/core/fatal_handler.h"
+#include "emdevif/core/attributes_and_useful_macros.h"
+#include "emdevif/core/fatal_handler.h"
 
-        #include "emdevif/core/concepts.hpp"
-        #include "emdevif/core/error_handler.hpp"
-        #include "emdevif/system/heap.hpp"
+#include "emdevif/core/concepts.hpp"
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/system/heap.hpp"
 
 namespace emdevif::detail {
 class ThreadTypeChecker;  // 前向声明
@@ -27,19 +27,19 @@ class ThreadTypeChecker;  // 前向声明
 
 namespace emdevif {
 
-    #ifndef EMDEVIF_SYS_TICK_TYPE_UINT_BITS
-        #define EMDEVIF_SYS_TICK_TYPE_UINT_BITS 64
-    #endif
+#ifndef EMDEVIF_SYS_TICK_TYPE_UINT_BITS
+#define EMDEVIF_SYS_TICK_TYPE_UINT_BITS 64
+#endif
 
-    #if (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 16)
+#if (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 16)
 using SysTick_t = uint16_t;
-    #elif (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 32)
+#elif (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 32)
 using SysTick_t = uint32_t;
-    #elif (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 64)
+#elif (EMDEVIF_SYS_TICK_TYPE_UINT_BITS == 64)
 using SysTick_t = uint64_t;
-    #else
-        #error "The value of macro `EMDEVIF_SYS_TICK_TYPE_UINT_BITS' can only equals to 16, 32 or 64."
-    #endif
+#else
+#error "The value of macro `EMDEVIF_SYS_TICK_TYPE_UINT_BITS' can only equals to 16, 32 or 64."
+#endif
 
 /**
  * 线程标准入口函数指针
@@ -414,7 +414,7 @@ private:
 
 }  // namespace emdevif
 
-    #include "emdevif/system_impl/thread.inl"
+#include "emdevif/system_impl/thread.inl"
 
 namespace emdevif::detail {
 

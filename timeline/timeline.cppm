@@ -11,6 +11,6 @@ export module emdevif.timeline;
 
 export namespace emdevif {
 using ::emdevif::BaseTimePoint;
-using ::emdevif::Timeline;
 using ::emdevif::Duration;
-}
+using ::emdevif::Timeline;
+}  // namespace emdevif

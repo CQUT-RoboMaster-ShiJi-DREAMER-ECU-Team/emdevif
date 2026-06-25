@@ -12,4 +12,4 @@ export module emdevif.system.atomic;
 export namespace emdevif {
 using ::emdevif::atomic;
 using ::emdevif::memory_order;
-}
+}  // namespace emdevif

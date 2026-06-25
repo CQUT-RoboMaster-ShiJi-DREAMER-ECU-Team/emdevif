@@ -6,11 +6,11 @@
 module;
 
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-    #include "freertos/FreeRTOS.h"
-    #include "freertos/queue.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
 #else
-    #include "FreeRTOS.h"
-    #include "queue.h"
+#include "FreeRTOS.h"
+#include "queue.h"
 #endif
 
 #include "emdevif/system/sys_queue.hpp"

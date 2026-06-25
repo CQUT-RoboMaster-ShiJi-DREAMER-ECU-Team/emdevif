@@ -5,16 +5,16 @@
 
 #pragma once
 #ifndef EMDEVIF_SYSTEM_SEMAPHORE_HPP
-    #define EMDEVIF_SYSTEM_SEMAPHORE_HPP
+#define EMDEVIF_SYSTEM_SEMAPHORE_HPP
 
-        #include <cstddef>
+#include <cstddef>
 
-        #include <utility>
+#include <utility>
 
-        #include "emdevif/core/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
-        #include "emdevif/core/error_handler.hpp"
-        #include "emdevif/system/thread.hpp"
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/system/thread.hpp"
 
 namespace emdevif {
 
@@ -174,6 +174,6 @@ using BinarySemaphore = CountingSemaphore<1>;
 
 }  // namespace emdevif
 
-    #include "emdevif/system_impl/semaphore.inl"
+#include "emdevif/system_impl/semaphore.inl"
 
 #endif  // !EMDEVIF_SYSTEM_SEMAPHORE_HPP

@@ -5,15 +5,15 @@
 
 #pragma once
 #ifndef EMDEVIF_SYSTEM_MUTEX_HPP
-    #define EMDEVIF_SYSTEM_MUTEX_HPP
+#define EMDEVIF_SYSTEM_MUTEX_HPP
 
-        #include <cstdint>
-        #include <utility>
+#include <cstdint>
+#include <utility>
 
-        #include "emdevif/core/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
-        #include "emdevif/core/error_handler.hpp"
-        #include "emdevif/system/thread.hpp"
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/system/thread.hpp"
 
 namespace emdevif {
 
@@ -127,6 +127,6 @@ private:
 
 }  // namespace emdevif
 
-    #include "emdevif/system_impl/mutex.inl"
+#include "emdevif/system_impl/mutex.inl"
 
 #endif  // !EMDEVIF_SYSTEM_MUTEX_HPP

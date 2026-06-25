@@ -5,13 +5,12 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_UTILS_INIT_ONCE_HPP
-    #define EMDEVIF_CORE_UTILS_INIT_ONCE_HPP
+#define EMDEVIF_CORE_UTILS_INIT_ONCE_HPP
 
-        #include <type_traits>
-        #include <utility>
+#include <type_traits>
+#include <utility>
 
-        #include "emdevif/core/error_handler.hpp"
-
+#include "emdevif/core/error_handler.hpp"
 
 namespace emdevif {
 
@@ -155,4 +154,3 @@ private:
 }  // namespace emdevif
 
 #endif  // !EMDEVIF_CORE_UTILS_INIT_ONCE_HPP
-

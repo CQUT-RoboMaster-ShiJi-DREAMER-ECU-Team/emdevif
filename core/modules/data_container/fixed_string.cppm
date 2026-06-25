@@ -10,11 +10,11 @@ module;
 export module emdevif.core.data_container.fixed_string;
 
 export namespace emdevif {
-    using ::emdevif::BasicFixedString;
-    using ::emdevif::FixedString;
-    using ::emdevif::FixedU8String;
-    using ::emdevif::FixedU16String;
-    using ::emdevif::FixedU32String;
-    using ::emdevif::FixedWString;
-    using ::emdevif::swap;
-}
+using ::emdevif::BasicFixedString;
+using ::emdevif::FixedString;
+using ::emdevif::FixedU16String;
+using ::emdevif::FixedU32String;
+using ::emdevif::FixedU8String;
+using ::emdevif::FixedWString;
+using ::emdevif::swap;
+}  // namespace emdevif

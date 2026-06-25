@@ -15,7 +15,6 @@
 #include <span>
 #include <type_traits>
 
-
 namespace emdevif {
 
 /**

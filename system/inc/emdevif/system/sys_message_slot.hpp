@@ -5,15 +5,15 @@
 
 #pragma once
 #ifndef EMDEVIF_SYSTEM_SYS_MESSAGE_SLOT_HPP
-    #define EMDEVIF_SYSTEM_SYS_MESSAGE_SLOT_HPP
+#define EMDEVIF_SYSTEM_SYS_MESSAGE_SLOT_HPP
 
-        #include <type_traits>
-        #include <utility>
+#include <type_traits>
+#include <utility>
 
-        #include "emdevif/core/data_container/message_queue.hpp"
-        #include "emdevif/core/error_handler.hpp"
-        #include "emdevif/system/sys_queue.hpp"
-        #include "emdevif/system/thread.hpp"
+#include "emdevif/core/data_container/message_queue.hpp"
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/system/sys_queue.hpp"
+#include "emdevif/system/thread.hpp"
 
 namespace emdevif {
 

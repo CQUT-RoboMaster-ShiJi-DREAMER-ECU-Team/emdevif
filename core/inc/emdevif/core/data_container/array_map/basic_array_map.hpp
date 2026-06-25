@@ -5,17 +5,17 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_DATA_CONTAINER_ARRAY_MAP_BASIC_ARRAY_MAP_HPP
-    #define EMDEVIF_CORE_DATA_CONTAINER_ARRAY_MAP_BASIC_ARRAY_MAP_HPP
+#define EMDEVIF_CORE_DATA_CONTAINER_ARRAY_MAP_BASIC_ARRAY_MAP_HPP
 
-        #include <algorithm>
-        #include <array>
-        #include <functional>
-        #include <iterator>
-        #include <utility>
+#include <algorithm>
+#include <array>
+#include <functional>
+#include <iterator>
+#include <utility>
 
-        #include "emdevif/core/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
-        #include "emdevif/core/error_handler.hpp"
+#include "emdevif/core/error_handler.hpp"
 
 namespace emdevif {
 

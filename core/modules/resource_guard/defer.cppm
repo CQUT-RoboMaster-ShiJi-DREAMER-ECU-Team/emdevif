@@ -10,6 +10,6 @@ module;
 export module emdevif.core.resource_guard.defer;
 
 export namespace emdevif {
-    using ::emdevif::DeferFunction;
-    using ::emdevif::Defer;
-}
+using ::emdevif::Defer;
+using ::emdevif::DeferFunction;
+}  // namespace emdevif

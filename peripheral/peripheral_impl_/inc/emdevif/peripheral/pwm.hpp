@@ -5,19 +5,19 @@
 
 #pragma once
 #ifndef EMDEVIF_PERIPHERAL_PWM_HPP
-    #define EMDEVIF_PERIPHERAL_PWM_HPP
+#define EMDEVIF_PERIPHERAL_PWM_HPP
 
-    #include <cstdint>
+#include <cstdint>
 
-        #include <span>
-        #include <string_view>
+#include <span>
+#include <string_view>
 
-        #include "emdevif/core/fatal_handler.h"
+#include "emdevif/core/fatal_handler.h"
 
-        #include "emdevif/core/error_handler.hpp"
-        #include "emdevif/peripheral/detail/peripheral_error_handler.hpp"
-        #include "emdevif/peripheral/model/pwm.hpp"
-        #include "emdevif/peripheral/peripheral_handle_map.hpp"
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/peripheral/detail/peripheral_error_handler.hpp"
+#include "emdevif/peripheral/model/pwm.hpp"
+#include "emdevif/peripheral/peripheral_handle_map.hpp"
 namespace emdevif {
 
 /// @brief PWM 外设封装类，通过句柄映射访问底层 PWM 外设并封装启停及占空比设置操作

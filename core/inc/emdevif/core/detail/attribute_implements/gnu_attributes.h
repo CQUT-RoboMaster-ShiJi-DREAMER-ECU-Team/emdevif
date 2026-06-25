@@ -7,9 +7,9 @@
 #define EMDEVIF_CORE_DETAIL_GNU_ATTRIBUTES_H
 
 #if ((!defined(__clang__)) && (defined(__GNUC__) || defined(__CC_ARM)))
-    // CC_ARM 也支持 GNU 的属性语法，因此也包含在内
+// CC_ARM 也支持 GNU 的属性语法，因此也包含在内
 
-    /* clang-format off */
+/* clang-format off */
 
 #ifdef __cplusplus
     #define EMDEVIF_NO_RETURN [[noreturn]]
@@ -53,7 +53,7 @@
 
 #define EMDEVIF_FORMAT_CHECK(function, string_index, first_to_check) __attribute__((format(function, string_index, first_to_check)))
 
-    /* clang-format on */
+/* clang-format on */
 
 #endif  // ((!defined(__clang__)) && (defined(__GNUC__) || defined(__CC_ARM)))
 

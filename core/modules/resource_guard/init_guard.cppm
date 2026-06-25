@@ -10,8 +10,8 @@ module;
 export module emdevif.core.resource_guard.init_guard;
 
 export namespace emdevif {
-    using ::emdevif::ValidHaveInitDeInitPairObject;
-    using ::emdevif::InitGuardDoNotInitObjectTag;
-    using ::emdevif::init_guard_do_not_init_object_tag;
-    using ::emdevif::InitGuard;
-}
+using ::emdevif::init_guard_do_not_init_object_tag;
+using ::emdevif::InitGuard;
+using ::emdevif::InitGuardDoNotInitObjectTag;
+using ::emdevif::ValidHaveInitDeInitPairObject;
+}  // namespace emdevif

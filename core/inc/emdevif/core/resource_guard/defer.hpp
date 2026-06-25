@@ -5,14 +5,13 @@
 
 #pragma once
 #ifndef EMDEVIF_CORE_RESOURCE_GUARD_DEFER_HPP
-    #define EMDEVIF_CORE_RESOURCE_GUARD_DEFER_HPP
+#define EMDEVIF_CORE_RESOURCE_GUARD_DEFER_HPP
 
-        #include <concepts>
-        #include <functional>
-        #include <utility>
+#include <concepts>
+#include <functional>
+#include <utility>
 
-    #include "emdevif/core/simplify_decl_macros.hpp"
-
+#include "emdevif/core/simplify_decl_macros.hpp"
 
 namespace emdevif {
 

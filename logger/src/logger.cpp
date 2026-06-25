@@ -8,27 +8,27 @@
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
 module;
 #else
-    #include "emdevif/core/error_handler.hpp"
-    #include "emdevif/logger.hpp"
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/logger.hpp"
 
-    #if (EMDEVIF_LOGGER_MODE == 0)
-        // Sync
-        #if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
-            #include "emdevif/core/resource_guard/lock_guard.hpp"
-            #include "emdevif/system/mutex.hpp"
-        #endif
-    #else
-        // Async
-        #include "emdevif/core/data_container/ring_buffer.hpp"
-        #include "emdevif/core/resource_guard/lock_guard.hpp"
-        #include "emdevif/system/mutex.hpp"
-        #include "emdevif/system/semaphore.hpp"
-        #include "emdevif/system/thread.hpp"
-    #endif
+#if (EMDEVIF_LOGGER_MODE == 0)
+// Sync
+#if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
+#include "emdevif/core/resource_guard/lock_guard.hpp"
+#include "emdevif/system/mutex.hpp"
+#endif
+#else
+// Async
+#include "emdevif/core/data_container/ring_buffer.hpp"
+#include "emdevif/core/resource_guard/lock_guard.hpp"
+#include "emdevif/system/mutex.hpp"
+#include "emdevif/system/semaphore.hpp"
+#include "emdevif/system/thread.hpp"
+#endif
 #endif
 
 #ifndef EMDEVIF_USER_DECLARES_PROVIDE_MODULE
-    #include "emdevif/user_declares.hpp"
+#include "emdevif/user_declares.hpp"
 #endif
 
 #include <cstdarg>
@@ -51,31 +51,31 @@ import emdevif.user_declares;
 #endif
 
 #if (EMDEVIF_LOGGER_MODE == 0)
-    // Sync
-    #if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
-        #if EMDEVIF_USE_MODULES
+// Sync
+#if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
+#if EMDEVIF_USE_MODULES
 import emdevif.core.resource_guard.lock_guard;
 import emdevif.system.mutex;
-        #else
-            #include "emdevif/core/resource_guard/lock_guard.hpp"
-            #include "emdevif/system/mutex.hpp"
-        #endif
-    #endif
 #else
-    // Async
-    #if EMDEVIF_USE_MODULES
+#include "emdevif/core/resource_guard/lock_guard.hpp"
+#include "emdevif/system/mutex.hpp"
+#endif
+#endif
+#else
+// Async
+#if EMDEVIF_USE_MODULES
 import emdevif.core.data_container.ring_buffer;
 import emdevif.core.resource_guard.lock_guard;
 import emdevif.system.mutex;
 import emdevif.system.semaphore;
 import emdevif.system.thread;
-    #else
-        #include "emdevif/core/data_container/ring_buffer.hpp"
-        #include "emdevif/core/resource_guard/lock_guard.hpp"
-        #include "emdevif/system/mutex.hpp"
-        #include "emdevif/system/semaphore.hpp"
-        #include "emdevif/system/thread.hpp"
-    #endif
+#else
+#include "emdevif/core/data_container/ring_buffer.hpp"
+#include "emdevif/core/resource_guard/lock_guard.hpp"
+#include "emdevif/system/mutex.hpp"
+#include "emdevif/system/semaphore.hpp"
+#include "emdevif/system/thread.hpp"
+#endif
 #endif
 
 #if (EMDEVIF_LOGGER_MODE != 2)  // 不是 ExternalImpl 模式的情况
@@ -96,9 +96,9 @@ static int snprintf_(char* dest, const std::size_t buffer_size, const char* form
 #endif  // (EMDEVIF_LOGGER_MODE != 2)
 
 #if (EMDEVIF_LOGGER_MODE == 0)
-    #include "./sync.hpp"
+#include "./sync.hpp"
 #elif (EMDEVIF_LOGGER_MODE == 1)
-    #include "./async.hpp"
+#include "./async.hpp"
 #elif (EMDEVIF_LOGGER_MODE == 2)
 // Nothing to include, the implementation is provided by user.
 #endif
