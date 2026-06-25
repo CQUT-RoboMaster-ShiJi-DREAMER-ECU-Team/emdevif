@@ -13,14 +13,12 @@ module;
     #include "event_groups.h"
 #endif
 
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/system/event_group.hpp"
 
 export module emdevif.system.event_group;
 
-#include "emdevif/system/event_group.hpp"
-
 export namespace emdevif {
-using ::emdevif::EventGroupStaticInstance;
-using ::emdevif::EventGroupBuilder;
 using ::emdevif::EventGroup;
-}
+using ::emdevif::EventGroupBuilder;
+using ::emdevif::EventGroupStaticInstance;
+}  // namespace emdevif

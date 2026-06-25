@@ -13,15 +13,13 @@ module;
     #include "semphr.h"
 #endif
 
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/system/semaphore.hpp"
 
 export module emdevif.system.semaphore;
 
-#include "emdevif/system/semaphore.hpp"
-
 export namespace emdevif {
-using ::emdevif::CountingSemaphoreStaticInstance;
-using ::emdevif::CountingSemaphoreBuilder;
-using ::emdevif::CountingSemaphore;
 using ::emdevif::BinarySemaphore;
-}
+using ::emdevif::CountingSemaphore;
+using ::emdevif::CountingSemaphoreBuilder;
+using ::emdevif::CountingSemaphoreStaticInstance;
+}  // namespace emdevif

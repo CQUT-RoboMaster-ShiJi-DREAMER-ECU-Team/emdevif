@@ -15,14 +15,12 @@ module;
 
 #include <cstddef>
 
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/system/mutex.hpp"
 
 export module emdevif.system.mutex;
 
-#include "emdevif/system/mutex.hpp"
-
 export namespace emdevif {
-using ::emdevif::MutexStaticInstance;
-using ::emdevif::MutexBuilder;
 using ::emdevif::Mutex;
-}
+using ::emdevif::MutexBuilder;
+using ::emdevif::MutexStaticInstance;
+}  // namespace emdevif

@@ -6,22 +6,20 @@
 module;
 
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-#include "freertos/FreeRTOS.h"
+    #include "freertos/FreeRTOS.h"
 #else
-#include "FreeRTOS.h"
+    #include "FreeRTOS.h"
 #endif
-
-#define EMDEVIF_MODULE_INTERFACE_UNIT
-
-export module emdevif.system.heap;
 
 #include "emdevif/system/heap.hpp"
 
+export module emdevif.system.heap;
+
 export namespace emdevif::heap {
-using ::emdevif::heap::construct;
-using ::emdevif::heap::destruct;
-using ::emdevif::heap::Deleter;
-using ::emdevif::heap::unique_ptr;
-using ::emdevif::heap::make_unique;
 using ::emdevif::heap::Allocator;
-}
+using ::emdevif::heap::construct;
+using ::emdevif::heap::Deleter;
+using ::emdevif::heap::destruct;
+using ::emdevif::heap::make_unique;
+using ::emdevif::heap::unique_ptr;
+}  // namespace emdevif::heap

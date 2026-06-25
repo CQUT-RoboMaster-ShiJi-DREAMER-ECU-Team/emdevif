@@ -5,25 +5,23 @@
 
 #pragma once
 #ifndef EMDEVIF_FREERTOS_SYSTEM_IMPL_MUTEX_INL
-#define EMDEVIF_FREERTOS_SYSTEM_IMPL_MUTEX_INL
+    #define EMDEVIF_FREERTOS_SYSTEM_IMPL_MUTEX_INL
 
-#include "emdevif/core/detail/config.hpp"
+    #include "emdevif/core/detail/config.hpp"
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-#include "freertos/FreeRTOS.h"
-#include "freertos/semphr.h"
-#else
-#include "FreeRTOS.h"
-#include "semphr.h"
-#endif
+    #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+        #include "freertos/FreeRTOS.h"
+        #include "freertos/semphr.h"
+    #else
+        #include "FreeRTOS.h"
+        #include "semphr.h"
+    #endif
 
-#include "emdevif/core/fatal_handler.h"
+    #include "emdevif/core/fatal_handler.h"
 
-#include "emdevif/core/error_handler.hpp"
+    #include "emdevif/core/error_handler.hpp"
 
-#include <cstddef>
-#endif
+    #include <cstddef>
 
 namespace emdevif {
 

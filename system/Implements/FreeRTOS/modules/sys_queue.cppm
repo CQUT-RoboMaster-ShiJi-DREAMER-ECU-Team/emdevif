@@ -13,14 +13,12 @@ module;
     #include "queue.h"
 #endif
 
-#define EMDEVIF_MODULE_INTERFACE_UNIT
+#include "emdevif/system/sys_queue.hpp"
 
 export module emdevif.system.sys_queue;
 
-#include "emdevif/system/sys_queue.hpp"
-
 export namespace emdevif {
-using ::emdevif::SysQueueStaticInstance;
-using ::emdevif::SysQueueBuilder;
 using ::emdevif::SysQueue;
-}
+using ::emdevif::SysQueueBuilder;
+using ::emdevif::SysQueueStaticInstance;
+}  // namespace emdevif

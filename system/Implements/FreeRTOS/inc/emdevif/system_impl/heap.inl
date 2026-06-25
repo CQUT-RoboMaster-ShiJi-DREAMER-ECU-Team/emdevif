@@ -7,19 +7,17 @@
 #ifndef EMDEVIF_FREERTOS_SYSTEM_IMPL_SYSTEM_HEAP_INL
     #define EMDEVIF_FREERTOS_SYSTEM_IMPL_SYSTEM_HEAP_INL
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-        #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-            #include "freertos/FreeRTOS.h"
-        #else
-            #include "FreeRTOS.h"
-        #endif
-
-        #include "emdevif/core/concepts.hpp"
-
-        #include <memory>
-        #include <utility>
-        #include <type_traits>
+    #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+        #include "freertos/FreeRTOS.h"
+    #else
+        #include "FreeRTOS.h"
     #endif
+
+    #include "emdevif/core/concepts.hpp"
+
+    #include <memory>
+    #include <utility>
+    #include <type_traits>
 
 namespace emdevif::heap::detail {
 

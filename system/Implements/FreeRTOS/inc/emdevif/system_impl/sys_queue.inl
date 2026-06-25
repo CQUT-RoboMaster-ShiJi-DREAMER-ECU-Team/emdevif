@@ -9,21 +9,19 @@
 
     #include "emdevif/core/detail/config.hpp"
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-        #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-            #include "freertos/FreeRTOS.h"
-            #include "freertos/queue.h"
-        #else
-            #include "FreeRTOS.h"
-            #include "queue.h"
-        #endif
-
-        #include "emdevif/core/fatal_handler.h"
-
-        #include "emdevif/core/error_handler.hpp"
-
-        #include <cstddef>
+    #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+        #include "freertos/FreeRTOS.h"
+        #include "freertos/queue.h"
+    #else
+        #include "FreeRTOS.h"
+        #include "queue.h"
     #endif
+
+    #include "emdevif/core/fatal_handler.h"
+
+    #include "emdevif/core/error_handler.hpp"
+
+    #include <cstddef>
 
 namespace emdevif {
 

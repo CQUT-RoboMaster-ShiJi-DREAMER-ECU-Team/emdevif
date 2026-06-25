@@ -9,24 +9,20 @@
 
     #include "emdevif/core/fatal_handler.h"
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-
-        #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-            #include <cassert>
-            #include "freertos/FreeRTOS.h"
-            #include "freertos/task.h"
-        #else
-            #include "FreeRTOS.h"
-            #include "task.h"
-        #endif
-
-        #include "emdevif/core/data_container/message_queue.hpp"
-
-        #include <utility>
-        #include <type_traits>
-        #include <limits>
-
+    #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+        #include <cassert>
+        #include "freertos/FreeRTOS.h"
+        #include "freertos/task.h"
+    #else
+        #include "FreeRTOS.h"
+        #include "task.h"
     #endif
+
+    #include "emdevif/core/data_container/message_queue.hpp"
+
+    #include <utility>
+    #include <type_traits>
+    #include <limits>
 
     #if (configMAX_PRIORITIES < 6)
         #error \

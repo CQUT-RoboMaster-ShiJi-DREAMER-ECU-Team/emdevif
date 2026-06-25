@@ -9,22 +9,20 @@
 
     #include "emdevif/core/detail/config.hpp"
 
-    #ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-        #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-            #include "freertos/FreeRTOS.h"
-            #include "freertos/semphr.h"
-        #else
-            #include "FreeRTOS.h"
-            #include "semphr.h"
-        #endif
-
-        #include "emdevif/core/error_handler.hpp"
-
-        #include "emdevif/core/fatal_handler.h"
-
-        #include <cstddef>
-        #include <utility>
+    #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+        #include "freertos/FreeRTOS.h"
+        #include "freertos/semphr.h"
+    #else
+        #include "FreeRTOS.h"
+        #include "semphr.h"
     #endif
+
+    #include "emdevif/core/error_handler.hpp"
+
+    #include "emdevif/core/fatal_handler.h"
+
+    #include <cstddef>
+    #include <utility>
 
 // for template<std::ptrdiff_t least_max_value> CountingSemaphore
 namespace emdevif {

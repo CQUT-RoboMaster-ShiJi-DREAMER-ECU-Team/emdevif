@@ -5,23 +5,21 @@
 
 #pragma once
 #ifndef EMDEVIF_FREERTOS_SYSTEM_IMPL_EVENT_GROUP_IMPLEMENTS_INL
-#define EMDEVIF_FREERTOS_SYSTEM_IMPL_EVENT_GROUP_IMPLEMENTS_INL
+    #define EMDEVIF_FREERTOS_SYSTEM_IMPL_EVENT_GROUP_IMPLEMENTS_INL
 
-#ifndef EMDEVIF_MODULE_INTERFACE_UNIT
-#if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
-#include "freertos/FreeRTOS.h"
-#include "freertos/event_groups.h"
-#else
-#include "FreeRTOS.h"
-#include "event_groups.h"
-#endif
+    #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
+        #include "freertos/FreeRTOS.h"
+        #include "freertos/event_groups.h"
+    #else
+        #include "FreeRTOS.h"
+        #include "event_groups.h"
+    #endif
 
-#include "emdevif/core/utils/bit_int.hpp"
+    #include "emdevif/core/utils/bit_int.hpp"
 
-#include <cstdint>
+    #include <cstdint>
 
-#include <concepts>
-#endif
+    #include <concepts>
 
 namespace emdevif {
 
