@@ -7,9 +7,9 @@
 #ifndef EMDEVIF_CORE_UTILS_WHEN_HPP
     #define EMDEVIF_CORE_UTILS_WHEN_HPP
 
-        #include <utility>
-        #include <type_traits>
         #include <concepts>
+        #include <type_traits>
+        #include <utility>
 
 namespace emdevif {
 

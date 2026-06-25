@@ -7,10 +7,10 @@
 #ifndef EMDEVIF_CORE_UTILS_INIT_ONCE_HPP
     #define EMDEVIF_CORE_UTILS_INIT_ONCE_HPP
 
-        #include "emdevif/core/error_handler.hpp"
-
         #include <type_traits>
         #include <utility>
+
+        #include "emdevif/core/error_handler.hpp"
 
 
 namespace emdevif {

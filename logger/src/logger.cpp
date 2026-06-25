@@ -8,22 +8,22 @@
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
 module;
 #else
-    #include "emdevif/logger.hpp"
     #include "emdevif/core/error_handler.hpp"
+    #include "emdevif/logger.hpp"
 
     #if (EMDEVIF_LOGGER_MODE == 0)
         // Sync
         #if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
-            #include "emdevif/system/mutex.hpp"
             #include "emdevif/core/resource_guard/lock_guard.hpp"
+            #include "emdevif/system/mutex.hpp"
         #endif
     #else
         // Async
-        #include "emdevif/system/thread.hpp"
-        #include "emdevif/system/mutex.hpp"
-        #include "emdevif/system/semaphore.hpp"
         #include "emdevif/core/data_container/ring_buffer.hpp"
         #include "emdevif/core/resource_guard/lock_guard.hpp"
+        #include "emdevif/system/mutex.hpp"
+        #include "emdevif/system/semaphore.hpp"
+        #include "emdevif/system/thread.hpp"
     #endif
 #endif
 
@@ -31,14 +31,14 @@ module;
     #include "emdevif/user_declares.hpp"
 #endif
 
-#include "emdevif/core/line_separator.h"
-#include "emdevif/core/fatal_handler.h"
-#include "emdevif/core/attributes_and_useful_macros.h"
-
 #include <cstdarg>
 #include <cstdint>
 
 #include <iterator>
+
+#include "emdevif/core/attributes_and_useful_macros.h"
+#include "emdevif/core/fatal_handler.h"
+#include "emdevif/core/line_separator.h"
 
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
 module emdevif.logger;
@@ -54,27 +54,27 @@ import emdevif.user_declares;
     // Sync
     #if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
         #if EMDEVIF_USE_MODULES
-import emdevif.system.mutex;
 import emdevif.core.resource_guard.lock_guard;
+import emdevif.system.mutex;
         #else
-            #include "emdevif/system/mutex.hpp"
             #include "emdevif/core/resource_guard/lock_guard.hpp"
+            #include "emdevif/system/mutex.hpp"
         #endif
     #endif
 #else
     // Async
     #if EMDEVIF_USE_MODULES
-import emdevif.system.thread;
-import emdevif.system.mutex;
-import emdevif.system.semaphore;
 import emdevif.core.data_container.ring_buffer;
 import emdevif.core.resource_guard.lock_guard;
+import emdevif.system.mutex;
+import emdevif.system.semaphore;
+import emdevif.system.thread;
     #else
-        #include "emdevif/system/thread.hpp"
-        #include "emdevif/system/mutex.hpp"
-        #include "emdevif/system/semaphore.hpp"
         #include "emdevif/core/data_container/ring_buffer.hpp"
         #include "emdevif/core/resource_guard/lock_guard.hpp"
+        #include "emdevif/system/mutex.hpp"
+        #include "emdevif/system/semaphore.hpp"
+        #include "emdevif/system/thread.hpp"
     #endif
 #endif
 

@@ -7,14 +7,13 @@
 #ifndef EMDEVIF_LOGGER_ASYNC_HPP
     #define EMDEVIF_LOGGER_ASYNC_HPP
 
-    #include "emdevif/logger/config.hpp"
+    #include <cstdarg>
 
         #include "emdevif/core/fatal_handler.h"
-        #include "emdevif/core/error_handler.hpp"
 
         #include "emdevif/core/detail/include_emdevif_user_declares_in_headers.hpp"
-
-        #include <cstdarg>
+        #include "emdevif/core/error_handler.hpp"
+        #include "emdevif/logger/config.hpp"
 
 namespace emdevif::logger::detail {
 

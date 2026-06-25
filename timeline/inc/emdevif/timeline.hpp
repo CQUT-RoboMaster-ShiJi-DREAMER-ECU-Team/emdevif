@@ -7,11 +7,11 @@
 #ifndef EMDEVIF_TIMELINE_HPP
     #define EMDEVIF_TIMELINE_HPP
 
-        #include "emdevif/core/simplify_decl_macros.hpp"
-
         #include <cstdint>
 
         #include <type_traits>
+
+        #include "emdevif/core/simplify_decl_macros.hpp"
 
 namespace emdevif {
 

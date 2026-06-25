@@ -7,10 +7,10 @@
 #ifndef EMDEVIF_LOGGER_CONFIG_VALUES_HPP
     #define EMDEVIF_LOGGER_CONFIG_VALUES_HPP
 
-    #include "emdevif/logger/config.hpp"
-
+    #include <cstdarg>
         #include <cstdint>
-        #include <cstdarg>
+
+        #include "emdevif/logger/config.hpp"
 
 namespace emdevif::logger {
 

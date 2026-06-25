@@ -7,14 +7,14 @@
 #ifndef EMDEVIF_SYSTEM_SEMAPHORE_HPP
     #define EMDEVIF_SYSTEM_SEMAPHORE_HPP
 
+        #include <cstddef>
+
+        #include <utility>
+
         #include "emdevif/core/fatal_handler.h"
 
         #include "emdevif/core/error_handler.hpp"
         #include "emdevif/system/thread.hpp"
-
-        #include <cstddef>
-
-        #include <utility>
 
 namespace emdevif {
 

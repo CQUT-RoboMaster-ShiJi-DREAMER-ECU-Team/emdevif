@@ -9,14 +9,15 @@
 
     #include "emdevif/core/utils/bit_int/basic_config.hpp"
 
-        #include "emdevif/core/concepts.hpp"
-        #include "emdevif/core/utils/bit_int/detail/exception_config.hpp"
-
         #include <cstdint>
-        #include <type_traits>
+
+        #include <compare>
         #include <concepts>
         #include <iostream>
-        #include <compare>
+        #include <type_traits>
+
+        #include "emdevif/core/concepts.hpp"
+        #include "emdevif/core/utils/bit_int/detail/exception_config.hpp"
 
 
 namespace emdevif {

@@ -7,9 +7,10 @@
 #ifndef EMDEVIF_CORE_RESOURCE_GUARD_TRY_FINALLY_HPP
     #define EMDEVIF_CORE_RESOURCE_GUARD_TRY_FINALLY_HPP
 
-        #include <utility>
         #include <concepts>
         #include <functional>
+        #include <utility>
+
         #include "emdevif/core/resource_guard/defer.hpp"
 
 

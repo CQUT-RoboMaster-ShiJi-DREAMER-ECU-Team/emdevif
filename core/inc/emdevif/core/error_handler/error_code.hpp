@@ -7,17 +7,15 @@
 #ifndef EMDEVIF_CORE_ERROR_HANDLER_ERROR_CODE_HPP
     #define EMDEVIF_CORE_ERROR_HANDLER_ERROR_CODE_HPP
 
-    #include "emdevif/core/error_handler/fatal_handler.hpp"
-
-        #include "emdevif/core/concepts.hpp"
-
     #include <cstdint>
 
-    #include <concepts>
     #include <compare>
-    #include <source_location>
+    #include <concepts>
     #include <exception>
+    #include <source_location>
 
+    #include "emdevif/core/concepts.hpp"
+    #include "emdevif/core/error_handler/fatal_handler.hpp"
     #include "emdevif/core/simplify_decl_macros.hpp"
 
 

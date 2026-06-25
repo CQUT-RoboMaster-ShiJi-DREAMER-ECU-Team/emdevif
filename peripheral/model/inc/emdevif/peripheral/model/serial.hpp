@@ -8,12 +8,12 @@
     #define EMDEVIF_PERIPHERAL_MODEL_SERIAL_HPP
 
 
-        #include "emdevif/core/error_handler.hpp"
-
         #include <cstdint>
 
         #include <span>
         #include <type_traits>
+
+        #include "emdevif/core/error_handler.hpp"
 
 namespace emdevif {
 

@@ -7,13 +7,13 @@
 #ifndef EMDEVIF_SYSTEM_MUTEX_HPP
     #define EMDEVIF_SYSTEM_MUTEX_HPP
 
+        #include <cstdint>
+        #include <utility>
+
         #include "emdevif/core/fatal_handler.h"
 
         #include "emdevif/core/error_handler.hpp"
         #include "emdevif/system/thread.hpp"
-
-        #include <cstdint>
-        #include <utility>
 
 namespace emdevif {
 

@@ -7,11 +7,11 @@
 #ifndef EMDEVIF_CORE_ERROR_HANDLER_FATAL_HANDLER_HPP
 #define EMDEVIF_CORE_ERROR_HANDLER_FATAL_HANDLER_HPP
 
-#include "emdevif/core/attributes_and_useful_macros.h"
-
 #include <cstdarg>
 
 #include <type_traits>
+
+#include "emdevif/core/attributes_and_useful_macros.h"
 
 namespace emdevif {
 

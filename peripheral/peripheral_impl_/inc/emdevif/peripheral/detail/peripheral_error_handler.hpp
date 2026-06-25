@@ -11,10 +11,10 @@
         #include <string_view>
         #include <type_traits>
 
-        #include "emdevif/core/simplify_decl_macros.hpp"
-        #include "emdevif/core/error_handler.hpp"
-
         #include "emdevif/core/fatal_handler.h"
+
+        #include "emdevif/core/error_handler.hpp"
+        #include "emdevif/core/simplify_decl_macros.hpp"
 
 namespace emdevif::detail {
 

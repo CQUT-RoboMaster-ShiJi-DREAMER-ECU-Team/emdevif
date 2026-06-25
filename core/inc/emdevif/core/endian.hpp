@@ -9,10 +9,10 @@
 
         #include <cstdint>
 
-        #include <concepts>
-        #include <bit>
-        #include <array>
         #include <algorithm>
+        #include <array>
+        #include <bit>
+        #include <concepts>
 
 namespace emdevif {
 

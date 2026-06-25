@@ -11,13 +11,14 @@
 #ifndef EMDEVIF_CORE_DATA_CONTAINER_FIXED_STRING_HPP
     #define EMDEVIF_CORE_DATA_CONTAINER_FIXED_STRING_HPP
 
+        #include <cstddef>
+
         #include <compare>
         #include <concepts>
-        #include <cstddef>
         #include <iterator>
+        #include <limits>
         #include <ranges>
         #include <string_view>
-        #include <limits>
 
         #include "emdevif/core/fatal_handler.h"
 

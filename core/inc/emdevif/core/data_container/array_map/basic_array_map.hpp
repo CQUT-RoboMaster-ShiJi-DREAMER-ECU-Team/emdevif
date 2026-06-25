@@ -7,14 +7,15 @@
 #ifndef EMDEVIF_CORE_DATA_CONTAINER_ARRAY_MAP_BASIC_ARRAY_MAP_HPP
     #define EMDEVIF_CORE_DATA_CONTAINER_ARRAY_MAP_BASIC_ARRAY_MAP_HPP
 
-        #include "emdevif/core/fatal_handler.h"
-        #include "emdevif/core/error_handler.hpp"
-
-        #include <utility>
-        #include <array>
         #include <algorithm>
-        #include <iterator>
+        #include <array>
         #include <functional>
+        #include <iterator>
+        #include <utility>
+
+        #include "emdevif/core/fatal_handler.h"
+
+        #include "emdevif/core/error_handler.hpp"
 
 namespace emdevif {
 

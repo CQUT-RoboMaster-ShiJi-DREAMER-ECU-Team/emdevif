@@ -7,17 +7,16 @@
 #ifndef EMDEVIF_SYSTEM_EVENT_GROUP_HPP
     #define EMDEVIF_SYSTEM_EVENT_GROUP_HPP
 
-    #include "emdevif/system_impl/event_group_definitions.hpp"
+    #include <cstdint>
+
+        #include <utility>
 
         #include "emdevif/core/fatal_handler.h"
 
         #include "emdevif/core/error_handler.hpp"
-        #include "emdevif/system/thread.hpp"
         #include "emdevif/core/utils/bit_int.hpp"
-
-        #include <utility>
-
-        #include <cstdint>
+        #include "emdevif/system/thread.hpp"
+        #include "emdevif/system_impl/event_group_definitions.hpp"
 
 namespace emdevif {
 

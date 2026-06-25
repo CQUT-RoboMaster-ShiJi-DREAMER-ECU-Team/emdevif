@@ -6,10 +6,11 @@
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
 module;
 #else
-    #include "emdevif/system/event_group.hpp"
-
     #include "emdevif/core/error_handler.hpp"
+    #include "emdevif/system/event_group.hpp"
 #endif
+
+#include <cstddef>
 
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
     #include "freertos/FreeRTOS.h"
@@ -18,8 +19,6 @@ module;
     #include "FreeRTOS.h"
     #include "event_groups.h"
 #endif
-
-#include <cstddef>
 
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
 module emdevif.system.event_group;

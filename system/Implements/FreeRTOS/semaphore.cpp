@@ -6,10 +6,11 @@
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
 module;
 #else
-#include "emdevif/system/semaphore.hpp"
-
 #include "emdevif/core/error_handler.hpp"
+#include "emdevif/system/semaphore.hpp"
 #endif
+
+#include <cstddef>
 
 #if (defined(EMDEVIF_THREAD_USE_ESPIDF_FREERTOS) && EMDEVIF_THREAD_USE_ESPIDF_FREERTOS)
 #include "freertos/FreeRTOS.h"
@@ -20,8 +21,6 @@ module;
 #endif
 
 #include "emdevif/core/fatal_handler.h"
-
-#include <cstddef>
 
 #if (defined(EMDEVIF_USE_MODULES) && EMDEVIF_USE_MODULES)
 module emdevif.system.semaphore;

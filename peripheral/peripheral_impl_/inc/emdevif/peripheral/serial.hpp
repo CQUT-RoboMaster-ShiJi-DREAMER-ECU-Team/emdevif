@@ -7,20 +7,19 @@
 #ifndef EMDEVIF_PERIPHERAL_SERIAL_HPP
     #define EMDEVIF_PERIPHERAL_SERIAL_HPP
 
-    #include "emdevif/peripheral/detail/peripheral_error_handler.hpp"
-
-        #include "emdevif/peripheral/peripheral_handle_map.hpp"
-        #include "emdevif/peripheral/model/serial.hpp"
-        #include "emdevif/core/error_handler.hpp"
-
-        #include <cstdint>
+    #include <cstdint>
 
         #include <limits>
-        #include <string_view>
         #include <span>
+        #include <string_view>
         #include <type_traits>
 
         #include "emdevif/core/fatal_handler.h"
+
+        #include "emdevif/core/error_handler.hpp"
+        #include "emdevif/peripheral/detail/peripheral_error_handler.hpp"
+        #include "emdevif/peripheral/model/serial.hpp"
+        #include "emdevif/peripheral/peripheral_handle_map.hpp"
 namespace emdevif {
 
 /// @brief 串口通信外设封装类，通过句柄映射访问底层串口外设并封装收发操作

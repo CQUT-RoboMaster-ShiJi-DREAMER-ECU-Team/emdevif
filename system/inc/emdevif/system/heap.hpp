@@ -7,13 +7,12 @@
 #ifndef EMDEVIF_SYSTEM_HEAP_HPP
     #define EMDEVIF_SYSTEM_HEAP_HPP
 
-    #include "emdevif/core/simplify_decl_macros.hpp"
+    #include <memory>
+        #include <type_traits>
+        #include <utility>
 
         #include "emdevif/core/concepts.hpp"
-
-        #include <memory>
-        #include <utility>
-        #include <type_traits>
+        #include "emdevif/core/simplify_decl_macros.hpp"
 
 namespace emdevif::heap {
 

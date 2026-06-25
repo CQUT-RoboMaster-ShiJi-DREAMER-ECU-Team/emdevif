@@ -7,13 +7,13 @@
 #ifndef EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_HPP
     #define EMDEVIF_CORE_DATA_CONTAINER_MESSAGE_QUEUE_HPP
 
-        #include "emdevif/core/error_handler.hpp"
-
-        #include <cstdint>
         #include <cstddef>
+        #include <cstdint>
 
         #include <concepts>
         #include <type_traits>
+
+        #include "emdevif/core/error_handler.hpp"
 
 
 namespace emdevif {

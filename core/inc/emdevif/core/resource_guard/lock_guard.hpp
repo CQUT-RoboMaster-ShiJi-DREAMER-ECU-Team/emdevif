@@ -7,11 +7,10 @@
 #ifndef EMDEVIF_CORE_RESOURCE_GUARD_LOCK_GUARD_HPP
     #define EMDEVIF_CORE_RESOURCE_GUARD_LOCK_GUARD_HPP
 
-        #include "emdevif/core/error_handler.hpp"
-
-        #include <utility>
         #include <concepts>
+        #include <utility>
 
+        #include "emdevif/core/error_handler.hpp"
     #include "emdevif/core/simplify_decl_macros.hpp"
 
 

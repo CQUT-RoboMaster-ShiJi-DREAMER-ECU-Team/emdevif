@@ -7,9 +7,9 @@
 #ifndef EMDEVIF_CORE_RESOURCE_GUARD_DEFER_HPP
     #define EMDEVIF_CORE_RESOURCE_GUARD_DEFER_HPP
 
-        #include <utility>
         #include <concepts>
         #include <functional>
+        #include <utility>
 
     #include "emdevif/core/simplify_decl_macros.hpp"
 

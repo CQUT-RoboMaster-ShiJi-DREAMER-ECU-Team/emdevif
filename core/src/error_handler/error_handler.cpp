@@ -3,11 +3,11 @@
  * @brief 错误处理
  */
 
-#include "emdevif/core/error_handler.hpp"
+#include <cstdarg>
 
 #include "emdevif/core/attributes_and_useful_macros.h"
 
-#include <cstdarg>
+#include "emdevif/core/error_handler.hpp"
 
 namespace emdevif {
 
