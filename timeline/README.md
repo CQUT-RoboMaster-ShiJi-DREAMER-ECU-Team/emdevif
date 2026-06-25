@@ -2,43 +2,35 @@
 
 微秒级时间戳以及间隔时间测量。
 
-这个库依赖 emdevif_user_declares。
-
 ## 配置
 
-* 宏 `EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS`: 如果定义为 true，则 `Timeline` 最高精度为毫秒。默认为 false。
+* 宏 `EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS`（CMake 变量 `EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS`）：如果为 ON，则 `Timeline` 最高精度为毫秒。默认为 OFF。
 
-## emdevif_user_declares 的需求
+## 链接期注入的需求
 
-**不可链接 `emdevif_timeline` 库，否则导致循环依赖！**<br>
-**不可导入 `emdevif.timeline` 模块，否则导致循环依赖！**
-
-该模块需要用户在 emdevif_user_declares 中声明 `getMicroseconds` 函数：
+该库通过链接期注入机制获取时间源。用户只需在任意一个自己的 `.cpp` 文件中，于命名空间 `emdevif::user_impl::timeline` 内定义对应函数即可：
 
 ```C++
 #include <cstdint>  // for uint64_t
 
-export namespace emdevif::user_declares {
+namespace emdevif::user_impl::timeline {
 
-// 实现在命名空间 emdevif::user_declares::timeline 内
-namespace timeline {
-
-// 用于获取以微秒为单位的时间戳
-uint64_t getMicroseconds()  // 可选 inline、noexcept 修饰符
+// 用于获取以微秒为单位的时间戳（EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS 为 OFF 时）
+uint64_t getMicroseconds() noexcept
 {
     // 返回以微秒为单位的时间戳
 }
 
-// 如果 EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS 定义为 true，则应该改为提供 getMilliseconds 函数，返回以毫秒为单位的时间戳
-// uint64_t getMilliseconds()
+// 如果 EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS 为 ON，则改为提供 getMilliseconds 函数，返回以毫秒为单位的时间戳
+// uint64_t getMilliseconds() noexcept
 // {
 //     // 返回以毫秒为单位的时间戳
 // }
 
-}  // namespace timeline
-
-}  // namespace emdevif::user_declares
+}  // namespace emdevif::user_impl::timeline
 ```
+
+注意：该实现文件需要链接到最终的可执行文件或库，链接器会自动解析符号。
 
 ## 示例
 

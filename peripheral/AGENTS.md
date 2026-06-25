@@ -38,10 +38,12 @@ public:
 ```
 
 ### Handle Map 层（`peripheral/peripheral_handle_map/`）
-提供 `PeripheralHandleMap::findHandle(name)` 静态方法，从用户的 `peripheral_handle_map` 常量映射中查找 `void*`。
+提供 `PeripheralHandleMap::findHandle(name)` 静态方法，委托给用户提供的 `emdevif::user_impl::peripheral_handle_map::findHandle` 函数。
 
-- 用户必须在 `emdevif_user_declares` 中定义 `constexpr auto peripheral_handle_map = makeStaticMap<std::string_view, void*>({...})`
-- 该映射在编译期被静态断言验证格式正确性
+- 用户需要在任意 `.cpp` 文件中实现 `emdevif::user_impl::peripheral_handle_map::findHandle(std::string_view) -> void*`
+- 该函数负责将字符串名称映射到对应的 `XxxModel::Instance*`（返回 `void*`），未找到时返回 `nullptr`
+- 不再要求 `constexpr`，不再使用 `makeStaticMap` / `array_map`
+- 链接器在链接期自动解析符号
 
 ### Impl 层（`peripheral/peripheral_impl_/`）
 每种外设的具体操作类（如 `Gpio` 继承 `GpioModel`）：
@@ -53,12 +55,18 @@ public:
 ## 数据流：从用户注册到外设调用
 
 ```
-1. 用户在 emdevif_user_declares 中:
+1. 用户在任意 .cpp 中:
    constinit GpioModel::Instance gpio1{ .handle = &hw_gpio, .write_function = ... };
-   constexpr auto peripheral_handle_map = makeStaticMap<...>({ {"gpio1", &gpio1} });
+
+   namespace emdevif::user_impl::peripheral_handle_map {
+       void* findHandle(std::string_view name) noexcept {
+           if (name == "gpio1") return &gpio1;
+           return nullptr;
+       }
+   }
 
 2. 应用代码:
-   Gpio gpio("gpio1");           // 构造时查找 peripheral_handle_map["gpio1"]
+   Gpio gpio("gpio1");           // 构造时调用 findHandle("gpio1") 查找实例
    gpio.write(Gpio::Set);        // 委托给 gpio1.write_function(hw_gpio, ...)
 ```
 
@@ -78,17 +86,13 @@ public:
 - 确保 `peripheral_impl_` 链接了所需的其他模块（通常与现有外设一致即可）
 - 不需要修改 `model/CMakeLists.txt`（GLOB 自动收集）
 
-## 循环依赖注意事项
-
-- `emdevif_user_declares` **不可链接** `emdevif_peripheral` 或 `emdevif_peripheral_impl_`，否则循环依赖
-- `emdevif_user_declares` 可以链接 `emdevif_peripheral_model`（仅模型定义，不含实现）
-- 用户侧同样不可导入 `emdevif.peripheral.*` 模块（含 impl）及 `emdevif.peripheralHandleMap`，但可导入 `emdevif.peripheral.model.*`
-
 ## 开发约束
+
+- 用户实现 `findHandle` 的 `.cpp` 文件需要链接到最终可执行文件或库，以确保链接器能解析符号。
 - Model 的 `Instance` 结构体必须保持 `standard_layout`（有 `static_assert` 验证）
 - 函数指针签名变更属于破坏性变更，需同步更新所有平台适配层（如 `emdevif_stm32_peripheral`）
 - 新增外设类型时，需同步考虑非 Modules 路径（`.hpp` 必须可独立于 `.cppm` 使用）
-- `peripheral_handle_map` 的键名语义要保持稳定，避免字符串名称冲突
+- 外设句柄名称（`findHandle` 的 `name` 参数）的语义要保持稳定，避免字符串名称冲突
 
 ## 参考资料
 - 用户侧注册示例：`peripheral/README.md`

@@ -30,7 +30,7 @@ private:
 public:
     /// @brief 根据句柄名构造 PWM 实例
     /// @param name PWM 外设句柄名称
-    explicit constexpr Pwm(const std::string_view name) noexcept
+    explicit Pwm(const std::string_view name) noexcept
         : instance_(static_cast<PwmModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
         detail::PeripheralErrorHandler::checkInstanceIsExist(instance_, "PWM", name);

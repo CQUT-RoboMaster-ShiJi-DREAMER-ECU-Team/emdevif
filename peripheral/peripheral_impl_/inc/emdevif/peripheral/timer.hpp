@@ -29,7 +29,7 @@ private:
 public:
     /// @brief 根据句柄名构造定时器实例
     /// @param name 定时器外设句柄名称
-    explicit constexpr Timer(const std::string_view name) noexcept
+    explicit Timer(const std::string_view name) noexcept
         : instance_(static_cast<TimerModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
         detail::PeripheralErrorHandler::checkInstanceIsExist(instance_, "Timer", name);

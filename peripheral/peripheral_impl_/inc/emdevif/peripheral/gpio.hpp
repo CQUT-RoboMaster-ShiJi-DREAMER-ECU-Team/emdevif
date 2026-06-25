@@ -32,7 +32,7 @@ public:
      * @brief 根据句柄名构造 GPIO 实例
      * @param name GPIO 外设句柄名称
      */
-    explicit constexpr Gpio(const std::string_view name) noexcept
+    explicit Gpio(const std::string_view name) noexcept
         : instance_(static_cast<GpioModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
         detail::PeripheralErrorHandler::checkInstanceIsExist(instance_, "GPIO", name);

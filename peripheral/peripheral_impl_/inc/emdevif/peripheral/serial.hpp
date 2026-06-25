@@ -34,7 +34,7 @@ public:
 
     /// @brief 根据句柄名构造串口实例
     /// @param name 串口外设句柄名称
-    explicit constexpr Serial(const std::string_view name) noexcept
+    explicit Serial(const std::string_view name) noexcept
         : instance_(static_cast<SerialModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
         detail::PeripheralErrorHandler::checkInstanceIsExist(instance_, "Serial", name);

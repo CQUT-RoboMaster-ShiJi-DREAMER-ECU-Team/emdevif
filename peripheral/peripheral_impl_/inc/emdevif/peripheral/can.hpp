@@ -34,7 +34,7 @@ public:
      * @brief 根据句柄名构造 CAN 实例
      * @param name CAN 外设句柄名称
      */
-    explicit constexpr Can(const std::string_view name) noexcept
+    explicit Can(const std::string_view name) noexcept
         : instance_(static_cast<CanModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
         detail::PeripheralErrorHandler::checkInstanceIsExist(instance_, "CAN", name);

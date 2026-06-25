@@ -7,21 +7,26 @@
 #ifndef EMDEVIF_TIMELINE_HPP
     #define EMDEVIF_TIMELINE_HPP
 
-        #include "emdevif/core/detail/include_emdevif_user_declares_in_headers.hpp"
         #include "emdevif/core/simplify_decl_macros.hpp"
 
         #include <cstdint>
 
         #include <type_traits>
 
-    #ifndef EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS
-        #define EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS false
-    #endif
-
 namespace emdevif {
 
 /// 时间点类型
 using BaseTimePoint = uint64_t;
+
+namespace user_impl::timeline {
+#if (!EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS)
+    BaseTimePoint getMicroseconds() noexcept;
+    BaseTimePoint getMilliseconds() noexcept = EMDEVIF_REASON_DELETE("Macro `EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS` was false, so this function deleted. Please usage `getMicroseconds` instead");
+#else
+    BaseTimePoint getMicroseconds() noexcept = EMDEVIF_REASON_DELETE("Macro `EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS` was true, so this function deleted. Please usage `getMilliseconds` instead");
+    BaseTimePoint getMilliseconds() noexcept;
+#endif
+}  // namespace user_impl::timeline
 
 /**
  * 时间线类
@@ -48,7 +53,7 @@ public:
     static BaseTimePoint getMicroseconds() noexcept
     #if (!EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS)
     {
-        return ::emdevif::user_declares::timeline::getMicroseconds();
+        return ::emdevif::user_impl::timeline::getMicroseconds();
     }
     #else
         = EMDEVIF_REASON_DELETE(
@@ -63,7 +68,7 @@ public:
     static BaseTimePoint getMilliseconds() noexcept
     #if (EMDEVIF_TIMELINE_SOURCE_IS_MILLISECONDS)
     {
-        return ::emdevif::user_declares::timeline::getMilliseconds();
+        return ::emdevif::user_impl::timeline::getMilliseconds();
     }
     #else
         = EMDEVIF_REASON_DELETE(

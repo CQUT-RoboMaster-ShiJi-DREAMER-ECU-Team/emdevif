@@ -195,9 +195,16 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/emdevif_collection/emdevif)
 
 在子模块的 README.md 中，将会提供 cmake/emdevif_config.cmake 的示例，您可以将其内容复制到您的配置文件中并加以修改即可。
 
-### 由用户自定义的实现模块 emdevif_user_declares
+### 链接期注入（timeline / peripheral）与用户自定义模块（logger）
 
-有一部分子模块（例如 logger、timeline）需要用户提供一些底层实现，例如如何输出日志、如何获取时间戳等。这些实现被称为“用户自定义的实现模块”（user-declared
+emdevif 有两种机制让用户提供底层实现：
+
+- **链接期注入**（`timeline`、`peripheral`）：用户只需在任意 `.cpp` 文件中，于命名空间 `emdevif::user_impl` 中定义所需函数，链接器自动解析符号。不再需要创建 `emdevif_user_declares` 目标。详见各子模块 README。
+- **用户自定义模块**（`logger`，如下所述）：仍需通过 `emdevif_user_declares` 目标提供实现。
+
+#### 由用户自定义的实现模块 emdevif_user_declares（logger 仍使用）
+
+有一部分子模块（例如 logger）需要用户提供一些底层实现，例如如何输出日志。这些实现被称为"用户自定义的实现模块"（user-declared
 implementation modules），简称 emdevif_user_declares。
 
 #### 使用模块的情况

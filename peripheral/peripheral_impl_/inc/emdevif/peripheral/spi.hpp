@@ -34,7 +34,7 @@ public:
 
     /// @brief 根据句柄名构造 SPI 实例
     /// @param name SPI 外设句柄名称
-    explicit constexpr Spi(const std::string_view name) noexcept
+    explicit Spi(const std::string_view name) noexcept
         : instance_(static_cast<SpiModel::Instance*>(PeripheralHandleMap::findHandle(name)))
     {
         detail::PeripheralErrorHandler::checkInstanceIsExist(instance_, "SPI", name);
