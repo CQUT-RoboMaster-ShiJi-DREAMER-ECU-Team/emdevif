@@ -43,7 +43,8 @@ concept MessageSlot =
     requires {
         typename T::ValueType;
         T::item_size;
-    } && std::same_as<std::remove_cvref_t<decltype(T::item_size)>, std::size_t> &&
+    } && std::same_as<std::remove_cvref_t<decltype(T::item_size)>, std::size_t> && std::is_move_constructible_v<T> &&
+    std::is_move_assignable_v<T> && !std::is_copy_constructible_v<T> && !std::is_copy_assignable_v<T> &&
     requires(T& t,
              const T& ct,
              T u,

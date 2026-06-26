@@ -171,6 +171,7 @@ public:
     {
         head_ = 0U;
         tail_ = 0U;
+        count_ = 0U;
     }
 
     /**
@@ -179,13 +180,24 @@ public:
      */
     constexpr void push(const Type& item) noexcept
     {
+        if (isFull()) {
+            buffer_[head_++] = item;
+            ++tail_;
+            return;
+        }
         buffer_[head_++] = item;
+        ++count_;
     }
     /// @overload
-    /// 向缓冲区增加单个数据，以移动的方式
     constexpr void push(Type&& item) noexcept
     {
+        if (isFull()) {
+            buffer_[head_++] = std::move(item);
+            ++tail_;
+            return;
+        }
         buffer_[head_++] = std::move(item);
+        ++count_;
     }
 
     /**
@@ -202,6 +214,12 @@ public:
             }
         }
         else {
+            if (items.size() > remainSlots()) {
+                for (const auto& item : items) {
+                    push(item);
+                }
+                return;
+            }
             if (item_size - head_ >= items.size()) {
                 std::memcpy(&buffer_[head_], items.data(), sizeof(Type) * items.size());
                 head_ += items.size();
@@ -213,6 +231,7 @@ public:
                 std::memcpy(&buffer_[0], &items[last_remain_slots], sizeof(Type) * (items.size() - last_remain_slots));
                 head_ += items.size();
             }
+            count_ += items.size();
         }
     }
     /// @overload
@@ -231,6 +250,7 @@ public:
      */
     constexpr Type pop() noexcept
     {
+        --count_;
         return buffer_[tail_++];
     }
 
@@ -257,6 +277,12 @@ public:
             }
         }
         else {
+            if (items.size() > count_) {
+                for (auto& item : items) {
+                    item = pop();
+                }
+                return;
+            }
             if (item_size - tail_ >= items.size()) {
                 std::memcpy(items.data(), &buffer_[tail_], sizeof(Type) * items.size());
                 tail_ += items.size();
@@ -267,6 +293,7 @@ public:
                 std::memcpy(&items[last_remain_slots], &buffer_[0], sizeof(Type) * (items.size() - last_remain_slots));
                 tail_ += items.size();
             }
+            count_ -= items.size();
         }
     }
 
@@ -318,10 +345,11 @@ public:
      */
     constexpr void discard(std::size_t slots) noexcept
     {
-        if (slots > usedSlots()) {
-            slots = usedSlots();
+        if (slots > count_) {
+            slots = count_;
         }
         tail_ += slots;
+        count_ -= slots;
     }
 
     /**
@@ -330,7 +358,7 @@ public:
      */
     [[nodiscard]] constexpr std::size_t usedSlots() const noexcept
     {
-        return head_ - tail_;
+        return count_;
     }
 
     /**
@@ -348,7 +376,7 @@ public:
      */
     [[nodiscard]] constexpr bool isEmpty() const noexcept
     {
-        return usedSlots() == 0;
+        return count_ == 0;
     }
 
     /**
@@ -357,7 +385,7 @@ public:
      */
     [[nodiscard]] constexpr bool isFull() const noexcept
     {
-        return remainSlots() == 0;
+        return count_ == item_size;
     }
 
     /**
@@ -366,7 +394,7 @@ public:
      */
     [[nodiscard]] constexpr std::size_t remainSlots() const noexcept
     {
-        return item_size - usedSlots();
+        return item_size - count_;
     }
 
     /**
@@ -418,6 +446,11 @@ public:
      */
     constexpr Type& useNextSlot() noexcept
     {
+        if (isFull()) {
+            ++tail_;
+            return buffer_[head_++];
+        }
+        ++count_;
         return buffer_[head_++];
     }
     /// @overload
@@ -440,12 +473,14 @@ public:
         }
 
         head_ += slots;
+        count_ += slots;
     }
 
 private:
     Type buffer_[item_size];                         ///< 缓冲区存储所用的数组
     RingUnsigned<std::size_t, item_size> head_{0U};  ///< 缓冲区头指针
     RingUnsigned<std::size_t, item_size> tail_{0U};  ///< 缓冲区尾指针
+    std::size_t count_{0};                           ///< 已使用槽位数
 };
 
 }  // namespace emdevif
