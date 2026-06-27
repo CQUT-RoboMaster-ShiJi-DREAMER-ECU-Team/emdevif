@@ -2,13 +2,6 @@
 #ifndef EMDEVIF_LOGGER_USER_CONFIG_HPP
 #define EMDEVIF_LOGGER_USER_CONFIG_HPP
 
-// 日志模式：
-//     0 - 同步模式（Sync）
-//     1 - 异步模式（Async）
-//     2 - 外部实现模式（ExternalImpl）
-// 默认值为 0
-#define EMDEVIF_LOGGER_MODE                    0
-
 // 日志忽略等级：如果日志等级小于该值，则不会打印该日志（如果日志等级与忽略等级相等，则仍然会打印该日志）。
 // 取值可选：
 //     0 - Verbose

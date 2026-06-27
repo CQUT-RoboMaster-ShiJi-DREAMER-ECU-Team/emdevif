@@ -1,17 +1,40 @@
-/**
- * @file async.hpp
- * @brief
- */
+#if EMDEVIF_USE_MODULES
+module;
 
-// ReSharper disable CppNonInlineFunctionDefinitionInHeaderFile
+module emdevif.logger;
 
-#pragma once
-#ifndef EMDEVIF_LOGGER_SRC_ASYNC_HPP_
-#define EMDEVIF_LOGGER_SRC_ASYNC_HPP_
+import emdevif.core.error_handler;
+import emdevif.core.data_container.ring_buffer;
+import emdevif.core.resource_guard.lock_guard;
+import emdevif.system.mutex;
+import emdevif.system.semaphore;
+import emdevif.system.thread;
+#else
+#include "emdevif/logger.hpp"
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/core/data_container/ring_buffer.hpp"
+#include "emdevif/core/resource_guard/lock_guard.hpp"
+#include "emdevif/system/mutex.hpp"
+#include "emdevif/system/semaphore.hpp"
+#include "emdevif/system/thread.hpp"
+#include "emdevif/core/attributes_and_useful_macros.h"
+#include "emdevif/core/fatal_handler.h"
+#include "emdevif/core/line_separator.h"
+#endif
 
 namespace emdevif::logger::detail::async {
 
-/// 日志异步模式下打印线程的栈大小
+static VsnprintfImpl vsnprintf_impl_ = nullptr;
+
+static int snprintf_(char* dest, const std::size_t buffer_size, const char* format, ...) noexcept
+{
+    std::va_list args;
+    va_start(args, format);
+    const auto ret = vsnprintf_impl_(dest, buffer_size, format, args);
+    va_end(args);
+    return ret;
+}
+
 static constexpr auto logger_async_thread_stack_size = static_cast<std::size_t>(EMDEVIF_LOGGER_ASYNC_THREAD_STACK_SIZE);
 
 static RingBuffer<std::array<char, logger_buffer_size>, logger_buffer_count> buffer_{};
@@ -41,7 +64,7 @@ EMDEVIF_NO_RETURN static void logPrinterThread(void*) noexcept
         mutex_.lock();
 
         if (!buffer_.isEmpty()) {
-            if (::emdevif::user_declares::logger::printLogMessage(&buffer_.peekRef()[0]) == ErrorCode::Success) {
+            if (::emdevif::user_impl::logger::printLogMessage(&buffer_.peekRef()[0]) == ErrorCode::Success) {
                 buffer_.discard(1);
             }
 
@@ -58,7 +81,7 @@ EMDEVIF_NO_RETURN static void logPrinterThread(void*) noexcept
 
 ErrorCode logInit(const VsnprintfImpl vsprintf_impl) noexcept
 {
-    detail::vsnprintf_impl_ = vsprintf_impl;
+    vsnprintf_impl_ = vsprintf_impl;
 
     buffer_.clear();
 
@@ -124,16 +147,16 @@ void logImpl(const LoggerLevel level, const char* format, std::va_list args) noe
         auto* const p_buffer = buffer_.nextSlot().data();
         const auto logMsgBufferLength = [] { return logger_buffer_size; };
 
-        const auto index1 = detail::snprintf_(p_buffer,
-                                              logMsgBufferLength(),
-                                              "%-10zu %7s ",
-                                              ::emdevif::user_declares::logger::getTimeLine(),
-                                              toCString(level));
+        const auto index1 = snprintf_(p_buffer,
+                                      logMsgBufferLength(),
+                                      "%-10zu %7s ",
+                                      ::emdevif::user_impl::logger::getTimeLine(),
+                                      toCString(level));
         if (index1 < 0) {
             return;
         }
 
-        const auto index2 = detail::vsnprintf_impl_(p_buffer + index1, logMsgBufferLength() - index1, format, args);
+        const auto index2 = vsnprintf_impl_(p_buffer + index1, logMsgBufferLength() - index1, format, args);
         if (index2 < 0) {
             return;
         }
@@ -167,11 +190,10 @@ void logImpl(const LoggerLevel level, const char* format, std::va_list args) noe
         }
 #endif
 
-        // 致命错误时，立即尝试打印所有日志并终止程序
         if (level == LoggerLevel::Fatal) {
             static std::uint8_t fail_count = 0;
             while (!buffer_.isEmpty()) {
-                if (::emdevif::user_declares::logger::printLogMessage(&buffer_.peekRef()[0]) == ErrorCode::Success) {
+                if (::emdevif::user_impl::logger::printLogMessage(&buffer_.peekRef()[0]) == ErrorCode::Success) {
                     buffer_.discard(1);
                     fail_count = 0;
                 }
@@ -194,5 +216,3 @@ void logImpl(const LoggerLevel level, const char* format, std::va_list args) noe
 }
 
 }  // namespace emdevif::logger::detail::async
-
-#endif  // !EMDEVIF_LOGGER_SRC_ASYNC_HPP_

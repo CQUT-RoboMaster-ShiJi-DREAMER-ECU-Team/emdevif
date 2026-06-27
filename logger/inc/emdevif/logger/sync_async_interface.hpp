@@ -18,7 +18,7 @@
 
 namespace emdevif::logger {
 
-inline emdevif::ErrorCode init(const detail::VsnprintfImpl vsprintf_impl) noexcept
+inline emdevif::ErrorCode init(const VsnprintfImpl vsprintf_impl) noexcept
 {
     return detail::logInit(vsprintf_impl);
 }

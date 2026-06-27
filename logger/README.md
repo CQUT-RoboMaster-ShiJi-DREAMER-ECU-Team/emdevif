@@ -5,8 +5,7 @@
 ## 依赖
 
 - `emdevif_core`
-- `emdevif_user_declares`
-- `emdevif_system`（异步模式或同步+锁时）
+- `emdevif_system`（异步模式或同步+锁时，需设置 CMake 变量 `EMDEVIF_LOGGER_LINK_SYSTEM_LIB` 为 `ON`）
 
 参考 [emdevif_logger_config_example.hpp](./emdevif_logger_config_example.hpp)
 文件，您可以将这个文件拷贝到您的工程中，并根据需要修改配置选项。然后在 CMakeLists.txt 中定义
@@ -19,71 +18,57 @@ target_compile_definitions(emdevif_logger PUBLIC
 )
 ```
 
-## 依赖关系
+## 日志模式选择
 
-异步模式时，依赖 `emdevif_system` 子模块。
-同步模式时，如果启用了锁，则依赖 `emdevif_system` 子模块。
-如果依赖了子模块 `emdevif_system`，则需要设置 CMake 变量 `EMDEVIF_LOGGER_LINK_SYSTEM_LIB` 为 `ON`。
+通过 CMake 缓存变量 `EMDEVIF_LOGGER_MODE` 选择日志模式：
 
-## emdevif_user_declares 的需求
+- `0`：同步模式（Sync）
+- `1`：异步模式（Async）
+- `2`：外部实现模式（ExternalImpl）
 
-**不可链接 `emdevif_logger` 库，否则导致循环依赖！**<br>
-**不可导入 `emdevif.logger` 模块，否则导致循环依赖！**
+默认值为 `0`（同步模式）。
 
-该模块需要用户在 emdevif_user_declares 中声明 `getTimeLine`、`printLogMessage` 函数：
+选定的模式对应的库目标（`emdevif_logger_sync` / `emdevif_logger_async` / `emdevif_logger_external`）会被构建并别名为 `emdevif_logger`。只有被选中的目标会被构建，其他模式的代码不会被编译。
+
+## 链接期注入（user_impl）
+
+logger 模块通过链接期注入机制让用户提供底层实现，您只需在任意 `.cpp` 文件中，于命名空间 `emdevif::user_impl::logger` 中定义所需函数，链接器自动解析符号。
 
 ### 同步/异步模式
 
+在同步或异步模式下，您需要提供以下函数：
+
 ```C++
-#include <cstddef>                  // for std::size_t
-import emdevif.core.error_handler;  // for emdevif::ErrorCode
+#include <cstddef>
+#include "emdevif/core/error_handler.hpp"
 
-export namespace emdevif::user_declares {
+namespace emdevif::user_impl::logger {
 
-// 实现在 emdevif::user_declares::logger 命名空间中声明
-namespace logger {
-
-// 用于获取当前时间戳的函数
-std::size_t getTimeLine() noexcept  // 可选 inline 等修饰符
+std::size_t getTimeLine() noexcept
 {
     // 返回时间戳，单位可以是毫秒、微秒等，取决于具体实现
 }
 
-// 用于打印日志消息的函数
-// message: 要打印的日志消息，已经格式化完成
-ErrorCode printLogMessage(const char* message) noexcept
+emdevif::ErrorCode printLogMessage(const char* message) noexcept
 {
     // 在这里实现日志消息的打印逻辑，例如输出到控制台、文件、串口外设等
-
     // 返回 emdevif::ErrorCode::Success 表示成功，其他值表示失败
 }
 
-}  // namespace logger
-
-}  // namespace emdevif::user_declares
+}
 ```
+
+**注意：** 不应在这些实现中链接 `emdevif_logger` 或导入 `emdevif.logger` 模块，否则导致循环依赖。
 
 ### 外部实现模式
 
+在外部实现模式下，您需要提供每级别的日志实现函数（无 `init`/`deInit`，用户自行初始化/反初始化外部日志库）：
+
 ```C++
-#include <cstdarg>                  // for std::va_list, va_start, va_end
-import emdevif.core.error_handler;  // for emdevif::ErrorCode
+#include <cstdarg>
+#include "emdevif/core/error_handler.hpp"
 
-export namespace emdevif::user_declares {
-
-// 实现在 emdevif::user_declares::logger 命名空间中声明
-namespace logger {
-
-emdevif::ErrorCode logInitImpl(/* 自行约定初始化参数 */) noexcept
-{
-    // 实现日志初始化
-}
-
-void deInitImpl() noexcept
-{
-    // 实现日志重置
-}
-// init 和 deInit 的实现可以根据您的需求灵活调整，比如您还可以让这两个实现都留空，自己手动初始化/重置外部日志系统。
+namespace emdevif::user_impl::logger {
 
 void logImpl(const int level, const char* format, std::va_list args) noexcept
 {
@@ -92,7 +77,6 @@ void logImpl(const int level, const char* format, std::va_list args) noexcept
     // 您需要自行实现 emdevif::logger::LoggerLevel 与外部日志系统日志级别之间的映射关系
 }
 
-// 以下函数的参数与 logImpl 的同理
 void logVerboseImpl(const char* format, std::va_list args) noexcept
 {
     // 实现 Verbose 级别日志输出
@@ -105,7 +89,7 @@ void logDebugImpl(const char* format, std::va_list args) noexcept
 
 void logInfoImpl(const char* format, std::va_list args) noexcept
 {
-   // 实现 Info 级别日志输出
+    // 实现 Info 级别日志输出
 }
 
 void logWarningImpl(const char* format, std::va_list args) noexcept
@@ -123,12 +107,12 @@ void logFatalImpl(const char* format, std::va_list args) noexcept
     // 实现 Fatal 级别日志输出
 }
 
-}  // namespace logger
-
-}  // namespace emdevif::user_declares
+}
 ```
 
 ## 示例
+
+### 同步/异步模式示例
 
 ```C++
 #include <cstdio>
@@ -137,16 +121,33 @@ import emdevif.logger;
 
 int main()
 {
-    emdevif::logger::init(std::vsnprintf);  // 如果是同步/异步模式，需要提供一个 vsnprintf 风格的格式化函数
-    // 如果是外部实现模式，则根据您自己约定的参数进行初始化
+    emdevif::logger::init(std::vsnprintf);
 
     while (true) {
         using namespace emdevif;
-
-        logger::info("Hello, emdevif Logger!");  // 不需要换行符，会自动添加
+        logger::info("Hello, emdevif Logger!");
         logger::info("Support printf-style %s!", "format");
-        logger::debug(emdevif::LogLevel::Warning, "This is a debug log: %d", 42);
-        // ...
+    }
+}
+```
+
+### 外部实现模式示例
+
+```C++
+#include <cstdio>
+
+import emdevif.logger;
+
+// 在您的工程的其他 .cpp 文件中提供 emdevif::user_impl::logger 的实现（见上文）
+
+int main()
+{
+    // 外部实现模式无 init/deInit，您自行初始化外部日志库
+
+    while (true) {
+        using namespace emdevif;
+        logger::info("Hello, emdevif Logger!");
+        logger::info("Support printf-style %s!", "format");
     }
 }
 ```

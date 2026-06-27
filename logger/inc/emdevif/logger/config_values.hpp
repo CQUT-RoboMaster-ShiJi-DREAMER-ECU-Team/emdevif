@@ -8,11 +8,16 @@
 #define EMDEVIF_LOGGER_CONFIG_VALUES_HPP
 
 #include <cstdarg>
+#include <cstddef>
 #include <cstdint>
 
 #include "emdevif/logger/config.hpp"
 
 namespace emdevif::logger {
+
+#if (EMDEVIF_LOGGER_MODE == 0 || EMDEVIF_LOGGER_MODE == 1)
+using VsnprintfImpl = int (*)(char* dest, std::size_t buffer_size, const char* format, std::va_list args);
+#endif
 
 /// @brief 日志工作模式枚举。
 enum class LoggerMode : uint_fast8_t {

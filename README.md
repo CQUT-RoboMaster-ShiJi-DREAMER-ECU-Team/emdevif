@@ -195,183 +195,35 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/emdevif_collection/emdevif)
 
 在子模块的 README.md 中，将会提供 cmake/emdevif_config.cmake 的示例，您可以将其内容复制到您的配置文件中并加以修改即可。
 
-### 链接期注入（timeline / peripheral）与用户自定义模块（logger）
+### 链接期注入（timeline / peripheral / logger）
 
-emdevif 有两种机制让用户提供底层实现：
+部分子模块需要用户提供底层实现，例如 timeline 提供时间戳、logger 输出日志、peripheral 查找外设句柄。这些实现通过链接期注入机制提供：用户只需在任意 `.cpp` 文件中，于命名空间 `emdevif::user_impl` 中定义所需函数，链接器自动解析符号。不再需要创建 `emdevif_user_declares` 目标。详见各子模块 README。
 
-- **链接期注入**（`timeline`、`peripheral`）：用户只需在任意 `.cpp` 文件中，于命名空间 `emdevif::user_impl` 中定义所需函数，链接器自动解析符号。不再需要创建 `emdevif_user_declares` 目标。详见各子模块 README。
-- **用户自定义模块**（`logger`，如下所述）：仍需通过 `emdevif_user_declares` 目标提供实现。
+#### 示例
 
-#### 由用户自定义的实现模块 emdevif_user_declares（logger 仍使用）
-
-有一部分子模块（例如 logger）需要用户提供一些底层实现，例如如何输出日志。这些实现被称为"用户自定义的实现模块"（user-declared
-implementation modules），简称 emdevif_user_declares。
-
-#### 使用模块的情况
-
-如果您使用了模块导入的方式，那么您需要为 emdevif_user_declares 模块提供一个实现模块，并且将其添加到 CMake
-中。这个模块需要导出一个特定的命名空间 `emdevif::user_declares`，并且在其中导出实现所需的功能。
-
-首先需要在您的工程中创建这个模块，并在 CMakeLists.txt 中将其添加为一个目标：
-
-```
-project_root
-├── cmake/  # 存放 CMake 配置文件的目录
-│   ├── emdevif_config.cmake
-│   └── ...
-├── inc/
-│   └── ...
-├── src/
-│   └── ...
-├── CMakeLists.txt
-├── emdevif_collection/
-│   ├── emdevif/
-│   │   └── ...
-│   └── emdevif_user_declares/  # 用户自定义的实现模块
-│       ├── emdevif_user_declares.cppm
-│       └── ...
-└── ...
-```
-
-```CMake
-# project_root/CMakeLists.txt
-
-# 按照相同的方式配置
-cmake_minimum_required(VERSION 3.28)
-project(your_project_name C CXX)
-
-set(CMAKE_C_STANDARD 11)            # 最低限制是 C11
-set(CMAKE_CXX_STANDARD 20)          # 最低限制是 C++20
-set(CMAKE_CXX_SCAN_FOR_MODULES ON)  # 启用 C++ 模块支持（必须设置为 ON）
-
-add_executable(${PROJECT_NAME} src/main.cpp)
-target_include_directories(${PROJECT_NAME} PRIVATE inc)
-
-include(cmake/emdevif_config.cmake)
-target_link_libraries(${PROJECT_NAME} PRIVATE emdevif)
-
-# 添加用户自定义的实现模块
-add_library(emdevif_user_declares STATIC)
-target_sources(emdevif_user_declares
-    PUBLIC FILE_SET emdevif_user_declares_module TYPE CXX_MODULES
-    FILES emdevif_collection/emdevif_user_declares/emdevif_user_declares.cppm  # 您的实现文件，需要提供为 C++ 模块
-)
-target_compile_definitions(emdevif_user_declares PUBLIC
-    EMDEVIF_USER_DECLARES_PROVIDE_MODULE=1  # 使用模块时，还需要提供这个宏定义，以便 emdevif 的模块能够正确地导入用户自定义的实现模块
-)
-target_link_libraries(emdevif_user_declares
-    # 可以链接其他库
-    # 注意，部分库（相应库的文档会有说明）不能在这里链接，否则会产生循环依赖。
-)
-```
+假设您需要在项目中使用 logger 模块（同步/异步模式），在某个 `.cpp` 文件中提供实现：
 
 ```C++
-// emdevif_collection/emdevif_user_declares/emdevif_user_declares.cppm
+// user_impl_logger.cpp
+#include <cstddef>
+#include "emdevif/core/error_handler.hpp"
 
-module;
+namespace emdevif::user_impl::logger {
 
-// 可以在这里添加头文件
-
-export module emdevif.user_declares;  // 导出的模块名称必须与它相同
-
-// 可以在这里导入其他模块
-// 注意，部分 emdevif 的模块（相应模块内会有说明）不能在这里导入，否则会产生循环依赖。
-
-export namespace emdevif::user_declares  // 命名空间也必须与它相同
+std::size_t getTimeLine() noexcept
 {
+    // 返回时间戳
+}
 
-// 在这里实现所需的功能，例如 logger 模块需要实现的日志输出函数。
-// 具体请参考各个子模块的 README.md
-
-// 当然，您也可以将实现分散在多个文件，或者放在不同的模块分区内，只要确保它们都被包含在
-// emdevif.user_declares 模块中并且会被导出即可。
+emdevif::ErrorCode printLogMessage(const char* message) noexcept
+{
+    // 输出日志消息，例如串口、控制台等
+}
 
 }
 ```
 
-#### 使用头文件的情况
-
-使用头文件时，用户自定义的实现模块则需要提供一个头文件，并且在其中定义一个特定的命名空间 `emdevif::user_declares`，然后在其中声明实现所需的功能。
-
-首先需要在您的工程中创建这个模块，并在 CMakeLists.txt 中将其添加为一个目标：
-
-```
-project_root
-├── cmake/  # 存放 CMake 配置文件的目录
-│   ├── emdevif_config.cmake
-│   └── ...
-├── inc/
-│   └── ...
-├── src/
-│   └── ...
-├── CMakeLists.txt
-├── emdevif_collection/
-│   ├── emdevif/
-│   │   └── ...
-│   └── emdevif_user_declares/  # 用户自定义的实现模块
-│       ├── inc/emdevif/user_declares.hpp  # 需要提供这个头文件，并且在其中声明实现所需的功能
-│       └── ...
-└── ...
-```
-
-```CMake
-# project_root/CMakeLists.txt
-
-# 按照相同的方式配置
-cmake_minimum_required(VERSION 3.28)
-project(your_project_name C CXX)
-
-set(CMAKE_C_STANDARD 11)             # 最低限制是 C11
-set(CMAKE_CXX_STANDARD 20)           # 最低限制是 C++20
-set(CMAKE_CXX_SCAN_FOR_MODULES OFF)  # 不使用模块，就不需要启用模块支持了
-
-add_executable(${PROJECT_NAME} src/main.cpp)
-target_include_directories(${PROJECT_NAME} PRIVATE inc)
-
-include(cmake/emdevif_config.cmake)
-target_link_libraries(${PROJECT_NAME} PRIVATE emdevif)
-
-# 添加用户自定义的实现模块
-# 根据您的需求决定库的类型，如果是纯头文件库，则使用 INTERFACE 类型；如果实现包含源文件，则使用 STATIC 或 SHARED 类型。
-# 这里以纯头文件库为例：
-add_library(emdevif_user_declares INTERFACE)
-target_include_directories(emdevif_user_declares INTERFACE
-    emdevif_collection/emdevif_user_declares/inc  # 包含用户自定义的实现模块的头文件路径
-)
-# 一旦以 #include 方式提供 emdevif_user_declares 时，都不能定义 EMDEVIF_USER_DECLARES_PROVIDE_MODULE。
-# 该宏仅在使用 .cppm 模块方式提供时才需要定义，与库类型（INTERFACE / STATIC / SHARED）无关。
-# target_compile_definitions(emdevif_user_declares PUBLIC
-#     EMDEVIF_USER_DECLARES_PROVIDE_MODULE=1
-# )
-target_link_libraries(emdevif_user_declares
-    # 可以链接其他库
-    # 注意，部分库（相应库的文档会有说明）不能在这里链接，否则会产生循环依赖。
-)
-```
-
-```C++
-// emdevif_collection/emdevif_user_declares/inc/emdevif/user_declares.hpp
-
-#pragma once
-#ifndef EMDEVIF_USER_DECLARES_HPP
-#define EMDEVIF_USER_DECLARES_HPP
-
-// 可以在这里添加头文件
-// 注意，部分 emdevif 的头文件（相应模块内会有说明）不能在这里导入，否则会产生循环依赖。
-
-namespace emdevif::user_declares  // 命名空间也必须与它相同
-{
-
-// 在这里实现所需的功能，例如 logger 模块需要实现的日志输出函数。
-// 具体请参考各个子模块的 README.md
-
-// 当然，您也可以将实现分散在多个文件，或者放在不同的模块分区内，只要确保它们都被包含在
-// emdevif/user_declares.hpp 中即可。
-
-}
-
-#endif  // !EMDEVIF_USER_DECLARES_HPP
-```
+编译并链接该 `.cpp` 到您的目标即可。timeline 与 peripheral 的使用方式类似，具体函数签名请参考对应模块的 README.md。
 
 ### CMake 变量配置
 

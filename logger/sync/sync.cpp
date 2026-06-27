@@ -1,15 +1,38 @@
-/**
- * @file sync.hpp
- * @brief 同步模式的日志实现
- */
+#if EMDEVIF_USE_MODULES
+module;
 
-// ReSharper disable CppNonInlineFunctionDefinitionInHeaderFile
+module emdevif.logger;
 
-#pragma once
-#ifndef EMDEVIF_LOGGER_SRC_SYNC_HPP_
-#define EMDEVIF_LOGGER_SRC_SYNC_HPP_
+import emdevif.core.error_handler;
+
+#if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
+import emdevif.core.resource_guard.lock_guard;
+import emdevif.system.mutex;
+#endif
+#else
+#include "emdevif/logger.hpp"
+#include "emdevif/core/error_handler.hpp"
+#include "emdevif/core/attributes_and_useful_macros.h"
+#include "emdevif/core/fatal_handler.h"
+#include "emdevif/core/line_separator.h"
+#if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
+#include "emdevif/core/resource_guard/lock_guard.hpp"
+#include "emdevif/system/mutex.hpp"
+#endif
+#endif
 
 namespace emdevif::logger::detail::sync {
+
+static VsnprintfImpl vsnprintf_impl_ = nullptr;
+
+static int snprintf_(char* dest, const std::size_t buffer_size, const char* format, ...) noexcept
+{
+    std::va_list args;
+    va_start(args, format);
+    const auto ret = vsnprintf_impl_(dest, buffer_size, format, args);
+    va_end(args);
+    return ret;
+}
 
 static char log_msg_buffer_[logger_buffer_count][logger_buffer_size];
 
@@ -28,7 +51,7 @@ static emdevif::MutexStaticInstance logger_mutex_static_instance_;
 
 ErrorCode logInit(const VsnprintfImpl vsprintf_impl) noexcept
 {
-    detail::vsnprintf_impl_ = vsprintf_impl;
+    vsnprintf_impl_ = vsprintf_impl;
 
 #if (defined(EMDEVIF_LOGGER_SYNC_USE_LOCK) && EMDEVIF_LOGGER_SYNC_USE_LOCK)
     logger_mutex_ = emdevif::Mutex{emdevif::MutexBuilder{
@@ -51,7 +74,7 @@ void logDeInit() noexcept
         "please use dynamic create(set macro `EMDEVIF_LOGGER_DYNAMIC_CREATE` to true).");
 #endif
 
-    detail::vsnprintf_impl_ = nullptr;
+    vsnprintf_impl_ = nullptr;
 }
 
 void logImpl(const LoggerLevel level, const char* format, std::va_list args) noexcept
@@ -63,16 +86,16 @@ void logImpl(const LoggerLevel level, const char* format, std::va_list args) noe
 
     auto* const p_buffer = reinterpret_cast<char*>(log_msg_buffer_);
 
-    const auto index1 = detail::snprintf_(p_buffer,
-                                          logMsgBufferLength(),
-                                          "%-10zu %7s ",
-                                          ::emdevif::user_declares::logger::getTimeLine(),
-                                          toCString(level));
+    const auto index1 = snprintf_(p_buffer,
+                                  logMsgBufferLength(),
+                                  "%-10zu %7s ",
+                                  ::emdevif::user_impl::logger::getTimeLine(),
+                                  toCString(level));
     if (index1 < 0) {
         return;
     }
 
-    const auto index2 = detail::vsnprintf_impl_(p_buffer + index1, logMsgBufferLength() - index1, format, args);
+    const auto index2 = vsnprintf_impl_(p_buffer + index1, logMsgBufferLength() - index1, format, args);
     if (index2 < 0) {
         return;
     }
@@ -106,9 +129,7 @@ void logImpl(const LoggerLevel level, const char* format, std::va_list args) noe
     }
 #endif
 
-    ::emdevif::user_declares::logger::printLogMessage(p_buffer);
+    ::emdevif::user_impl::logger::printLogMessage(p_buffer);
 }
 
 }  // namespace emdevif::logger::detail::sync
-
-#endif  // !EMDEVIF_LOGGER_SRC_SYNC_HPP_

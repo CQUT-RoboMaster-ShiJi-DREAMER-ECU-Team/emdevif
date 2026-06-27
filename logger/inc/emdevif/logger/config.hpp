@@ -11,10 +11,6 @@
 #include EMDEVIF_LOGGER_CONFIG_FILE
 #endif
 
-#ifndef EMDEVIF_LOGGER_MODE
-#define EMDEVIF_LOGGER_MODE 0
-#endif
-
 #if (!((EMDEVIF_LOGGER_MODE) >= 0 && (EMDEVIF_LOGGER_MODE) <= 2))
 #error "Invalid EMDEVIF_LOGGER_MODE value! It should be 0 (Sync), 1 (Async) or 2 (ExternalImpl)."
 #endif
