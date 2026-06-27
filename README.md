@@ -9,7 +9,6 @@ emdevif: embedded developing interface 嵌入式开发接口。
 * [timeline](./timeline) 微秒级时间戳。
 * [peripherals](./peripheral) 对外设的操作接口。
 * [system](./system) 对操作系统（例如 FreeRTOS）调用的封装。
-* [util](./util) 其他实用功能。
 
 ## 外部模块
 
@@ -19,7 +18,7 @@ emdevif: embedded developing interface 嵌入式开发接口。
 
 ## 相关文档
 
-- [编码规范](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev/blob/main/docs/emdevif-coding-style.md)
+- [编码规范](../../docs/coding-style.md)（在 `rmdev-dev` 集成环境内；独立查看见 [GitHub](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev/blob/main/docs/coding-style.md)）
 - [rmdev](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev.git)
 
 ## 模块与头文件说明

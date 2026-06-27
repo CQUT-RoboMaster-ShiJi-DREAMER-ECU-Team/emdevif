@@ -2,7 +2,7 @@
 
 ## 模块定位
 
-`emdevif` 提供嵌入式开发通用接口抽象（core/logger/timeline/peripheral/system/util），并作为 `rmdev` 的底层基础能力。
+`emdevif` 提供嵌入式开发通用接口抽象（core/logger/timeline/peripheral/system），并作为 `rmdev` 的底层基础能力。
 
 ## 仓库结构
 
@@ -20,9 +20,10 @@ emdevif/
 
 ## 编码规范
 
-本项目开发需遵循统一编码规范，详见：
+统一编码规范位于 `rmdev-dev` 仓库的 `docs/coding-style.md`：
 
-[https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev/blob/main/docs/emdevif-coding-style.md](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev/blob/main/docs/emdevif-coding-style.md)
+- 集成环境内（本仓库作为 `rmdev-dev` 子模块检出）：直接阅读 `../../docs/coding-style.md`（相对本仓库根目录）
+- 独立查看：https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev/blob/main/docs/coding-style.md
 
 ## 构建系统
 
@@ -48,7 +49,7 @@ emdevif/
 
 ## 参考资料
 
-- 编码规范：[https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev/blob/main/docs/emdevif-coding-style.md](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev/blob/main/docs/emdevif-coding-style.md)
-- 开发环境（集成与测试）：[https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev](https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev)
+- 编码规范：见上文「编码规范」章节（集成环境内读 `../../docs/coding-style.md`）
+- 开发环境（集成与测试）：https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev
 - Peripheral 架构与扩展：`peripheral/AGENTS.md`
 - 完整使用指南：`README.md`

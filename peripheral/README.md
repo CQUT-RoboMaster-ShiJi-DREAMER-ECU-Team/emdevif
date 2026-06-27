@@ -7,10 +7,10 @@
 emdevif 本身不实现任何外设驱动，只提供一套"名称查找 + 函数指针委托"的抽象框架。整个外设系统分三层：
 
 - **Model 层**：定义每种外设的接口契约。它是一个纯数据聚合（`XxxModel::Instance`，包含 `void* handle` 和一组函数指针），与平台无关、与实现无关。
-- **Handle Map 层**：维护一个编译期常量映射表（`string_view → void*`），将字符串名称关联到 `Instance` 的地址。
+- **Handle Map 层**：通过链接期注入获取一个 `string_view → void*` 的查找函数，将字符串名称关联到 `Instance` 的地址。
 - **Impl 层**：对用户透明的包装类（如 `Gpio`），构造函数通过名称查找 `Instance`，方法直接委托给函数指针。
 
-用户的职责只有一件事：创建 `Instance` 并通过 `user_impl::peripheral_handle_map::findHandle` 注册到外设句柄映射。之后应用代码只需用字符串名称即可获取外设，无需知道底层是 STM32 HAL、ESP-IDF 还是其他平台。
+用户的职责只有一件事：创建 `Instance` 并通过 `emdevif::user_impl::peripheral_handle_map::findHandle` 注册到外设句柄映射。之后应用代码只需用字符串名称即可获取外设，无需知道底层是 STM32 HAL、ESP-IDF 还是其他平台。
 
 ## 应用层使用
 

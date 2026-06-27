@@ -97,4 +97,4 @@ public:
 ## 参考资料
 - 用户侧注册示例：`peripheral/README.md`
 - 完整使用指南：`emdevif/README.md`
-- 编码规范：https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev/blob/main/docs/emdevif-coding-style.md
+- 编码规范（`rmdev-dev` 仓库 `docs/coding-style.md`）：集成环境内读 `../../../docs/coding-style.md`；独立查看见 https://github.com/CQUT-RoboMaster-ShiJi-DREAMER-ECU-Team/rmdev-dev/blob/main/docs/coding-style.md

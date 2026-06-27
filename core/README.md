@@ -52,7 +52,7 @@ target_compile_definitions(emdevif_core PUBLIC EMDEVIF_LINE_SEPARATOR_MODE=EMDEV
 
 ```C
 #include <stdio.h>
-#include "emdevif/line_separator.h"
+#include "emdevif/core/line_separator.h"
 
 int main(void)
 {
@@ -81,5 +81,5 @@ int main(void)
 
 `EMDEVIF_ASSERT` 与 `EMDEVIF_FATAL_HANDLER` 的区别是：前者允许通过设置宏 `NDEBUG` 来禁用断言检查，而后者则始终有效。
 
-使用错误处理函数时，需要导入 `emdevif.core.error_handler` 模块。若需要使用宏，还需要导入头文件 `emdevif/fatal_handler.h`。
-特别地，在 C 语言中使用宏，只需要导入头文件 `emdevif/fatal_handler.h` 即可。
+使用错误处理函数时，需要导入 `emdevif.core.error_handler` 模块。若需要使用宏，还需要导入头文件 `emdevif/core/fatal_handler.h`。
+特别地，在 C 语言中使用宏，只需要导入头文件 `emdevif/core/fatal_handler.h` 即可。
