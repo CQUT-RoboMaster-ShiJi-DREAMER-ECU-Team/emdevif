@@ -12,6 +12,7 @@
 #include <iterator>
 #include <utility>
 
+#include "emdevif/core/data_container/array_map/basic_array_map.hpp"
 #include "emdevif/core/fatal_handler.h"
 
 #include "emdevif/core/error_handler.hpp"
