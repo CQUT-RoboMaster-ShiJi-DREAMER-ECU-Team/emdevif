@@ -10,8 +10,5 @@ module;
 export module emdevif.core.data_container.inplace_dynamic_array;
 
 export namespace emdevif {
-using ::emdevif::erase;
-using ::emdevif::eraseIf;
 using ::emdevif::InplaceDynamicArray;
-using ::emdevif::swap;
 }  // namespace emdevif

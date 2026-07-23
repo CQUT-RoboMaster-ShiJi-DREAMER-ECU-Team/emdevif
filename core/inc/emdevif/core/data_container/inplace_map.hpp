@@ -17,6 +17,7 @@
 #include <functional>
 #include <initializer_list>
 #include <iterator>
+#include <ranges>
 #include <type_traits>
 #include <utility>
 
@@ -337,17 +338,15 @@ public:
     template<typename InputIt>
     explicit constexpr InplaceMap(InputIt first, InputIt last) : comp_()
     {
-        for (; first != last; ++first) {
-            insert(*first);
-        }
+        std::ranges::for_each(std::ranges::subrange(first, last),
+                              [this](const value_type& v) { insert(v); });
     }
 
     template<typename InputIt>
     explicit constexpr InplaceMap(InputIt first, InputIt last, const key_compare& comp) : comp_(comp)
     {
-        for (; first != last; ++first) {
-            insert(*first);
-        }
+        std::ranges::for_each(std::ranges::subrange(first, last),
+                              [this](const value_type& v) { insert(v); });
     }
 
     constexpr InplaceMap(std::initializer_list<value_type> ilist) : comp_()
@@ -617,12 +616,12 @@ public:
     template<typename InputIt>
     constexpr ErrorCode insert(InputIt first, InputIt last)
     {
-        for (; first != last; ++first) {
-            if (insert(*first).second == ErrorCode::Full) {
-                return ErrorCode::Full;
-            }
-        }
-        return ErrorCode::Success;
+        return std::ranges::any_of(std::ranges::subrange(first, last),
+                                   [this](const value_type& v) {
+                                       return insert(v).second == ErrorCode::Full;
+                                   })
+                   ? ErrorCode::Full
+                   : ErrorCode::Success;
     }
 
     /**
@@ -1048,6 +1047,18 @@ public:
         return a.size() == b.size() && std::equal(a.cbegin(), a.cend(), b.cbegin());
     }
 
+    // ---------- 非成员 swap（hidden friend）----------
+
+    /**
+     * 交换两个 InplaceMap
+     * @param a 左操作数
+     * @param b 右操作数
+     */
+    friend constexpr void swap(InplaceMap& a, InplaceMap& b) noexcept(noexcept(a.swap(b)))
+    {
+        a.swap(b);
+    }
+
 private:
     template<typename K, typename V>
     constexpr std::pair<iterator, ErrorCode> insertImpl_(K&& key, V&& value)
@@ -1099,24 +1110,6 @@ private:
         return insertImpl_(std::forward<K>(key), std::forward<V>(value));
     }
 };
-
-/**
- * 交换两个 InplaceMap
- * @tparam Key 键类型
- * @tparam T 值类型
- * @tparam N 容量
- * @tparam Compare 比较器
- * @tparam KeyContainer 键容器
- * @tparam MappedContainer 值容器
- * @param a 左操作数
- * @param b 右操作数
- */
-template<typename Key, typename T, std::size_t N, typename Compare, typename KeyContainer, typename MappedContainer>
-constexpr void swap(InplaceMap<Key, T, N, Compare, KeyContainer, MappedContainer>& a,
-                    InplaceMap<Key, T, N, Compare, KeyContainer, MappedContainer>& b) noexcept(noexcept(a.swap(b)))
-{
-    a.swap(b);
-}
 
 }  // namespace emdevif
 

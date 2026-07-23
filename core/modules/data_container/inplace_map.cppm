@@ -11,5 +11,4 @@ export module emdevif.core.data_container.inplace_map;
 
 export namespace emdevif {
 using ::emdevif::InplaceMap;
-using ::emdevif::swap;
 }  // namespace emdevif

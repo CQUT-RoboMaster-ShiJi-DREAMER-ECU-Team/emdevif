@@ -17,6 +17,7 @@
 #include <initializer_list>
 #include <iterator>
 #include <memory>
+#include <ranges>
 #include <type_traits>
 #include <utility>
 
@@ -298,28 +299,20 @@ public:
     constexpr InplaceDynamicArray(const InplaceDynamicArray& other) noexcept(std::is_nothrow_copy_constructible_v<T>)
         : size_(other.size_)
     {
-        for (size_type i = 0; i < size_; ++i) {
-            std::construct_at(ptrAt_(i), other[i]);
-        }
+        std::ranges::uninitialized_copy(other, std::ranges::subrange(begin(), end()));
     }
 
     constexpr InplaceDynamicArray(InplaceDynamicArray&& other) noexcept(std::is_nothrow_move_constructible_v<T>)
         : size_(other.size_)
     {
-        for (size_type i = 0; i < size_; ++i) {
-            std::construct_at(ptrAt_(i), std::move(other[i]));
-        }
+        std::ranges::uninitialized_move(other, std::ranges::subrange(begin(), end()));
     }
 
     constexpr InplaceDynamicArray(std::initializer_list<T> ilist) noexcept(std::is_nothrow_copy_constructible_v<T>)
         : size_(ilist.size())
     {
         EMDEVIF_ASSERT(ilist.size() <= N, "[InplaceDynamicArray]: initializer list too large");
-        size_type i = 0;
-        for (const auto& value : ilist) {
-            std::construct_at(ptrAt_(i), value);
-            ++i;
-        }
+        std::ranges::uninitialized_copy(ilist, std::ranges::subrange(begin(), end()));
     }
 
     ~InplaceDynamicArray()
@@ -342,17 +335,14 @@ public:
         }
         const size_type common = (std::min)(size_, other.size_);
 
-        for (size_type i = 0; i < common; ++i) {
-            (*this)[i] = other[i];
-        }
+        std::ranges::copy(std::ranges::subrange(other.begin(), other.begin() + common), begin());
 
         if (size_ > other.size_) {
-            std::destroy(ptrAt_(common), ptrAt_(size_));
+            std::destroy(begin() + common, end());
         }
         else if (other.size_ > size_) {
-            for (size_type i = common; i < other.size_; ++i) {
-                std::construct_at(ptrAt_(i), other[i]);
-            }
+            std::ranges::uninitialized_copy(std::ranges::subrange(other.begin() + size_, other.end()),
+                                            std::ranges::subrange(end(), end() + (other.size_ - size_)));
         }
 
         size_ = other.size_;
@@ -367,17 +357,14 @@ public:
         }
         const size_type common = (std::min)(size_, other.size_);
 
-        for (size_type i = 0; i < common; ++i) {
-            (*this)[i] = std::move(other[i]);
-        }
+        std::ranges::move(std::ranges::subrange(other.begin(), other.begin() + common), begin());
 
         if (size_ > other.size_) {
-            std::destroy(ptrAt_(common), ptrAt_(size_));
+            std::destroy(begin() + common, end());
         }
         else if (other.size_ > size_) {
-            for (size_type i = common; i < other.size_; ++i) {
-                std::construct_at(ptrAt_(i), std::move(other[i]));
-            }
+            std::ranges::uninitialized_move(std::ranges::subrange(other.begin() + size_, other.end()),
+                                            std::ranges::subrange(end(), end() + (other.size_ - size_)));
         }
 
         size_ = other.size_;
@@ -411,14 +398,12 @@ public:
         }
 
         if (count < size_) {
-            std::fill_n(ptrAt_(0), count, value);
-            std::destroy(ptrAt_(count), ptrAt_(size_));
+            std::ranges::fill_n(begin(), count, value);
+            std::destroy(begin() + count, end());
         }
         else {
-            std::fill_n(ptrAt_(0), size_, value);
-            for (size_type i = size_; i < count; ++i) {
-                std::construct_at(ptrAt_(i), value);
-            }
+            std::ranges::fill_n(begin(), size_, value);
+            std::ranges::uninitialized_fill(std::ranges::subrange(begin() + size_, begin() + count), value);
         }
 
         size_ = count;
@@ -451,9 +436,8 @@ public:
         else {
             auto mid = std::next(first, static_cast<difference_type>(size_));
             std::copy(first, mid, ptrAt_(0));
-            for (auto it = mid; it != last; ++it) {
-                std::construct_at(ptrAt_(size_ + static_cast<size_type>(std::distance(mid, it))), *it);
-            }
+            std::ranges::uninitialized_copy(std::ranges::subrange(mid, last),
+                                            std::ranges::subrange(end(), end() + (count - size_)));
         }
 
         size_ = count;
@@ -500,12 +484,10 @@ public:
         }
 
         if (new_size > size_) {
-            for (size_type i = size_; i < new_size; ++i) {
-                std::construct_at(ptrAt_(i));
-            }
+            std::ranges::uninitialized_value_construct(std::ranges::subrange(begin() + size_, begin() + new_size));
         }
         else if (new_size < size_) {
-            std::destroy(ptrAt_(new_size), ptrAt_(size_));
+            std::destroy(begin() + new_size, end());
         }
 
         size_ = new_size;
@@ -527,12 +509,10 @@ public:
         }
 
         if (new_size > size_) {
-            for (size_type i = size_; i < new_size; ++i) {
-                std::construct_at(ptrAt_(i), value);
-            }
+            std::ranges::uninitialized_fill(std::ranges::subrange(begin() + size_, begin() + new_size), value);
         }
         else if (new_size < size_) {
-            std::destroy(ptrAt_(new_size), ptrAt_(size_));
+            std::destroy(begin() + new_size, end());
         }
 
         size_ = new_size;
@@ -774,19 +754,22 @@ public:
         const size_type tail = size_ - index;
         const size_type uninit = (std::min)(tail, count);
 
-        for (size_type i = 0; i < uninit; ++i) {
-            std::construct_at(ptrAt_(size_ + count - 1 - i), std::move(*ptrAt_(size_ - 1 - i)));
+        if (uninit > 0) {
+            std::ranges::uninitialized_move(
+                std::ranges::subrange(ptrAt_(size_ - uninit), ptrAt_(size_)),
+                std::ranges::subrange(ptrAt_(size_ + count - uninit), ptrAt_(size_ + count)));
         }
         if (tail > uninit) {
             std::move_backward(ptrAt_(index), ptrAt_(size_ - uninit), ptrAt_(size_ + count - uninit));
         }
 
-        const size_type fill_existing = (std::min)(count, size_ - index);
+        const size_type fill_existing = (std::min)(count, tail);
         if (fill_existing > 0) {
-            std::fill_n(ptrAt_(index), fill_existing, value);
+            std::ranges::fill_n(ptrAt_(index), fill_existing, value);
         }
-        for (size_type i = fill_existing; i < count; ++i) {
-            std::construct_at(ptrAt_(size_ + i - fill_existing), value);
+        const size_type fill_uninit = count - fill_existing;
+        if (fill_uninit > 0) {
+            std::ranges::uninitialized_fill(std::ranges::subrange(ptrAt_(size_), ptrAt_(size_ + fill_uninit)), value);
         }
 
         size_ += count;
@@ -821,19 +804,24 @@ public:
         const size_type tail = size_ - index;
         const size_type uninit = (std::min)(tail, count);
 
-        for (size_type i = 0; i < uninit; ++i) {
-            std::construct_at(ptrAt_(size_ + count - 1 - i), std::move(*ptrAt_(size_ - 1 - i)));
+        if (uninit > 0) {
+            std::ranges::uninitialized_move(
+                std::ranges::subrange(ptrAt_(size_ - uninit), ptrAt_(size_)),
+                std::ranges::subrange(ptrAt_(size_ + count - uninit), ptrAt_(size_ + count)));
         }
         if (tail > uninit) {
             std::move_backward(ptrAt_(index), ptrAt_(size_ - uninit), ptrAt_(size_ + count - uninit));
         }
 
-        const size_type fill_existing = (std::min)(count, size_ - index);
+        const size_type fill_existing = (std::min)(count, tail);
         if (fill_existing > 0) {
             std::copy_n(first, fill_existing, ptrAt_(index));
         }
-        for (size_type i = fill_existing; i < count; ++i) {
-            std::construct_at(ptrAt_(size_ + i - fill_existing), *std::next(first, static_cast<difference_type>(i)));
+        const size_type fill_uninit = count - fill_existing;
+        if (fill_uninit > 0) {
+            auto src = std::next(first, static_cast<difference_type>(fill_existing));
+            std::ranges::uninitialized_copy(std::ranges::subrange(src, last),
+                                            std::ranges::subrange(ptrAt_(size_), ptrAt_(size_ + fill_uninit)));
         }
 
         size_ += count;
@@ -985,28 +973,23 @@ public:
                                                              std::is_nothrow_move_constructible_v<T> &&
                                                              std::is_nothrow_move_assignable_v<T>)
     {
-        using std::swap;
         const size_type common = (std::min)(size_, other.size_);
 
-        for (size_type i = 0; i < common; ++i) {
-            using std::swap;
-            swap((*this)[i], other[i]);
-        }
+        std::ranges::swap_ranges(std::ranges::subrange(begin(), begin() + common),
+                                 std::ranges::subrange(other.begin(), other.begin() + common));
 
         if (size_ > other.size_) {
-            for (size_type i = common; i < size_; ++i) {
-                std::construct_at(other.ptrAt_(i), std::move((*this)[i]));
-            }
-            std::destroy(ptrAt_(common), ptrAt_(size_));
+            std::ranges::uninitialized_move(std::ranges::subrange(begin() + common, end()),
+                                            std::ranges::subrange(other.ptrAt_(common), other.ptrAt_(size_)));
+            std::destroy(begin() + common, end());
         }
         else if (other.size_ > size_) {
-            for (size_type i = common; i < other.size_; ++i) {
-                std::construct_at(ptrAt_(i), std::move(other[i]));
-            }
-            std::destroy(other.ptrAt_(common), other.ptrAt_(other.size_));
+            std::ranges::uninitialized_move(std::ranges::subrange(other.begin() + common, other.end()),
+                                            std::ranges::subrange(ptrAt_(common), ptrAt_(other.size_)));
+            std::destroy(other.begin() + common, other.end());
         }
 
-        swap(size_, other.size_);
+        std::ranges::swap(size_, other.size_);
     }
 
     // ---------- 比较 ----------
@@ -1020,60 +1003,51 @@ public:
     {
         return a.size_ == b.size_ && std::equal(a.begin(), a.end(), b.begin());
     }
+
+    // ---------- 非成员 swap / erase / erase_if（hidden friend）----------
+
+    /**
+     * 交换两个 InplaceDynamicArray
+     * @param a 左操作数
+     * @param b 右操作数
+     */
+    friend constexpr void swap(InplaceDynamicArray& a, InplaceDynamicArray& b) noexcept(noexcept(a.swap(b)))
+    {
+        a.swap(b);
+    }
+
+    /**
+     * 移除所有等于 value 的元素
+     * @tparam U 比较值类型
+     * @param c 容器
+     * @param value 待移除值
+     * @return 移除的元素数量
+     */
+    template<typename U>
+    friend constexpr size_type erase(InplaceDynamicArray& c, const U& value)
+    {
+        auto removed = std::ranges::remove(c, value);
+        auto r = static_cast<size_type>(std::distance(removed.begin(), c.end()));
+        c.erase(removed.begin(), c.end());
+        return r;
+    }
+
+    /**
+     * 移除满足谓词的元素
+     * @tparam Pred 谓词类型
+     * @param c 容器
+     * @param pred 谓词
+     * @return 移除的元素数量
+     */
+    template<typename Pred>
+    friend constexpr size_type eraseIf(InplaceDynamicArray& c, Pred pred)
+    {
+        auto removed = std::ranges::remove_if(c, pred);
+        auto r = static_cast<size_type>(std::distance(removed.begin(), c.end()));
+        c.erase(removed.begin(), c.end());
+        return r;
+    }
 };
-
-// ---------- 非成员 swap ----------
-
-/**
- * 交换两个 InplaceDynamicArray
- * @tparam T 元素类型
- * @tparam N 容量
- * @param a 左操作数
- * @param b 右操作数
- */
-template<typename T, std::size_t N>
-constexpr void swap(InplaceDynamicArray<T, N>& a, InplaceDynamicArray<T, N>& b) noexcept(noexcept(a.swap(b)))
-{
-    a.swap(b);
-}
-
-// ---------- 非成员 erase / erase_if ----------
-
-/**
- * 移除所有等于 value 的元素
- * @tparam T 元素类型
- * @tparam N 容量
- * @tparam U 比较值类型
- * @param c 容器
- * @param value 待移除值
- * @return 移除的元素数量
- */
-template<typename T, std::size_t N, typename U>
-constexpr typename InplaceDynamicArray<T, N>::size_type erase(InplaceDynamicArray<T, N>& c, const U& value)
-{
-    auto it = std::remove(c.begin(), c.end(), value);
-    auto r = static_cast<typename InplaceDynamicArray<T, N>::size_type>(std::distance(it, c.end()));
-    c.erase(it, c.end());
-    return r;
-}
-
-/**
- * 移除满足谓词的元素
- * @tparam T 元素类型
- * @tparam N 容量
- * @tparam Pred 谓词类型
- * @param c 容器
- * @param pred 谓词
- * @return 移除的元素数量
- */
-template<typename T, std::size_t N, typename Pred>
-constexpr typename InplaceDynamicArray<T, N>::size_type eraseIf(InplaceDynamicArray<T, N>& c, Pred pred)
-{
-    auto it = std::remove_if(c.begin(), c.end(), pred);
-    auto r = static_cast<typename InplaceDynamicArray<T, N>::size_type>(std::distance(it, c.end()));
-    c.erase(it, c.end());
-    return r;
-}
 
 }  // namespace emdevif
 
