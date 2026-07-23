@@ -136,7 +136,7 @@ add_subdirectory(emdevif_collection/emdevif)  # 请注意，这一条语句需�
 target_link_libraries(${PROJECT_NAME} PRIVATE emdevif)  # 链接 emdevif 库
 ```
 
-这样基本上就大功告成了！不过有些子模块还包含一些其他的配置选项，您可以参考各个子模块的 README.md 来进行配置。
+这样基本上就大功告成了！不过有些子模块还包含一些其他的配置选项，您可以参考 `docs/` 目录下各个子模块的文档来进行配置。
 
 我们建议您单独创建一个 `emdevif_config.cmake` 文件来管理 emdevif 的配置选项，这样可以使得您的
 CMakeLists.txt 更加清晰，并且便于管理子模块的配置。例如：
@@ -192,11 +192,11 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/emdevif_collection/emdevif)
 # 尽管这样看上去有些多余，但如果子模块的配置选项较多，这样做会使得 CMakeLists.txt 更加清晰。
 ```
 
-在子模块的 README.md 中，将会提供 cmake/emdevif_config.cmake 的示例，您可以将其内容复制到您的配置文件中并加以修改即可。
+在 `docs/` 目录下的子模块文档中，将会提供 cmake/emdevif_config.cmake 的示例，您可以将其内容复制到您的配置文件中并加以修改即可。
 
 ### 链接期注入（timeline / peripheral / logger）
 
-部分子模块需要用户提供底层实现，例如 timeline 提供时间戳、logger 输出日志、peripheral 查找外设句柄。这些实现通过链接期注入机制提供：用户只需在任意 `.cpp` 文件中，于命名空间 `emdevif::user_impl` 中定义所需函数，链接器自动解析符号。不再需要创建 `emdevif_user_declares` 目标。详见各子模块 README。
+部分子模块需要用户提供底层实现，例如 timeline 提供时间戳、logger 输出日志、peripheral 查找外设句柄。这些实现通过链接期注入机制提供：用户只需在任意 `.cpp` 文件中，于命名空间 `emdevif::user_impl` 中定义所需函数，链接器自动解析符号。不再需要创建 `emdevif_user_declares` 目标。详见 `docs/` 目录下各子模块文档。
 
 #### 示例
 
@@ -222,7 +222,7 @@ emdevif::ErrorCode printLogMessage(const char* message) noexcept
 }
 ```
 
-编译并链接该 `.cpp` 到您的目标即可。timeline 与 peripheral 的使用方式类似，具体函数签名请参考对应模块的 README.md。
+编译并链接该 `.cpp` 到您的目标即可。timeline 与 peripheral 的使用方式类似，具体函数签名请参考 `docs/` 目录下对应模块的文档。
 
 ### CMake 变量配置
 

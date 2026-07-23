@@ -7,7 +7,7 @@
 - `emdevif_core`
 - `emdevif_system`（异步模式或同步+锁时，需设置 CMake 变量 `EMDEVIF_LOGGER_LINK_SYSTEM_LIB` 为 `ON`）
 
-参考 [emdevif_logger_config_example.hpp](./emdevif_logger_config_example.hpp)
+参考 [emdevif_logger_config_example.hpp](../logger/emdevif_logger_config_example.hpp)
 文件，您可以将这个文件拷贝到您的工程中，并根据需要修改配置选项。然后在 CMakeLists.txt 中定义
 `EMDEVIF_LOGGER_CONFIG_FILE` 宏来指定配置文件：
 

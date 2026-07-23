@@ -11,18 +11,18 @@
 ### 概览
 
 * 基本头文件（这些功能仅提供头文件，没有模块）：提供基础的数据类型定义和宏定义。
-    * [attributes_and_useful_macros.h](inc/emdevif/core/attributes_and_useful_macros.h): 提供常用的属性和宏定义。
-    * [line_separator.h](inc/emdevif/core/line_separator.h): 提供统一的换行符的定义。
-    * [simplify_decl_macros.hpp](inc/emdevif/core/simplify_decl_macros.hpp): 提供简化声明的宏。
+    * [attributes_and_useful_macros.h](../core/inc/emdevif/core/attributes_and_useful_macros.h): 提供常用的属性和宏定义。
+    * [line_separator.h](../core/inc/emdevif/core/line_separator.h): 提供统一的换行符的定义。
+    * [simplify_decl_macros.hpp](../core/inc/emdevif/core/simplify_decl_macros.hpp): 提供简化声明的宏。
   若头文件的后缀名是 `.h`，则表示它们在 C 和 C++ 中都可以使用；若后缀名是 `.hpp`，则表示它们只能在 C++ 中使用。
-* [错误处理模块](modules/error_handler.cppm): 提供错误码定义和错误处理函数。
-* [数据容器](modules/data_container): 提供常用的数据容器实现（如环形缓冲区）。
-* [integer_suffix.cppm](modules/integer_suffix.cppm): 提供固定宽度整型、size_t、ptrdiff_t 的自定义字面量。
+* [错误处理模块](../core/modules/error_handler.cppm): 提供错误码定义和错误处理函数。
+* [数据容器](../core/modules/data_container): 提供常用的数据容器实现（如环形缓冲区）。
+* [integer_suffix.cppm](../core/modules/integer_suffix.cppm): 提供固定宽度整型、size_t、ptrdiff_t 的自定义字面量。
 * STL 库的扩展：
-    * [类型特征](modules/type_traits.cppm): 提供部分类型特征的实现。
-    * [概念库](modules/concepts.cppm): 提供一些常用概念的实现。
-    * [端序](modules/endian.cppm): 提供端序转换相关的功能。
-    * [资源保护](modules/resource_guard.cppm): 实现安全释放资源的机制（如 LockGuard、轻量级 try-finally）。
+    * [类型特征](../core/modules/type_traits.cppm): 提供部分类型特征的实现。
+    * [概念库](../core/modules/concepts.cppm): 提供一些常用概念的实现。
+    * [端序](../core/modules/endian.cppm): 提供端序转换相关的功能。
+    * [资源保护](../core/modules/resource_guard.cppm): 实现安全释放资源的机制（如 LockGuard、轻量级 try-finally）。
 
 ### 详细功能说明
 
