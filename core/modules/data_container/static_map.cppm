@@ -5,7 +5,7 @@
 
 module;
 
-#include "emdevif/core/data_container/array_map/static_map.hpp"
+#include "emdevif/core/data_container/static_map.hpp"
 
 export module emdevif.core.data_container.static_map;
 
