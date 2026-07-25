@@ -8,6 +8,5 @@
 #define EMDEVIF_CORE_TYPE_TRAITS_HPP
 
 #include "emdevif/core/type_traits/misc.hpp"
-#include "emdevif/core/type_traits/tuple_style.hpp"
 
 #endif  // !EMDEVIF_CORE_TYPE_TRAITS_HPP
