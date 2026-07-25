@@ -34,13 +34,13 @@
 
 ```cpp
 {
-    emdevif::Defer cleanup([&]() noexcept {
+    // cleanup 通常不会被直接使用，建议与 EMDEVIF_MAYBE_UNUSED 搭配
+    EMDEVIF_MAYBE_UNUSED emdevif::Defer cleanup([&]() noexcept {
         releaseResource();
         closeConnection();
     });
-    
+
     // 使用资源...
-    
 }  // cleanup 在这里执行，确保资源被释放
 ```
 
@@ -109,20 +109,14 @@ concept ValidLock = requires(T& lock) {
 
 1. **异常模式**（当 `__cpp_exceptions` 启用时）：
    ```cpp
-   LockGuard(ValidLock auto& lock) {
-       auto result = lock.lock();
-       if (result != ErrorCode::Success) {
-           throw ErrorWithCodeException(result);
-       }
-   }
+   LockGuard guard(lock);  // 将会自动调用 lock.lock() ，失败抛异常
    ```
 
 2. **非异常模式**：
    ```cpp
    // 使用标签分发，不自动加锁
-   LockGuard(ValidLock auto& lock, lock_guard_do_not_lock_when_init_tag) {
-       // 手动调用 lock() 或 try_lock()
-   }
+   LockGuard guard(lock, lock_guard_do_not_lock_when_init); // 仅初始化守卫，不会自动加锁
+   ErrorCode ec = guard.lock();  // 手动加锁。如果失败，可以通过 ec 获取错误码
    ```
 
 **注意事项：**
@@ -137,7 +131,7 @@ concept ValidLock = requires(T& lock) {
 MyDriver driver;
 {
     emdevif::InitGuard guard(driver, config);
-    // driver.init(config) 已被调用
+    // driver.init(config) 已被调用。若失败，抛异常
     
     // 使用驱动...
     
@@ -155,22 +149,16 @@ concept ValidHaveInitDeInitPairObject = requires(T& obj, InitArgs... args) {
 
 **两种构造模式：**
 
-1. **异常模式**：
+1. **异常模式**（当 `__cpp_exceptions` 启用时）：
    ```cpp
-   InitGuard(ValidHaveInitDeInitPairObject auto& obj, InitArgs... args) {
-       auto result = obj.init(args...);
-       if (result != ErrorCode::Success) {
-           throw ErrorWithCodeException(result);
-       }
-   }
+   InitGuard guard(driver, config);  // 将会自动调用 driver.init(config)，失败抛异常
    ```
 
 2. **非异常模式**：
    ```cpp
-   InitGuard(ValidHaveInitDeInitPairObject auto& obj, 
-             init_guard_do_not_init_object_tag) {
-       // 手动调用 init()
-   }
+   // 使用标签分发，不自动初始化
+   InitGuard guard(driver, init_guard_do_not_init_object_tag);  // 仅初始化守卫，不会自动调用 init
+   ErrorCode ec = driver.init(config);  // 手动初始化。如果失败，可以通过 ec 获取错误码
    ```
 
 **使用场景：**

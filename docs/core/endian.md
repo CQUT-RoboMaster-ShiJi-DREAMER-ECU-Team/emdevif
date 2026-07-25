@@ -148,11 +148,13 @@ struct WithPadding {
 // 错误！WithPadding 可能有填充字节
 // emdevif::byteSwap(WithPadding{1, 2});
 
-// 正确的做法：使用 packed 属性
-struct __attribute__((packed)) WithoutPadding {
+// 正确的做法：使用 #pragma pack(1) 消除填充字节
+#pragma pack(push, 1)
+struct WithoutPadding {
     uint8_t a;
     uint32_t b;
 };
+#pragma pack(pop)
 
 auto swapped = emdevif::byteSwap(WithoutPadding{1, 2});  // OK
 ```

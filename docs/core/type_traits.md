@@ -136,20 +136,6 @@ auto point = tuple_to_aggregate<Point>(tuple);
 
 ## 最佳实践
 
-### 1. 使用 is_consteval 进行编译时分发
-
-```cpp
-constexpr auto process(auto value) {
-    if constexpr (emdevif::is_consteval([] { return value; })) {
-        // 编译时路径
-        return compileTimeProcess(value);
-    } else {
-        // 运行时路径
-        return runtimeProcess(value);
-    }
-}
-```
-
 ### 2. 使用 tuple_style 进行泛型编程
 
 ```cpp

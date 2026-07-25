@@ -53,7 +53,7 @@ emdevif 提供了统一的宏，隐藏了这些差异。
 
 ### EMDEVIF_UNUSED(X)
 
-抑制未使用变量的警告，同时确保变量被使用。
+抑制未使用变量的警告。
 
 ```cpp
 void callback(int value, void* user_data) {
@@ -105,11 +105,21 @@ EMDEVIF_NO_RETURN void fatal_error(const char* msg) {
 
 ### 2. 使用 EMDEVIF_FORMAT_CHECK 捕获格式错误
 
+`EMDEVIF_FORMAT_CHECK` 只能放在函数声明的后面，不能放在前面：
+
 ```cpp
+// 正确：放在函数声明后面
+void log_message(const char* format, ...) EMDEVIF_FORMAT_CHECK(printf, 1, 2);
+
+// 错误：放在函数声明前面
 EMDEVIF_FORMAT_CHECK(printf, 1, 2)
-void log_message(const char* format, ...) {
-    // 实现
-}
+void log_message(const char* format, ...);
+```
+
+使用示例：
+
+```cpp
+void log_message(const char* format, ...) EMDEVIF_FORMAT_CHECK(printf, 1, 2);
 
 // 编译时检查
 log_message("Value: %d", 42);      // OK
@@ -159,18 +169,27 @@ EMDEVIF_NO_RETURN void might_return(bool flag) {
 }
 ```
 
-### 2. EMDEVIF_UNUSED 的作用域
+### 2. EMDEVIF_UNUSED 与 EMDEVIF_MAYBE_UNUSED 的区别
+
+`EMDEVIF_UNUSED` 和 `EMDEVIF_MAYBE_UNUSED` 的实现原理不同：
+- `EMDEVIF_UNUSED(X)` 通过 `(void)X` 实现，用于抑制未使用变量的警告
+- `EMDEVIF_MAYBE_UNUSED` 通过 `__attribute__((unused))` 或 `[[maybe_unused]]` 实现，用于标记变量或函数可能未使用
+
+**建议优先使用 `EMDEVIF_MAYBE_UNUSED`**，因为它更符合 C++ 标准，且可以在更多场景下使用（如函数参数、结构体成员等）。
 
 ```cpp
+// EMDEVIF_UNUSED：用于局部变量，通过 (void)X 实现
 void function() {
     int unused_var = 42;
     EMDEVIF_UNUSED(unused_var);  // OK
+}
 
-    {
-        int another_unused = 100;
-        // EMDEVIF_UNUSED(unused_var);  // 错误！作用域不匹配
-        EMDEVIF_UNUSED(another_unused);
-    }
+// EMDEVIF_MAYBE_UNUSED：用于声明时标记，通过属性实现
+EMDEVIF_MAYBE_UNUSED static int global_var = 42;
+
+void process(int value, EMDEVIF_MAYBE_UNUSED void* user_data) {
+    // user_data 可能未使用，但不会警告
+    process_value(value);
 }
 ```
 
@@ -193,25 +212,7 @@ void my_scanf(void* context, const char* format, ...);
 
 ## 容易让用户感到意外的设计
 
-### 1. C 模式下的属性限制
-
-```c
-// C 模式下，某些属性可能不可用
-// EMDEVIF_FALL_THROUGH 在 C11 之前可能不支持
-
-void switch_example(int value) {
-    switch (value) {
-    case 1:
-        do_something();
-        EMDEVIF_FALL_THROUGH;  // C11+ 或编译器扩展
-    case 2:
-        do_other_thing();
-        break;
-    }
-}
-```
-
-### 2. EMDEVIF_WEAK 的链接器行为
+### 1. EMDEVIF_WEAK 的链接器行为
 
 ```cpp
 // 弱符号可以被强符号覆盖
@@ -225,7 +226,7 @@ void default_handler() {
 }
 ```
 
-### 3. 段属性的平台依赖性
+### 2. 段属性的平台依赖性
 
 ```cpp
 // 段名称是平台相关的

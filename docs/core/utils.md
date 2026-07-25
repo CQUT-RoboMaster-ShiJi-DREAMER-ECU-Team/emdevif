@@ -301,54 +301,6 @@ public:
 };
 ```
 
-### 一次性配置系统
-
-```cpp
-class SystemConfig {
-private:
-    emdevif::InitOnce<uint32_t> clock_freq_;
-    emdevif::InitOnce<uint8_t> priority_;
-    emdevif::InitOnce<bool> debug_enabled_;
-
-public:
-    ErrorCode init(uint32_t freq, uint8_t priority, bool debug) {
-        auto result = clock_freq_.init(freq);
-        if (result != ErrorCode::Success) return result;
-
-        result = priority_.init(priority);
-        if (result != ErrorCode::Success) return result;
-
-        result = debug_enabled_.init(debug);
-        return result;
-    }
-
-    uint32_t getClockFreq() const { return clock_freq_; }
-    uint8_t getPriority() const { return priority_; }
-    bool isDebugEnabled() const { return debug_enabled_; }
-};
-```
-
-### 位域操作
-
-```cpp
-// GPIO 寄存器操作
-class GpioPort {
-private:
-    volatile uint32_t& reg_;
-
-public:
-    void setMode(uint8_t pin, uint8_t mode) {
-        uint32_t mask = 0x3 << (pin * 2);
-        reg_ &= ~mask;
-        reg_ |= static_cast<uint32_t>(mode) << (pin * 2);
-    }
-
-    uint8_t getMode(uint8_t pin) const {
-        return (reg_ >> (pin * 2)) & 0x3;
-    }
-};
-```
-
 ## 总结
 
 工具模块为嵌入式系统提供了实用的编程工具：

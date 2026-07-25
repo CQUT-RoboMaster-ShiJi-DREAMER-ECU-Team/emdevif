@@ -112,14 +112,13 @@ public:
 ```cpp
 class ExceptionDisabled {
 public:
-    // 当异常被禁用时，提供清晰的错误信息
-    EMDEVIF_REASON_DELETE("Exceptions are disabled")
-    operator std::exception_ptr() const;
+    // 当函数被删除时，提供清晰的错误信息
+    operator std::exception_ptr() const = EMDEVIF_REASON_DELETE("Exceptions are disabled");
 };
 
 // 等价于：
-// operator std::exception_ptr() const = delete("Exceptions are disabled");
-// 注意：这是 C++20 特性，某些编译器可能不支持
+// operator std::exception_ptr() const = delete("Exceptions are disabled");  // C++26
+// operator std::exception_ptr() const = delete;  // C++26 之前
 ```
 
 ## 最佳实践
@@ -188,7 +187,7 @@ private:
 };
 ```
 
-### 4. 在工具类中使用
+### 4. 在零例模式（只有静态函数的类）中使用
 
 ```cpp
 class MathUtils {
@@ -206,8 +205,8 @@ public:
 
 ```cpp
 class MyClass {
-private:  // 或 public:
-    // 宏应该放在访问说明符之后
+public:
+    // 宏应该放在访问说明符之后（尽量是 public 的）
     EMDEVIF_DELETE_COPY_AND_MOVE(MyClass)
 };
 ```

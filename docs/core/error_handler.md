@@ -164,6 +164,7 @@ EMDEVIF_ASSERT(config.isValid(), "Invalid configuration");  // 编译时检查
 
 ```cpp
 ErrorCode ec = ErrorCodeValue::Success;  // OK，隐式转换
+ErrorCode ec2 = ErrorCode::Success;  // 也 OK，而且更推荐这样做
 ErrorCode ec2 = 0;  // 错误！需要显式转换
 ErrorCode ec3 = static_cast<ErrorCode>(0);  // OK
 ```
@@ -179,22 +180,6 @@ constexpr int divide(int a, int b) {
 // 编译时调用：如果 b=0，会导致编译错误
 constexpr auto result = divide(10, 2);  // OK
 // constexpr auto bad = divide(10, 0);  // 编译错误！
-```
-
-### 3. 注册函数的生命周期
-
-```cpp
-// 错误的做法：注册局部函数
-void setup() {
-    auto handler = []() { /* ... */ };
-    emdevif::registerTerminateFunction(handler);
-}  // handler 生命周期结束，但注册的函数指针仍然有效
-
-// 正确的做法：注册全局或静态函数
-static void myTerminateHandler() { /* ... */ }
-void setup() {
-    emdevif::registerTerminateFunction(myTerminateHandler);
-}
 ```
 
 ## 容易让用户感到意外的设计
@@ -214,7 +199,7 @@ error: 'detail::assertFailedHandler' is not a constant expression
 ```cpp
 #define NDEBUG  // 禁用断言
 EMDEVIF_ASSERT(shouldNeverHappen(), "This won't be checked!");
-// 断言被完全移除，条件表达式仍然会被求值（但结果被丢弃）
+// 断言被完全移除，条件表达式 shouldNeverHappen() 不会被求值
 ```
 
 ### 3. terminate 函数的无限循环

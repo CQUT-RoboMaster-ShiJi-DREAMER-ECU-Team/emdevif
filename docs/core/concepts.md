@@ -66,14 +66,14 @@ T clamp(T value, T min, T max) {
 `ArithmeticType` 是 emdevif 中最重要的概念之一，用于约束算术类型。
 
 ```cpp
-template<typename T>
-concept ArithmeticType = HaveLimitType<T> && requires(T a, T b) {
-    { a + b } -> std::same_as<T>;
-    { a - b } -> std::same_as<T>;
-    { a * b } -> std::same_as<T>;
-    { a / b } -> std::same_as<T>;
-    { a = b } -> std::same_as<T&>;
-    { a <=> b } -> std::same_as<std::strong_ordering>;
+template<typename Type>
+concept ArithmeticType = HaveLimitType<Type> && requires(Type lhs, Type rhs) {
+    lhs + rhs;
+    lhs - rhs;
+    lhs * rhs;
+    lhs / rhs;
+    lhs = rhs;
+    lhs <=> rhs;
 };
 ```
 

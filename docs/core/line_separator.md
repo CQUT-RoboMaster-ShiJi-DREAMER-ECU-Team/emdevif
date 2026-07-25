@@ -242,12 +242,12 @@ public:
 ### 2. 与 printf 的交互
 
 ```cpp
-// 使用 EMDEVIF_LINE_SEPARATOR 作为格式字符串的一部分
+// 使用 EMDEVIF_LINE_SEPARATOR 作为格式字符串的一部分（以 CRLF 为例）
 printf("Value: %d" EMDEVIF_LINE_SEPARATOR, 42);
 // 等价于 printf("Value: %d\r\n", 42);
 
-// 但不能在格式字符串中间使用
-printf("Value:" EMDEVIF_LINE_SEPARATOR " %d", 42);  // 可能不是你想要的
+printf("Value:" EMDEVIF_LINE_SEPARATOR " %d", 42);
+// 等价于 printf("Value:\r\n %d", 42);
 ```
 
 ### 3. 多行字符串

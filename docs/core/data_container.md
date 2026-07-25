@@ -134,11 +134,11 @@ constexpr auto hello_world = hello + world;  // 编译时连接
 `StaticMap` 是一个编译时静态映射，适用于查找表、配置映射等场景。
 
 ```cpp
-// 创建编译时映射
-constexpr auto error_names = emdevif::makeStaticMap({
-    std::pair{ErrorCode::Success, "OK"},
-    std::pair{ErrorCode::Timeout, "Timeout"},
-    std::pair{ErrorCode::InvalidArgument, "Invalid argument"}
+// 创建编译时映射（使用模板参数指定键值类型，避免逐个写 std::pair）
+constexpr auto error_names = emdevif::makeStaticMap<ErrorCode, std::string_view>({
+    {ErrorCode::Success, "OK"},
+    {ErrorCode::Timeout, "Timeout"},
+    {ErrorCode::InvalidArgument, "Invalid argument"}
 });
 
 // 查找
