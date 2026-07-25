@@ -11,18 +11,19 @@
 ### 概览
 
 * 基本头文件（这些功能仅提供头文件，没有模块）：提供基础的数据类型定义和宏定义。
-    * [attributes_and_useful_macros.h](../core/inc/emdevif/core/attributes_and_useful_macros.h): 提供常用的属性和宏定义。
-    * [line_separator.h](../core/inc/emdevif/core/line_separator.h): 提供统一的换行符的定义。
-    * [simplify_decl_macros.hpp](../core/inc/emdevif/core/simplify_decl_macros.hpp): 提供简化声明的宏。
+    * [attributes_and_useful_macros.h](../core/inc/emdevif/core/attributes_and_useful_macros.h): 提供常用的属性和宏定义。详见 [编译器属性与实用宏文档](core/attributes_and_useful_macros.md)。
+    * [line_separator.h](../core/inc/emdevif/core/line_separator.h): 提供统一的换行符的定义。详见 [换行符模块文档](core/line_separator.md)。
+    * [simplify_decl_macros.hpp](../core/inc/emdevif/core/simplify_decl_macros.hpp): 提供简化声明的宏。详见 [简化声明宏文档](core/simplify_decl_macros.md)。
   若头文件的后缀名是 `.h`，则表示它们在 C 和 C++ 中都可以使用；若后缀名是 `.hpp`，则表示它们只能在 C++ 中使用。
-* [错误处理模块](../core/modules/error_handler.cppm): 提供错误码定义和错误处理函数。
-* [数据容器](../core/modules/data_container): 提供常用的数据容器实现（如环形缓冲区）。
-* [integer_suffix.cppm](../core/modules/integer_suffix.cppm): 提供固定宽度整型、size_t、ptrdiff_t 的自定义字面量。
+* [错误处理模块](../core/modules/error_handler.cppm): 提供错误码定义和错误处理函数。详见 [错误处理模块文档](core/error_handler.md)。
+* [数据容器](../core/modules/data_container): 提供常用的数据容器实现（如环形缓冲区）。详见 [数据容器模块文档](core/data_container.md)。
+* [integer_suffix.cppm](../core/modules/integer_suffix.cppm): 提供固定宽度整型、size_t、ptrdiff_t 的自定义字面量。详见 [整型后缀模块文档](core/integer_suffix.md)。
 * STL 库的扩展：
-    * [类型特征](../core/modules/type_traits.cppm): 提供部分类型特征的实现。
-    * [概念库](../core/modules/concepts.cppm): 提供一些常用概念的实现。
-    * [端序](../core/modules/endian.cppm): 提供端序转换相关的功能。
-    * [资源保护](../core/modules/resource_guard.cppm): 实现安全释放资源的机制（如 LockGuard、轻量级 try-finally）。
+    * [类型特征](../core/modules/type_traits.cppm): 提供部分类型特征的实现。详见 [类型特征模块文档](core/type_traits.md)。
+    * [概念库](../core/modules/concepts.cppm): 提供一些常用概念的实现。详见 [概念库文档](core/concepts.md)。
+    * [端序](../core/modules/endian.cppm): 提供端序转换相关的功能。详见 [端序转换模块文档](core/endian.md)。
+    * [资源保护](../core/modules/resource_guard.cppm): 实现安全释放资源的机制（如 LockGuard、轻量级 try-finally）。详见 [资源保护模块文档](core/resource_guard.md)。
+* 工具模块：提供通用化的控制结构和特殊类型。详见 [工具模块文档](core/utils.md)。
 
 ### 详细功能说明
 
